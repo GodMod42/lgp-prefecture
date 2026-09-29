@@ -169,6 +169,14 @@ textarea{height:150px;padding:12px;resize:vertical}
 .li{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;background:var(--carte);color:var(--texte);border:1px solid var(--ligne);border-radius:6px;padding:12px 16px;margin-bottom:8px;font:inherit;font-size:.9rem;cursor:pointer}
 .li:hover{background:var(--lav)}.li small{color:var(--gris);display:block}
 .li .st{margin:0;padding:3px 10px;font-size:.75rem}
+.m.l{justify-content:flex-start}.m.l .mt{text-align:left}
+.m.l .bb{background:var(--lav);color:var(--texte);margin-left:0}
+:root[data-theme=dark] .m.l .bb{background:var(--lav);color:var(--texte)}
+.m.l .mav{background:#e1000f}
+.m .bb a{color:inherit;text-decoration:underline}
+.sys{text-align:center;font-size:.78rem;color:var(--gris)}
+.st.off{background:var(--lav);color:var(--bleu)}
+#rep:disabled{opacity:.5}
 @media(max-width:700px){.c8,.c4,.c6{grid-column:span 12}.fcard{padding:24px}}
 </style>
 <script src="assets/js/site.js"></script>
@@ -230,7 +238,7 @@ textarea{height:150px;padding:12px;resize:vertical}
   <div id="lst" data-notx hidden></div>
   </div>
   <div id="tk" hidden>
-    <div class="tkh"><div><span class="st">Ouvert</span><p class="tkm" id="tkm" data-notx></p></div><button class="back" id="back" type="button">← Retour à la liste</button></div>
+    <div class="tkh"><div><span class="st" id="tkst" data-notx>Ouvert</span><p class="tkm" id="tkm" data-notx></p></div><button class="back" id="back" type="button">← Retour à la liste</button></div>
     <div class="tkc">
       <div id="th" data-notx></div>
       <hr>
@@ -274,83 +282,90 @@ document.getElementById("theme").onclick=()=>{
 
 
 /* ===== À CONFIGURER ===== */
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1554583778389659830/vl4csyBgW39h55-0fPXXMhdV_wg-o05UFLur6IRubMysF2YOqckazIoKSIY8W52NIJAc";  // webhook Discord du salon qui reçoit les demandes
+const API_URL = "https://api.exemple.fr";   // adresse publique (HTTPS) de ton bot, sans "/" final
 
 const user=getUser();
-if(!user) location.replace("connexion.html");
-else{
-  document.getElementById("who").textContent="Connecté en tant que "+user.name;
-  document.getElementById("nom").value=user.name;
-}
-document.getElementById("out").onclick=logout;
-
-const f=document.getElementById("f"),msg=document.getElementById("msg"),btn=document.getElementById("send");
+if(!user||!user.token){logout();throw new Error("session")}   // il faut se reconnecter (nouveau système de tickets)
 const $=id=>document.getElementById(id);
-const TK="lgp_tk_"+user.id,MAXF=3,MAXMO=8;
-const tks=()=>{try{return JSON.parse(localStorage.getItem(TK)||"[]")}catch(e){return[]}};
-const saveT=a=>{try{localStorage.setItem(TK,JSON.stringify(a))}catch(e){}};
+$("who").textContent="Connecté en tant que "+user.name;
+$("nom").value=user.name;
+$("out").onclick=logout;
+
+const f=$("f"),msg=$("msg"),btn=$("send"),MAXF=3,MAXMO=8;
 const fmt=t=>new Date(t).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).replace(",","");
-async function post(embed,files){
-  const body={allowed_mentions:{parse:[]},embeds:[embed]};let o;
-  if(files&&files.length){const fd=new FormData();fd.append("payload_json",JSON.stringify(body));files.forEach((x,i)=>fd.append("files["+i+"]",x,x.name));o={method:"POST",body:fd}}
-  else o={method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)};
-  const r=await fetch(WEBHOOK_URL,o);if(!r.ok)throw 0;
+async function api(p,o={}){
+  o.headers=Object.assign({Authorization:"Bearer "+user.token},o.headers||{});
+  const r=await fetch(API_URL+p,o);
+  if(r.status===401){alert("Session expirée : reconnecte-toi.");logout();throw 0}
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw e.error||r.status}
+  return r.json();
 }
-let cur=null,pend=[];
-function renderList(){
-  const a=tks(),l=$("lst");l.textContent="";l.hidden=!a.length;if(!a.length)return;
-  const h=document.createElement("h3");h.textContent="Mes demandes";l.append(h);
-  a.forEach(t=>{const b=document.createElement("button");b.type="button";b.className="li";
-    const d=document.createElement("div"),n=document.createElement("b"),sm=document.createElement("small"),st=document.createElement("span");
-    n.textContent=t.objet;sm.textContent="#"+t.id+" · "+t.motif+" · "+fmt(t.date);st.className="st";st.textContent=t.statut;
-    d.append(n,sm);b.append(d,st);b.onclick=()=>showT(t.id);l.append(b)});
+let cur=null,pend=[],poll=null,last="";
+
+async function renderList(){
+  const l=$("lst");
+  try{
+    const a=await api("/tickets");l.textContent="";l.hidden=!a.length;if(!a.length)return;
+    const h=document.createElement("h3");h.textContent="Mes demandes";l.append(h);
+    a.forEach(t=>{const b=document.createElement("button");b.type="button";b.className="li";
+      const d=document.createElement("div"),n=document.createElement("b"),sm=document.createElement("small"),st=document.createElement("span");
+      n.textContent=t.objet;sm.textContent="#"+t.id+" · "+t.motif+" · "+fmt(t.date);
+      st.className="st"+(t.statut==="Ouvert"?"":" off");st.textContent=t.statut;
+      d.append(n,sm);b.append(d,st);b.onclick=()=>showT(t.id);l.append(b)});
+  }catch(e){l.hidden=true}
 }
-function renderT(){
-  const t=tks().find(x=>x.id===cur);if(!t)return;
+function avatar(x){
+  const ini=()=>{const e=document.createElement("span");e.className="mav";e.textContent=(x.author||"?").charAt(0).toUpperCase();return e};
+  if(!x.avatar)return ini();
+  const a=document.createElement("img");a.className="mav";a.alt="";a.src=x.avatar;a.onerror=()=>a.replaceWith(ini());return a;
+}
+function renderT(t){
   const m=$("tkm");m.textContent="";const b=document.createElement("b");b.textContent=t.nom;
   m.append("Demandeur : ",b," · "+(t.tel?t.tel+" · ":"")+t.motif+" · #"+t.id);
+  const s=$("tkst");s.textContent=t.statut;s.className="st"+(t.statut==="Ouvert"?"":" off");
+  const closed=t.statut!=="Ouvert";$("rep").disabled=$("rp").disabled=$("fl").disabled=closed;
   const th=$("th");th.textContent="";
   t.msgs.forEach(x=>{
-    const r=document.createElement("div"),c=document.createElement("div"),mt=document.createElement("div"),bb=document.createElement("div");
-    r.className="m";mt.className="mt";mt.textContent=user.name+" · "+fmt(x.date);bb.className="bb";bb.textContent=x.txt;
-    if(x.files&&x.files.length){const s=document.createElement("small");s.textContent="Pièces jointes : "+x.files.join(", ");bb.append(s)}
-    c.append(mt,bb);
-    let av;const ini=()=>{const e=document.createElement("span");e.className="mav";e.textContent=user.name.charAt(0).toUpperCase();return e};
-    if(user.avatar){av=document.createElement("img");av.className="mav";av.alt="";av.src=user.avatar;av.onerror=()=>av.replaceWith(ini())}else av=ini();
-    r.append(c,av);th.append(r)});
+    if(x.from==="system"){const d=document.createElement("div");d.className="sys";d.textContent=x.txt+" · "+fmt(x.date);th.append(d);return}
+    const r=document.createElement("div"),c=document.createElement("div"),mt=document.createElement("div"),bb=document.createElement("div"),staff=x.from==="staff";
+    r.className="m"+(staff?" l":"");mt.className="mt";mt.textContent=(staff?"Préfecture · ":"")+x.author+" · "+fmt(x.date);bb.className="bb";bb.textContent=x.txt||"";
+    if(x.files&&x.files.length){const sm=document.createElement("small");sm.append("Pièces jointes : ");
+      x.files.forEach((fl,i)=>{if(i)sm.append(", ");if(fl.url&&/^https:\/\//.test(fl.url)){const a=document.createElement("a");a.href=fl.url;a.target="_blank";a.rel="noopener";a.textContent=fl.name;sm.append(a)}else sm.append(fl.name)});bb.append(sm)}
+    c.append(mt,bb);staff?r.append(avatar(x),c):r.append(c,avatar(x));th.append(r)});
 }
-function showT(id){cur=id;$("nv").hidden=true;$("tk").hidden=false;pend=[];fileNames();renderT();scrollTo(0,0)}
-$("back").onclick=()=>{$("tk").hidden=true;$("nv").hidden=false;renderList()};
+async function load(){
+  if(!cur)return;
+  try{const t=await api("/tickets/"+cur);if(t.id!==cur)return;
+    const k=t.statut+"|"+t.msgs.length;if(k===last)return;
+    const grew=last&&k!==last;last=k;renderT(t);
+    if(grew)$("th").lastElementChild&&$("th").lastElementChild.scrollIntoView({block:"nearest"});
+  }catch(e){}
+}
+function showT(id){cur=id;last="";$("nv").hidden=true;$("tk").hidden=false;pend=[];fileNames();load();clearInterval(poll);poll=setInterval(()=>{if(!document.hidden)load()},5000);scrollTo(0,0)}
+$("back").onclick=()=>{clearInterval(poll);cur=null;$("tk").hidden=true;$("nv").hidden=false;renderList()};
 function fileNames(){$("fln").textContent=pend.length?pend.length+" fichier(s) : "+pend.map(x=>x.name).join(", "):""}
 function addFiles(fs){fs.forEach(x=>{if(pend.length>=MAXF||x.size>MAXMO*1048576)return;pend.push(x)});fileNames()}
 $("fl").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
 $("rep").addEventListener("paste",e=>{const fs=[...(e.clipboardData?e.clipboardData.files:[])];if(fs.length){e.preventDefault();addFiles(fs)}});
 $("rp").onclick=async()=>{
   const txt=$("rep").value.trim();if(!txt&&!pend.length)return;
-  if(!WEBHOOK_URL){alert("Envoi non configuré : renseigne WEBHOOK_URL.");return}
-  const a=tks(),t=a.find(x=>x.id===cur);if(!t)return;
   $("rp").disabled=true;
   try{
-    await post({title:"Nouveau message · Ticket #"+t.id,color:0x000091,description:(txt||"(pièce jointe)").slice(0,1800),
-      fields:[{name:"Objet",value:t.objet.slice(0,200),inline:true},{name:"Demandeur",value:t.nom.slice(0,100)+" — "+user.name+" ("+user.id+")"}],timestamp:new Date().toISOString()},pend);
-    t.msgs.push({txt,date:Date.now(),files:pend.map(x=>x.name)});saveT(a);
-    $("rep").value="";pend=[];fileNames();renderT();
-  }catch(e){alert("L'envoi a échoué. Réessayez ou ouvrez un ticket sur le Discord.")}
+    const fd=new FormData();fd.append("txt",txt);pend.forEach(x=>fd.append("files",x,x.name));
+    await api("/tickets/"+cur+"/messages",{method:"POST",body:fd});
+    $("rep").value="";pend=[];fileNames();last="";await load();
+  }catch(e){alert(e==="ferme"?"Ce ticket est fermé.":"L'envoi a échoué. Réessayez dans un instant.")}
   $("rp").disabled=false;
 };
 f.onsubmit=async e=>{
   e.preventDefault();
-  const v=id=>document.getElementById(id).value.trim();
+  const v=id=>$(id).value.trim();
   if(!v("nom")||!v("motif")||!v("objet")||!v("txt")){msg.className="ko";msg.textContent="Merci de remplir tous les champs obligatoires.";return}
-  if(!WEBHOOK_URL){msg.className="ko";msg.textContent="Envoi non configuré : renseigne WEBHOOK_URL dans le script.";return}
   btn.disabled=true;msg.className="";msg.textContent="Envoi en cours...";
-  const t={id:Date.now().toString(36).toUpperCase().slice(-6),nom:v("nom"),tel:v("tel"),motif:v("motif"),objet:v("objet"),date:Date.now(),statut:"Ouvert",msgs:[{txt:v("txt"),date:Date.now(),files:[]}]};
   try{
-    await post({title:"Nouvelle demande #"+t.id+" : "+t.objet.slice(0,180),color:0x000091,description:t.msgs[0].txt.slice(0,1800),
-      fields:[{name:"Motif",value:t.motif,inline:true},{name:"Nom (civil RP)",value:t.nom.slice(0,200),inline:true},
-        {name:"Téléphone",value:t.tel.slice(0,50)||"—",inline:true},{name:"Discord",value:user.name+" ("+user.id+")"}],timestamp:new Date().toISOString()});
-    const a=tks();a.unshift(t);saveT(a);f.reset();document.getElementById("nom").value=user.name;msg.textContent="";showT(t.id);
-  }catch(err){msg.className="ko";msg.textContent="L'envoi a échoué. Réessayez ou ouvrez un ticket sur le Discord."}
+    const t=await api("/tickets",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nom:v("nom"),tel:v("tel"),motif:v("motif"),objet:v("objet"),txt:v("txt")})});
+    f.reset();$("nom").value=user.name;msg.textContent="";showT(t.id);
+  }catch(err){msg.className="ko";msg.textContent=err==="limite"?"Trop de demandes récentes. Réessayez plus tard.":"L'envoi a échoué. Réessayez ou ouvrez un ticket sur le Discord."}
   btn.disabled=false;
 };
 renderList();
