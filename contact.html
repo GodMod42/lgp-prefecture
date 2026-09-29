@@ -282,7 +282,7 @@ document.getElementById("theme").onclick=()=>{
 
 
 /* ===== À CONFIGURER ===== */
-const API_URL = "https://api.exemple.fr";   // adresse publique (HTTPS) de ton bot, sans "/" final
+const API_URL = "/api";   // le Worker Cloudflare transmet /api/* au bot (voir explications) ; ou l'adresse HTTPS complète du bot
 
 const user=getUser();
 if(!user||!user.token){logout();throw new Error("session")}   // il faut se reconnecter (nouveau système de tickets)
