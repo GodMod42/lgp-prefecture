@@ -36,7 +36,7 @@ nav a{padding:8px 16px;font-size:.95rem;font-weight:500}
 nav a:hover,nav a[aria-current]{color:var(--bleu);box-shadow:inset 0 -2px var(--bleu)}
 .actions{display:flex;align-items:center;gap:16px}
 #theme{width:38px;height:38px;border-radius:50%;border:1px solid var(--ligne);background:var(--carte);color:var(--texte);cursor:pointer;display:grid;place-items:center}
-.btn-co{background:var(--bleu);color:#fff;font-weight:700;padding:14px 24px}
+.btn-co{background:var(--bleu);color:#fff;font-weight:700;padding:12px 24px;border-radius:999px}
 :root[data-theme=dark] .btn-co{color:#000}
 
 /* Bandeau urgent */
@@ -232,10 +232,8 @@ textarea{height:150px;padding:12px;resize:vertical}
 <button class="aide" type="button">Besoin d'aide ?</button>
 <div class="fictif">Site fictif créé dans le cadre d'un serveur FiveM Roleplay — aucun lien avec une administration réelle.</div>
 
+<script src="assets/js/auth.js"></script>
 <script>
-const AUTH_KEY="lgp_user";
-function getUser(){try{const u=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");if(u&&u.exp>Date.now())return u}catch(e){}return null}
-(()=>{const u=getUser(),b=document.querySelector(".btn-co");if(u&&b){b.textContent=u.name;b.href="contact.html"}})();
 
 /* Thème clair / sombre */
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
@@ -254,7 +252,7 @@ else{
   document.getElementById("who").textContent="Connecté en tant que "+user.name;
   document.getElementById("nom").value=user.name;
 }
-document.getElementById("out").onclick=()=>{try{localStorage.removeItem(AUTH_KEY)}catch(e){}location.href="connexion.html"};
+document.getElementById("out").onclick=logout;
 
 const f=document.getElementById("f"),msg=document.getElementById("msg"),btn=document.getElementById("send");
 f.onsubmit=async e=>{
