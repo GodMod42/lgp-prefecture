@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "urgent": {
+    "enabled": true,
+    "theme": "red",
+    "tag": "URGENT",
+    "text": "Toute belle chose a une fin... Mais c'est le début d'une nouvelle aventure !",
+    "linkText": "→ Discord Préfecture",
+    "linkUrl": "https://discord.gg/8RAFH7KfDj",
+    "closable": true
+  },
+  "jobs": [
+    {
+      "titre": "Directeur de cabinet",
+      "salaire": "6 000 – 9 000 €+",
+      "texte": "Bras droit du Préfet. Il pilote le cabinet, coordonne les actions prioritaires, gère les affaires sensibles, les relations avec les autorités (Élysée, ministère, Ville de Paris) et prépare les décisions du Préfet."
+    },
+    {
+      "titre": "Secrétaire Général",
+      "salaire": "5 500 – 8 000 €",
+      "texte": "Assure la direction administrative de la Préfecture, supervise l'ensemble des services et veille au bon fonctionnement quotidien de l'institution."
+    },
+    {
+      "titre": "Attaché d'administration",
+      "salaire": "3 500 – 5 000 €",
+      "texte": "Encadre un service, instruit les dossiers complexes et prépare les actes administratifs soumis à la signature de la hiérarchie."
+    },
+    {
+      "titre": "Secrétaire administratif",
+      "salaire": "2 500 – 3 500 €",
+      "texte": "Assure le suivi des dossiers, l'accueil des usagers, la rédaction des courriers et la gestion des démarches en ligne."
+    },
+    {
+      "titre": "Inspecteur IGPN",
+      "salaire": "4 500 – 6 500 €",
+      "texte": "Inspection Générale de la Police Nationale : mène les enquêtes internes, contrôle le respect de la déontologie et traite les signalements visant les agents."
+    },
+    {
+      "titre": "Huissier de Justice (à la PP)",
+      "salaire": "4 000 – 6 000 €",
+      "texte": "Signifie les actes officiels, constate les faits et exécute les décisions de justice pour le compte de la Préfecture de Police."
+    },
+    {
+      "titre": "Inspecteur",
+      "salaire": "3 500 – 5 000 €",
+      "texte": "Contrôle le respect de la réglementation, réalise des inspections sur le terrain et rédige les rapports remis à la direction."
+    }
+  ],
+  "salaryLabel": "Salaire moyen :",
+  "texts": {}
+}
