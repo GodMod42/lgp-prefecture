@@ -140,6 +140,16 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .av p{font-size:.88rem;color:var(--gris);line-height:1.7}
 @media(max-width:960px){.cols2{grid-template-columns:1fr}}
 @media(max-width:600px){.avs{grid-template-columns:1fr}}
+.cta{display:inline-block;margin-top:14px;background:var(--bleu);color:#fff;font-weight:700;font-size:.9rem;padding:12px 24px}
+:root[data-theme=dark] .cta{color:#000}
+.apply{padding:24px 0 72px}.faq{padding:24px 0 96px}
+.apply .w,.faq .w{max-width:1360px}
+.apply p{color:var(--gris);max-width:46em;margin-bottom:14px}
+.apply ul{color:var(--gris);padding-left:26px;margin-bottom:14px}
+.faq .w{display:grid;grid-template-columns:1fr 2fr;gap:44px;align-items:start}
+.faq .lead{color:var(--gris);max-width:24em}
+.faq .job .body{padding:14px 20px 18px}.faq .job .body p{font-size:.9rem}
+@media(max-width:960px){.faq .w{grid-template-columns:1fr}}
 </style>
 <script src="assets/js/site.js"></script>
 </head>
@@ -200,6 +210,37 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
       </div>
     </div>
   </section>
+
+  <section class="apply">
+    <div class="w">
+      <p class="eyebrow">Candidature</p>
+      <h2>Comment postuler ?</h2>
+      <p>Pour intégrer nos services, vous devez prendre contact avec la préfecture et constituer un dossier de candidature complet comprenant :</p>
+      <ul>
+        <li>Un curriculum vitae (CV) à jour ;</li>
+        <li>Une lettre de motivation détaillant votre projet professionnel ;</li>
+        <li>Les pièces justificatives demandées selon le poste visé (diplômes, pièce d'identité, etc.).</li>
+      </ul>
+      <p>Une fois votre dossier prêt, contactez-nous directement via notre formulaire en ligne afin qu'un agent puisse étudier votre candidature et vous orienter vers la suite du processus de recrutement.</p>
+      <a class="cta" href="contact.html">Nous contacter</a>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="w">
+      <div>
+        <p class="eyebrow">Questions fréquentes</p>
+        <h2>Besoin d'aide ?</h2>
+        <p class="lead">Retrouvez les réponses aux questions les plus posées par les candidats.</p>
+      </div>
+      <div class="acc" id="faq">
+          <div class="job"><button type="button" aria-expanded="false" aria-controls="faq0">Quelles sont les conditions pour postuler ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq0"><p>Être majeur, disposer d'une pièce d'identité valide et constituer un dossier de candidature complet (CV et lettre de motivation).</p></div></div>
+          <div class="job"><button type="button" aria-expanded="false" aria-controls="faq1">Combien de temps dure le processus de recrutement ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq1"><p>Le délai varie selon le poste. En général, comptez quelques jours entre l'étude de votre dossier et l'entretien avec un agent.</p></div></div>
+          <div class="job"><button type="button" aria-expanded="false" aria-controls="faq2">Une formation est-elle prévue à l'embauche ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq2"><p>Oui, une formation initiale est prévue à l'embauche, puis des formations continues tout au long de votre carrière.</p></div></div>
+          <div class="job open"><button type="button" aria-expanded="true" aria-controls="faq3">Puis-je évoluer vers un autre poste par la suite ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq3"><p>Oui, la mobilité interne et les concours internes permettent d'évoluer vers d'autres fonctions ou d'autres services.</p></div></div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -243,6 +284,11 @@ SITE.ready.then(d=>{
     box.append(e);
   });
 });
+
+document.querySelectorAll("#faq .job").forEach(e=>{const b=e.querySelector("button");b.onclick=()=>{
+  const o=!e.classList.contains("open");
+  document.querySelectorAll("#faq .job").forEach(x=>{x.classList.remove("open");x.querySelector("button").setAttribute("aria-expanded","false")});
+  if(o){e.classList.add("open");b.setAttribute("aria-expanded","true")}}});
 
 /* Thème clair / sombre */
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
