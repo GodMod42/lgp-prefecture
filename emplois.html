@@ -141,6 +141,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 @media(max-width:960px){.cols2{grid-template-columns:1fr}}
 @media(max-width:600px){.avs{grid-template-columns:1fr}}
 </style>
+<script src="assets/js/site.js"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -185,7 +186,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
       <div>
         <p class="eyebrow">Nos emplois</p>
         <h2>Ce que nous avons à vous proposer</h2>
-        <div class="acc" id="jobs"></div>
+        <div class="acc" id="jobs" data-notx></div>
       </div>
       <div>
         <p class="eyebrow">Avantages</p>
@@ -225,38 +226,22 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 
 <script src="assets/js/auth.js"></script>
 <script>
-/* ===== À CONFIGURER : la liste des emplois ===== */
-const JOBS = [
-  { titre:"Directeur de cabinet", salaire:"6 000 – 9 000 €+",
-     texte:"Bras droit du Préfet. Il pilote le cabinet, coordonne les actions prioritaires, gère les affaires sensibles, les relations avec les autorités (Élysée, ministère, Ville de Paris) et prépare les décisions du Préfet." },
-  { titre:"Secrétaire Général", salaire:"5 500 – 8 000 €",
-     texte:"Assure la direction administrative de la Préfecture, supervise l'ensemble des services et veille au bon fonctionnement quotidien de l'institution." },
-  { titre:"Attaché d'administration", salaire:"3 500 – 5 000 €",
-     texte:"Encadre un service, instruit les dossiers complexes et prépare les actes administratifs soumis à la signature de la hiérarchie." },
-  { titre:"Secrétaire administratif", salaire:"2 500 – 3 500 €",
-     texte:"Assure le suivi des dossiers, l'accueil des usagers, la rédaction des courriers et la gestion des démarches en ligne." },
-  { titre:"Inspecteur IGPN", salaire:"4 500 – 6 500 €",
-     texte:"Inspection Générale de la Police Nationale : mène les enquêtes internes, contrôle le respect de la déontologie et traite les signalements visant les agents." },
-  { titre:"Huissier de Justice (à la PP)", salaire:"4 000 – 6 000 €",
-     texte:"Signifie les actes officiels, constate les faits et exécute les décisions de justice pour le compte de la Préfecture de Police." },
-  { titre:"Inspecteur", salaire:"3 500 – 5 000 €",
-     texte:"Contrôle le respect de la réglementation, réalise des inspections sur le terrain et rédige les rapports remis à la direction." }
-];
-
 const box=document.getElementById("jobs");
-JOBS.forEach((j,i)=>{
-  const d=document.createElement("div");d.className="job"+(i===0?" open":"");
-  d.innerHTML='<button type="button" aria-expanded="'+(i===0)+'" aria-controls="job'+i+'"><span></span><svg class="i"><use href="#chev"/></svg></button>'
-   +'<div class="body" id="job'+i+'"><p class="sal"></p><p></p></div>';
-  d.querySelector("span").textContent=j.titre;
-  const p=d.querySelectorAll(".body p");
-  p[0].textContent="Salaire moyen : "+j.salaire;p[1].textContent=j.texte;
-  d.querySelector("button").onclick=()=>{
-    const ouvrir=!d.classList.contains("open");
-    box.querySelectorAll(".job").forEach(x=>{x.classList.remove("open");x.querySelector("button").setAttribute("aria-expanded","false")});
-    if(ouvrir){d.classList.add("open");d.querySelector("button").setAttribute("aria-expanded","true")}
-  };
-  box.append(d);
+SITE.ready.then(d=>{
+  const jobs=d.jobs||SITE.defaults.jobs,lab=d.salaryLabel||SITE.defaults.salaryLabel;
+  box.textContent="";
+  jobs.forEach((j,i)=>{
+    const e=document.createElement("div");e.className="job"+(i===0?" open":"");
+    e.innerHTML='<button type="button" aria-expanded="'+(i===0)+'" aria-controls="job'+i+'"><span></span><svg class="i"><use href="#chev"/></svg></button><div class="body" id="job'+i+'"><p class="sal"></p><p></p></div>';
+    e.querySelector("span").textContent=j.titre;
+    const p=e.querySelectorAll(".body p");p[0].textContent=lab+" "+j.salaire;p[1].textContent=j.texte;
+    e.querySelector("button").onclick=()=>{
+      const o=!e.classList.contains("open");
+      box.querySelectorAll(".job").forEach(x=>{x.classList.remove("open");x.querySelector("button").setAttribute("aria-expanded","false")});
+      if(o){e.classList.add("open");e.querySelector("button").setAttribute("aria-expanded","true")}
+    };
+    box.append(e);
+  });
 });
 
 /* Thème clair / sombre */
