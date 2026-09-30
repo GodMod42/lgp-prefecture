@@ -126,4 +126,17 @@ const setupAssistant=()=>{
  form.onsubmit=e=>{e.preventDefault();const value=input.value.trim();if(!value)return;addMessage(value,'user');input.value='';const [reply,label,links]=answerFor(value);setTimeout(()=>addMessage(reply,'assistant',links),180)};
 };
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',setupAssistant):setupAssistant();
+
+/* Icône du mode clair/sombre : soleil en mode clair, lune en mode sombre. */
+const syncThemeIcon=()=>{
+ const dark=document.documentElement.dataset.theme==='dark';
+ document.querySelectorAll('#theme').forEach(button=>{
+  const svg=button.querySelector('svg');if(!svg)return;
+  svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');
+  svg.innerHTML=dark?'<path d="M20.985 12.486A9 9 0 1 1 11.514 3.015a7 7 0 0 0 9.471 9.471z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/>';
+  button.setAttribute('aria-label',dark?'Activer le mode clair':'Activer le mode sombre');
+ });
+};
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',syncThemeIcon):syncThemeIcon();
+new MutationObserver(syncThemeIcon).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 })();
