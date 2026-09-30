@@ -94,6 +94,7 @@ h2{font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.2;font-weight:800;margin:12p
 .dir a svg{width:16px;height:16px}
 #actus{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:28px}
 .actu{border:1px solid var(--ligne);padding:18px;background:var(--carte)}
+.actu img{display:block;width:100%;max-height:180px;object-fit:cover;margin-bottom:10px}
 .actu time{font-size:.8rem;color:var(--gris)}.actu h3{font-size:1rem}
 .msg{color:var(--gris)}
 .demarches{background:linear-gradient(135deg,#000091,#00006d);color:#fff}
@@ -287,6 +288,7 @@ SITE.ready.then(data=>{
   if(!ACTUS.length){b.innerHTML='<p class="msg">Aucune actualité pour le moment.</p>';return}
   b.innerHTML="";
   ACTUS.slice(0,3).forEach(a=>{const e=document.createElement("article");e.className="actu";
+    if(Array.isArray(a.photos)&&a.photos[0]&&typeof a.photos[0].data==="string"&&a.photos[0].data.startsWith("data:image/")){const img=document.createElement("img");img.src=a.photos[0].data;img.alt=a.photos[0].name||("Photo de "+(a.titre||"l'actualité"));e.append(img)}
     const t=document.createElement("time");t.textContent=a.date?new Date(a.date+"T12:00:00").toLocaleDateString("fr-FR"):"";
     const h=document.createElement("h3");h.textContent=a.titre||"Actualité";e.append(t,h);
     if(a.resume){const p=document.createElement("p");p.textContent=a.resume;e.append(p)}b.append(e)});
