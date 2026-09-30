@@ -164,15 +164,39 @@ async function start(){
       box.textContent="";
       D.actus.forEach((item,i)=>{
         const card=E("div","job");
+        item.documents=Array.isArray(item.documents)?item.documents:[];
         field(card,"Date de publication",item,"date","date");
         field(card,"Titre",item,"titre");
         field(card,"Résumé (affiché sur l'accueil)",item,"resume","area");
         field(card,"Contenu de l'actualité",item,"texte","area");
+        const docs=E("div"),docsTitle=E("label","","Documents joints"),docsHelp=E("small","sub","PDF, Word, OpenDocument ou texte — 1 Mo maximum par document, 2 Mo au total. Les documents seront inclus dans content.json.");
+        const picker=E("input");picker.type="file";picker.multiple=true;picker.accept=".pdf,.doc,.docx,.odt,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text,text/plain";
+        docs.append(docsTitle,docsHelp,picker);
+        item.documents.forEach((doc,docIndex)=>{
+          const line=E("div","r"),name=E("span","",doc.name||"Document");name.style.cssText="align-self:center;overflow-wrap:anywhere";
+          const remove=E("button","b","Retirer");remove.type="button";remove.onclick=()=>{item.documents.splice(docIndex,1);save();render()};
+          line.append(name,remove);docs.append(line);
+        });
+        picker.onchange=async()=>{
+          const files=[...picker.files];picker.value="";
+          const used=D.actus.reduce((sum,actu)=>sum+(actu.documents||[]).reduce((n,doc)=>n+(Number(doc.size)||0),0),0);
+          let added=0;
+          for(const file of files){
+            if(file.size>1024*1024){alert("« "+file.name+" » dépasse la limite de 1 Mo.");continue}
+            if(used+added+file.size>2*1024*1024){alert("La limite totale de 2 Mo de documents joints est atteinte.");break}
+            try{
+              const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file)});
+              item.documents.push({name:file.name,type:file.type||"application/octet-stream",size:file.size,data});added+=file.size;
+            }catch(e){alert("Impossible de lire « "+file.name+" ».")}
+          }
+          if(added){save();render()}
+        };
+        card.append(docs);
         const row=E("div","r");
         [["↑",()=>move(i,-1)],["↓",()=>move(i,1)],["Supprimer",()=>{if(confirm("Supprimer cette actualité ?")){D.actus.splice(i,1);save();render()}}]].forEach(([label,fn])=>{const b=E("button","b",label);b.type="button";b.onclick=fn;row.append(b)});
         card.append(row);box.append(card);
       });
-      const add=E("button","b p","Ajouter une actualité");add.type="button";add.onclick=()=>{D.actus.unshift({date:new Date().toISOString().slice(0,10),titre:"Nouvelle actualité",resume:"",texte:""});save();render()};box.append(add);
+      const add=E("button","b p","Ajouter une actualité");add.type="button";add.onclick=()=>{D.actus.unshift({date:new Date().toISOString().slice(0,10),titre:"Nouvelle actualité",resume:"",texte:"",documents:[]});save();render()};box.append(add);
     };
     render();
   };
