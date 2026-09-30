@@ -14,13 +14,6 @@
     "linkUrl": "https://discord.gg/8RAFH7KfDj",
     "closable": true
   },
-  "ticketMotifs": [
-    "Renseignement",
-    "Démarche administrative",
-    "Signalement / plainte",
-    "Recrutement",
-    "Autre"
-  ],
   "jobs": [
     {
       "titre": "Directeur de cabinet",
@@ -62,5 +55,14 @@
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "updated": "2026-09-30T19:02:02.182Z"
+  "updated": "2026-09-30T19:13:24.549Z",
+  "ticketMotifs": [
+    "Support technique",
+    "Réclamation",
+    "Déclaration / démarche",
+    "Signalement",
+    "Recrutement",
+    "IGPN",
+    "Autre"
+  ]
 }
