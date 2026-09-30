@@ -13,19 +13,27 @@ function logout(){
 (function(){
   const css=`
 .lgp-user{position:relative}
-.lgp-pill{display:flex;align-items:center;gap:10px;height:44px;padding:0 14px 0 6px;border:1px solid var(--ligne);border-radius:999px;background:var(--carte);color:var(--texte);font:700 .9rem var(--sans);cursor:pointer}
+.lgp-pill{display:flex;align-items:center;gap:10px;height:54px;padding:0 16px 0 8px;border:1px solid var(--ligne);border-radius:999px;background:var(--carte);color:var(--texte);font:700 1rem var(--sans);cursor:pointer}
 .lgp-pill:hover{background:var(--fond)}
-.lgp-av{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none;background:var(--bleu);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.85rem}
+.lgp-av{width:38px;height:38px;border-radius:50%;object-fit:cover;flex:none;background:var(--bleu);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.85rem}
 :root[data-theme=dark] .lgp-av{color:#000}
 .lgp-name{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lgp-pill svg{width:14px;height:14px;transition:transform .2s;opacity:.7}
 .lgp-pill[aria-expanded=true] svg{transform:rotate(180deg)}
-.lgp-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:200px;background:var(--carte);border:1px solid var(--ligne);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:6px;z-index:40}
+.lgp-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:270px;background:var(--carte);border:1px solid var(--ligne);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:6px;z-index:40}
 .lgp-menu[hidden]{display:none}
 .lgp-menu a,.lgp-menu button{display:block;width:100%;text-align:left;padding:10px 12px;border:0;border-radius:6px;background:none;color:var(--texte);font:500 .9rem var(--sans);cursor:pointer}
 .lgp-menu a:hover,.lgp-menu button:hover{background:var(--lav)}
+.lgp-hd{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px}
+.lgp-hd small{color:var(--gris);font-size:.82rem}.lgp-hd b{font-size:1rem}
+.lgp-role{align-self:flex-start;background:var(--lav);color:var(--bleu);border-radius:12px;padding:2px 10px;font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+.lgp-menu hr{border:0;border-top:1px solid var(--ligne);margin:6px 4px}
 .lgp-menu .out{color:#c9191e}
-:root[data-theme=dark] .lgp-menu .out{color:#ff8a8a}`;
+:root[data-theme=dark] .lgp-hd{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px}
+.lgp-hd small{color:var(--gris);font-size:.82rem}.lgp-hd b{font-size:1rem}
+.lgp-role{align-self:flex-start;background:var(--lav);color:var(--bleu);border-radius:12px;padding:2px 10px;font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+.lgp-menu hr{border:0;border-top:1px solid var(--ligne);margin:6px 4px}
+.lgp-menu .out{color:#ff8a8a}`;
   const st=document.createElement("style");st.textContent=css;document.head.append(st);
 
   const u=getUser(), btn=document.querySelector(".btn-co");
@@ -52,9 +60,12 @@ function logout(){
   pill.append(av,nom,chev);
 
   const menu=document.createElement("div");menu.className="lgp-menu";menu.hidden=true;
-  const l1=document.createElement("a");l1.href="contact.html";l1.textContent="Nous contacter";
-  const l2=document.createElement("button");l2.type="button";l2.className="out";l2.textContent="Se déconnecter";l2.onclick=logout;
-  menu.append(l1,l2);
+  const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x)e.textContent=x;return e};
+  const hd=el("div","lgp-hd");hd.append(el("small","","Connecté en tant que"),el("b","",u.name));
+  if(u.role)hd.append(el("span","lgp-role",u.role));
+  const lk=(t,h)=>{const a=el("a","",t);a.href=h;return a};
+  const l2=el("button","out","Se déconnecter");l2.type="button";l2.onclick=logout;
+  menu.append(hd,el("hr"),lk("Mon espace","dashboard.html"),lk("Mes démarches","demarche.html"),el("hr"),l2);
 
   const fermer=()=>{menu.hidden=true;pill.setAttribute("aria-expanded","false")};
   pill.onclick=e=>{e.stopPropagation();const o=menu.hidden;menu.hidden=!o;pill.setAttribute("aria-expanded",String(o))};
