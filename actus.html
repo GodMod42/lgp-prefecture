@@ -44,6 +44,9 @@ main section{padding:54px 0 86px}
 .news-card h2{font-size:1.2rem;line-height:1.35;margin-bottom:8px}
 .news-card p{white-space:pre-line;color:var(--gris)}
 .news-card .resume{color:var(--texte);font-weight:600;margin-bottom:8px}
+.news-documents{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.news-documents a{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--bleu);border-radius:3px;padding:7px 11px;color:var(--bleu);font-size:.88rem;font-weight:700;overflow-wrap:anywhere}
+.news-documents a:hover{background:var(--lav)}
 .empty{min-height:95px;display:grid;place-items:center;color:var(--gris);font-size:.95rem}
 footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding:54px 0 42px}
@@ -106,6 +109,8 @@ SITE.ready.then(data=>{
     const title=document.createElement("h2");title.textContent=item.titre||"Actualité";article.append(title);
     if(item.resume){const resume=document.createElement("p");resume.className="resume";resume.textContent=item.resume;article.append(resume)}
     if(item.texte){const body=document.createElement("p");body.textContent=item.texte;article.append(body)}
+    const documents=Array.isArray(item.documents)?item.documents:[];
+    if(documents.length){const list=document.createElement("div");list.className="news-documents";documents.forEach(doc=>{if(!doc||typeof doc.data!=="string"||!doc.data.startsWith("data:"))return;const link=document.createElement("a");link.href=doc.data;link.download=doc.name||"document";link.textContent="↓ Télécharger : "+(doc.name||"Document");list.append(link)});if(list.childElementCount)article.append(list)}
     box.append(article);
   });
 });
