@@ -264,7 +264,10 @@ document.getElementById("go").onclick=()=>{
       :u.avatar?"https://cdn.discordapp.com/avatars/"+u.id+"/"+u.avatar+"."+ext(u.avatar)+"?size=64"
       :"https://cdn.discordapp.com/embed/avatars/"+Number((BigInt(u.id)>>22n)%6n)+".png";
     const name=m.nick||u.global_name||u.username;
-    localStorage.setItem(AUTH_KEY,JSON.stringify({id:u.id,name,avatar,token:h.get("access_token"),exp:Date.now()+(+h.get("expires_in")||3600)*1000}));
+    /* Libellé affiché dans le menu du profil : premier rôle trouvé (ordre = priorité) */
+    const ROLES=[["1554580932411789402","Staff"],["1554577683273486407","Citoyen"]];
+    const role=(ROLES.find(r=>(m.roles||[]).includes(r[0]))||[])[1]||"";
+    localStorage.setItem(AUTH_KEY,JSON.stringify({id:u.id,name,avatar,role,token:h.get("access_token"),exp:Date.now()+(+h.get("expires_in")||3600)*1000}));
     location.replace("contact.html");
   }catch(e){say("Impossible de contacter Discord. Réessaie dans un instant.","ko")}
 })();
