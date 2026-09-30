@@ -228,7 +228,7 @@ textarea{height:150px;padding:12px;resize:vertical}
     <div class="grid">
       <div class="c8"><label for="nom">Nom et prénom (civil RP)</label><input id="nom" required autocomplete="name"></div>
       <div class="c4"><label for="tel">Téléphone (optionnel)</label><input id="tel" type="tel" placeholder="06 12 34 56 78"></div>
-      <div class="c6"><label for="motif">Motif de la demande</label><select id="motif" required><option value="">Choisissez un motif</option><option>Renseignement</option><option>Démarche administrative</option><option>Signalement / plainte</option><option>Recrutement</option><option>Autre</option></select></div>
+      <div class="c6"><label for="motif">Motif de la demande</label><select id="motif" required><option value="">Choisissez un motif</option></select></div>
       <div class="c6"><label for="objet">Objet</label><input id="objet" required maxlength="100" placeholder="Résumez votre demande en quelques mots"></div>
       <div class="c12"><label for="txt">Votre message</label><textarea id="txt" required maxlength="1500" placeholder="Décrivez votre demande en détail. Vous pourrez joindre des documents ou photos une fois la conversation ouverte."></textarea></div>
     </div>
@@ -282,11 +282,22 @@ document.getElementById("theme").onclick=()=>{
 
 
 /* ===== À CONFIGURER ===== */
-const API_URL = "/api";   // le Worker Cloudflare transmet /api/* au bot (voir explications) ; ou l'adresse HTTPS complète du bot
+const API_URL = "/api";   // API relayée par la fonction Netlify
 
 const user=getUser();
 if(!user||!user.token){logout();throw new Error("session")}   // il faut se reconnecter (nouveau système de tickets)
 const $=id=>document.getElementById(id);
+const motifSelect=$("motif");
+const fillMotifs=motifs=>{
+  const selected=motifSelect.value;
+  motifSelect.replaceChildren(new Option("Choisissez un motif",""));
+  (Array.isArray(motifs)?motifs:[]).filter(x=>typeof x==="string"&&x.trim()).forEach(x=>{
+    const option=document.createElement("option");option.value=x.trim();option.textContent=x.trim();motifSelect.append(option);
+  });
+  if([...motifSelect.options].some(x=>x.value===selected))motifSelect.value=selected;
+};
+fillMotifs(SITE.defaults.ticketMotifs);
+SITE.ready.then(d=>fillMotifs(d.ticketMotifs??SITE.defaults.ticketMotifs));
 $("who").textContent="Connecté en tant que "+user.name;
 $("nom").value=user.name;
 $("out").onclick=logout;
@@ -365,7 +376,21 @@ f.onsubmit=async e=>{
   try{
     const t=await api("/tickets",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nom:v("nom"),tel:v("tel"),motif:v("motif"),objet:v("objet"),txt:v("txt")})});
     f.reset();$("nom").value=user.name;msg.textContent="";showT(t.id);
-  }catch(err){msg.className="ko";msg.textContent=err==="limite"?"Trop de demandes récentes. Réessayez plus tard.":"L'envoi a échoué. Réessayez ou ouvrez un ticket sur le Discord."}
+  }catch(err){
+    msg.className="ko";
+    const errors={
+      limite:"Trop de demandes récentes. Réessayez plus tard.",
+      api_not_configured:"L’API du bot n’est pas configurée dans les variables Netlify (BOT_API_URL).",
+      api_requires_https:"L’adresse de l’API du bot doit commencer par https://.",
+      api_unavailable:"Le bot est injoignable. Vérifiez que le bot tourne et que BOT_API_URL pointe vers son API HTTPS.",
+      guild_unavailable:"Le bot n’est pas connecté au serveur Discord configuré.",
+      discord_permissions:"Le bot n’a pas les permissions nécessaires pour créer le salon de demande.",
+      discord:"Discord a refusé la création du salon. Vérifiez les permissions et la catégorie de tickets.",
+      not_member:"Rejoignez le serveur Discord puis reconnectez-vous au site.",
+      champs:"Certains champs sont invalides. Vérifiez le formulaire et réessayez."
+    };
+    msg.textContent=errors[err]||"L’envoi a échoué ("+String(err)+"). Consultez les journaux de la fonction API Netlify pour le détail.";
+  }
   btn.disabled=false;
 };
 renderList();
