@@ -55,7 +55,7 @@
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "updated": "2026-09-30T20:43:38.488Z",
+  "updated": "2026-09-30T21:20:13.287Z",
   "ticketMotifs": [
     "Support technique",
     "Réclamation",
@@ -66,6 +66,14 @@
     "Autre"
   ],
   "actus": [
+    {
+      "date": "2026-04-09",
+      "titre": "Nouvelle actualité",
+      "resume": "",
+      "texte": "",
+      "documents": [],
+      "photos": []
+    },
     {
       "date": "2026-09-29",
       "titre": "Prise de fonction de John Snow, Préfet de Police de Paris",
@@ -114,7 +122,7 @@
       "Valoriser le patrimoine culturel",
       "Informer et témoigner"
     ],
-    "videoUrl": "",
+    "videoUrl": "https://www.youtube.com/watch?v=GkOJp1s_Cm4&time_continue=1&embeds_referring_euri=https%3A%2F%2Fpswl-gouv.rp-info.fr%2F",
     "accordionTitle": "Ce que nous accomplissons",
     "missionDetails": [
       {
