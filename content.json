@@ -55,7 +55,7 @@
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "updated": "2026-09-30T21:20:13.287Z",
+  "updated": "2026-09-30T21:27:47.618Z",
   "ticketMotifs": [
     "Support technique",
     "Réclamation",
@@ -127,19 +127,19 @@
     "missionDetails": [
       {
         "titre": "Protection des citoyens",
-        "texte": "Assurer la sécurité des personnes et des biens sur l'ensemble du territoire, de jour comme de nuit."
+        "texte": "Assurer la sécurité des personnes et des biens sur l'ensemble du territoire Parisien, de jour comme de nuit.\n"
       },
       {
         "titre": "Maintien de l'ordre public",
-        "texte": "Encadrer les rassemblements et les événements, prévenir les troubles et protéger les libertés de chacun."
+        "texte": "Encadrer les rassemblements et manifestations afin de garantir la tranquillité publique.\n"
       },
       {
         "titre": "Service administratif de proximité",
-        "texte": "Accueillir les citoyens, traiter leurs demandes et faciliter leurs démarches administratives."
+        "texte": "Faciliter les démarches administratives des citoyens grâce à un accueil dédié et des services en ligne.\n"
       },
       {
         "titre": "Investigation et enquêtes",
-        "texte": "Conduire les investigations nécessaires et accompagner les procédures relevant des services compétents."
+        "texte": "Traiter les affaires judiciaires avec rigueur, de la plainte initiale jusqu'à la résolution du dossier.\n"
       }
     ],
     "valuesTitle": "Nos engagements",
@@ -165,11 +165,11 @@
     "command": [
       {
         "fonction": "Préfet de Police",
-        "nom": "CHARLES DE VALOIS"
+        "nom": "John SNOW"
       },
       {
         "fonction": "Sous-Préfet",
-        "nom": "ROBERTO RABATO"
+        "nom": "Alexandre MARCHAND"
       },
       {
         "fonction": "Commissaire Général",
