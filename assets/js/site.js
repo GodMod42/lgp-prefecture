@@ -17,7 +17,7 @@ header nav[aria-label="Navigation principale"]>a{flex:0 0 auto;padding:clamp(5px
 #theme{width:48px!important;height:48px!important}
 .btn-co{padding:15px 32px!important;font-size:1.05rem!important}
 .aide{background:#000091!important;color:#fff!important;display:inline-flex!important;align-items:center;justify-content:center;gap:8px}
-.lgp-assistant{position:fixed;right:20px;bottom:78px;z-index:1000;width:min(320px,calc(100vw - 24px));height:min(390px,calc(100dvh - 110px));display:none;flex-direction:column;overflow:hidden;border:1px solid #353744;border-radius:7px;background:var(--carte,#1e1e1e);color:var(--texte,#f0f0f0);box-shadow:0 10px 32px rgba(0,0,0,.28);font:13px/1.4 Marianne,"Public Sans","Segoe UI",system-ui,sans-serif}
+.lgp-assistant{position:fixed;right:20px;bottom:78px;z-index:1000;width:min(320px,calc(100vw - 24px));height:min(390px,calc(100dvh - 110px));display:none;flex-direction:column;overflow:hidden;margin:0!important;padding:0!important;border:1px solid #353744;border-radius:7px;background:var(--carte,#1e1e1e);color:var(--texte,#f0f0f0);box-shadow:0 10px 32px rgba(0,0,0,.28);font:13px/1.4 Marianne,"Public Sans","Segoe UI",system-ui,sans-serif}
 .lgp-assistant.open{display:flex}
 .lgp-assistant-head{min-height:54px;display:flex;align-items:center;gap:10px;padding:9px 12px;background:#000091;color:#fff}
 .lgp-assistant-head .titles{min-width:0;flex:1}.lgp-assistant-head strong{display:block;font-size:13px}.lgp-assistant-head small{display:block;font-size:10px;opacity:.9}
@@ -101,7 +101,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go)
 const setupAssistant=()=>{
  const triggers=[...document.querySelectorAll('.aide')],trigger=triggers[0];if(!trigger||document.querySelector('.lgp-assistant'))return;triggers.slice(1).forEach(button=>button.remove());
  const bubble=document.createElementNS('http://www.w3.org/2000/svg','svg');bubble.setAttribute('viewBox','0 0 24 24');bubble.setAttribute('aria-hidden','true');bubble.style.cssText='width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round';bubble.innerHTML='<path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 8.7 3.9a8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/>';trigger.prepend(bubble);
- const panel=document.createElement('section');panel.className='lgp-assistant';panel.setAttribute('role','dialog');panel.setAttribute('aria-label','Assistant de la Préfecture');panel.setAttribute('aria-modal','false');
+ const panel=document.createElement('div');panel.className='lgp-assistant';panel.setAttribute('role','dialog');panel.setAttribute('aria-label','Assistant de la Préfecture');panel.setAttribute('aria-modal','false');
  const head=document.createElement('div');head.className='lgp-assistant-head';
  const titles=document.createElement('div');titles.className='titles';const title=document.createElement('strong');title.textContent='Assistant de la Préfecture';const subtitle=document.createElement('small');subtitle.textContent='Posez votre question, je vous oriente';titles.append(title,subtitle);
  const close=document.createElement('button');close.type='button';close.setAttribute('aria-label','Fermer l’assistant');close.textContent='×';head.append(titles,close);
