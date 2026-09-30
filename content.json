@@ -34,19 +34,22 @@
     {
       "titre": "Inspecteur IGPN",
       "salaire": "3 000 – 5 000 €+",
-      "texte": "Agent détaché à l'Inspection Générale de la Police Nationale (police des polices). Il conduit des enquêtes internes, audits, inspections déontologiques et investigations sur les manquements des policiers (délégation Paris au sein de l'IGPN)."
+      "texte": "Agent détaché à l'Inspection Générale de la Police Nationale (police des polices). Il conduit des enquêtes internes, audits, inspections déontologiques et investigations sur les manquements des policiers (délégation Paris au sein de l'IGPN).",
+      "mention": "Sous l'autorité de la Préfecture De Police de Paris"
     },
     {
       "titre": "Huissier de Justice (à la PP)",
       "salaire": "2 300 – 3 500 €",
-      "texte": "Agent chargé des significations, constats, audiences administratives et actes officiels (ex. : notifications, expulsions, procédures judiciaires internes)."
+      "texte": "Agent chargé des significations, constats, audiences administratives et actes officiels (ex. : notifications, expulsions, procédures judiciaires internes).",
+      "mention": "Sous l'autorité de la Préfecture De Police de Paris"
     },
     {
       "titre": "Inspecteur",
       "salaire": "2 900 – 4 800 €",
-      "texte": "L'Inspecteur du travail est un cadre de la fonction publique (catégorie A) chargé de contrôler l'application du droit du travail sur son secteur (entreprises, salariés, conventions collectives)."
+      "texte": "L'Inspecteur du travail est un cadre de la fonction publique (catégorie A) chargé de contrôler l'application du droit du travail sur son secteur (entreprises, salariés, conventions collectives).",
+      "mention": "Sous l'autorité de la Préfecture De Police de Paris"
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "updated": "2026-09-30T18:49:40.034Z"
+  "updated": "2026-09-30T18:57:26.255Z"
 }
