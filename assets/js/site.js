@@ -11,7 +11,9 @@ header::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;back
 header .w{min-height:126px!important;padding-top:6px}
 .logo img{height:100px!important}
 nav{gap:8px!important}
-nav a{padding:14px 22px!important;font-size:1.1rem!important}
+header nav[aria-label="Navigation principale"]{display:flex!important;flex:1 1 auto;min-width:0;max-width:100%;flex-wrap:nowrap!important;white-space:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain}
+header nav[aria-label="Navigation principale"]::-webkit-scrollbar{display:none}
+header nav[aria-label="Navigation principale"]>a{flex:0 0 auto;padding:clamp(5px,.75vw,12px) clamp(5px,.9vw,16px)!important;font-size:clamp(.72rem,.95vw,1rem)!important}
 #theme{width:48px!important;height:48px!important}
 .btn-co{padding:15px 32px!important;font-size:1.05rem!important}
 @media(max-width:960px){.logo img{height:76px!important}header .w{min-height:0!important}}
