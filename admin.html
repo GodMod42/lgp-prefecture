@@ -84,6 +84,7 @@ async function start(){
   D.urgent=Object.assign({},S.defaults.urgent,D.urgent);
   D.jobs=D.jobs||JSON.parse(JSON.stringify(S.defaults.jobs));
   D.ticketMotifs=Array.isArray(D.ticketMotifs)?D.ticketMotifs.slice():S.defaults.ticketMotifs.slice();
+  D.actus=Array.isArray(D.actus)?D.actus.slice():[];
   D.salaryLabel=D.salaryLabel||S.defaults.salaryLabel;
   D.texts=D.texts||{};
 
@@ -100,10 +101,10 @@ async function start(){
   const save=()=>{try{D.updated=new Date().toISOString();localStorage.setItem("lgp_admin_draft",JSON.stringify(D))}catch(e){}
     $("#st").innerHTML="Brouillon enregistré à "+new Date().toLocaleTimeString("fr-FR")+" — <b>pas encore publié</b> : télécharge content.json et remplace celui de ton site."};
   const nav=()=>{const n=$("#nav");n.textContent="";
-    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
+    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
     it.forEach(x=>{if(!x){n.append(E("div","sep"));return}
       const b=E("button","nv"+(x[0]===view?" on":""),x[1]);b.type="button";
-      const c=(x[0]==="urgent"||x[0]==="jobs"||x[0]==="motifs")?0:of(x[0]).filter(f=>D.texts[f.key]!=null).length;
+      const c=(x[0]==="urgent"||x[0]==="jobs"||x[0]==="motifs"||x[0]==="actualites")?0:of(x[0]).filter(f=>D.texts[f.key]!=null).length;
       if(c)b.append(E("i","",c));b.onclick=()=>{view=x[0];nav();draw()};n.append(b)});
     if(missing.length){const m=E("p","bad","Pages introuvables : "+missing.join(", "));m.style.cssText="font-size:.78rem;margin-top:12px;padding:0 14px";n.append(m)}};
 
@@ -111,7 +112,7 @@ async function start(){
     if(type==="select"){i=E("select");[["red","Urgent (rouge)"],["blue","Information (bleu)"],["yellow","Attention (jaune)"]].forEach(o=>{const op=E("option","",o[1]);op.value=o[0];i.append(op)});i.value=obj[key]}
     else if(type==="area"){i=E("textarea");i.rows=3;i.value=obj[key]||""}
     else if(type==="checkbox"){i=E("input");i.type="checkbox";i.checked=!!obj[key];l.prepend(i)}
-    else{i=E("input");i.type="text";i.value=obj[key]||""}
+    else{i=E("input");i.type=type==="date"?"date":"text";i.value=obj[key]||""}
     i.oninput=i.onchange=()=>{obj[key]=type==="checkbox"?i.checked:i.value;save();g.upd&&g.upd()};
     w.append(l);if(type!=="checkbox")w.append(i);g.append(w)};
 
@@ -155,6 +156,27 @@ async function start(){
     render();
   };
 
+  const drawActus=p=>{
+    p.append(E("h2","","Actualités"),E("p","sub","Ces publications apparaissent sur la page « Suivre l'actu » et les trois plus récentes sur l'accueil."));
+    const box=E("div");p.append(box);
+    const move=(i,d)=>{const j=i+d;if(j<0||j>=D.actus.length)return;[D.actus[i],D.actus[j]]=[D.actus[j],D.actus[i]];save();render()};
+    const render=()=>{
+      box.textContent="";
+      D.actus.forEach((item,i)=>{
+        const card=E("div","job");
+        field(card,"Date de publication",item,"date","date");
+        field(card,"Titre",item,"titre");
+        field(card,"Résumé (affiché sur l'accueil)",item,"resume","area");
+        field(card,"Contenu de l'actualité",item,"texte","area");
+        const row=E("div","r");
+        [["↑",()=>move(i,-1)],["↓",()=>move(i,1)],["Supprimer",()=>{if(confirm("Supprimer cette actualité ?")){D.actus.splice(i,1);save();render()}}]].forEach(([label,fn])=>{const b=E("button","b",label);b.type="button";b.onclick=fn;row.append(b)});
+        card.append(row);box.append(card);
+      });
+      const add=E("button","b p","Ajouter une actualité");add.type="button";add.onclick=()=>{D.actus.unshift({date:new Date().toISOString().slice(0,10),titre:"Nouvelle actualité",resume:"",texte:""});save();render()};box.append(add);
+    };
+    render();
+  };
+
   const drawFields=(p,k)=>{
     p.append(E("h2","",k==="shared"?"Menu & pied de page":"Page : "+PAGES.find(x=>x[0]===k)[1]),
       E("p","sub",k==="shared"?"Ces textes sont communs à toutes les pages.":"Mise en forme : **gras**, [texte du lien](adresse). Un retour à la ligne reste un retour à la ligne."));
@@ -171,7 +193,7 @@ async function start(){
       if(!box.children.length)box.append(E("p","sub",fs.length?"Aucun résultat.":"Aucun texte trouvé sur cette page."))};
     q.oninput=dr;dr()};
 
-  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):drawFields(p,view)};
+  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):drawFields(p,view)};
 
   $("#pv").onclick=()=>{save();window.open("index.html?preview=1","_blank")};
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
