@@ -132,6 +132,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .job .body{display:none;padding:20px 20px 28px}
 .job.open .body{display:block}
 .job .sal{font-weight:700;font-size:.95rem;margin-bottom:16px}
+.job .mention{font-style:italic;margin:0 0 6px}
 .job .body p{font-size:.95rem;line-height:1.75}
 .avs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .av{border:1px solid var(--ligne);background:var(--carte);border-radius:4px;padding:22px 22px 28px;min-height:190px}
@@ -273,9 +274,11 @@ SITE.ready.then(d=>{
   box.textContent="";
   jobs.forEach((j,i)=>{
     const e=document.createElement("div");e.className="job"+(i===0?" open":"");
-    e.innerHTML='<button type="button" aria-expanded="'+(i===0)+'" aria-controls="job'+i+'"><span></span><svg class="i"><use href="#chev"/></svg></button><div class="body" id="job'+i+'"><p class="sal"></p><p></p></div>';
+    e.innerHTML='<button type="button" aria-expanded="'+(i===0)+'" aria-controls="job'+i+'"><span></span><svg class="i"><use href="#chev"/></svg></button><div class="body" id="job'+i+'"><p class="mention"></p><p class="sal"></p><p></p></div>';
     e.querySelector("span").textContent=j.titre;
-    const p=e.querySelectorAll(".body p");p[0].textContent=lab+" "+j.salaire;p[1].textContent=j.texte;
+    const mention=e.querySelector(".mention");mention.textContent=j.mention||"";mention.hidden=!j.mention;
+    e.querySelector(".sal").textContent=lab+" "+j.salaire;
+    e.querySelector(".body p:last-child").textContent=j.texte;
     e.querySelector("button").onclick=()=>{
       const o=!e.classList.contains("open");
       box.querySelectorAll(".job").forEach(x=>{x.classList.remove("open");x.querySelector("button").setAttribute("aria-expanded","false")});
