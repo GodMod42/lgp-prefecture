@@ -65,7 +65,7 @@ function logout(){
   if(u.role)hd.append(el("span","lgp-role",u.role));
   const lk=(t,h)=>{const a=el("a","",t);a.href=h;return a};
   const l2=el("button","out","Se déconnecter");l2.type="button";l2.onclick=logout;
-  menu.append(hd,el("hr"),lk("Mon espace","dashboard.html"),lk("Mes démarches","demarche.html"),el("hr"),l2);
+  menu.append(hd,el("hr"),lk("Mon espace","dashboard.html"),lk("Mes démarches","mes-demarches.html"),el("hr"),l2);
 
   const fermer=()=>{menu.hidden=true;pill.setAttribute("aria-expanded","false")};
   pill.onclick=e=>{e.stopPropagation();const o=menu.hidden;menu.hidden=!o;pill.setAttribute("aria-expanded",String(o))};
