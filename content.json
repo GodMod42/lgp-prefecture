@@ -1,6 +1,10 @@
 {
   "version": 1,
-  "texts": {},
+  "texts": {
+    "emplois:1os50vb": "Être de nationalité française, majeur, jouir de ses droits civiques et remplir les conditions d'aptitude physique et de diplôme propres à chaque poste.",
+    "emplois:1526hth": "Comptez en moyenne plusieurs semaines entre le dépôt du dossier, les épreuves de sélection et l'entretien final, selon le poste visé.",
+    "emplois:f2h5ce": "Oui, chaque poste bénéficie d'une formation initiale adaptée, suivie d'un accompagnement et de formations continues tout au long de la carrière."
+  },
   "urgent": {
     "enabled": true,
     "theme": "red",
@@ -51,5 +55,5 @@
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "updated": "2026-09-30T18:57:26.255Z"
+  "updated": "2026-09-30T19:02:02.182Z"
 }
