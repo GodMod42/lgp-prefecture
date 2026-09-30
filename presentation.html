@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/assets/img/favicon2.png">
+<title>Préfecture de Police LGP — Présentation</title>
+<meta name="description" content="Découvrez les missions, les engagements et l'organisation de la Préfecture de Police LGP.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Préfecture de Police LGP — Présentation">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://lgp-prefecture.vercel.app/presentation.html">
+<meta property="og:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:image:alt" content="Préfecture de Police LGP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:description" content="Découvrez les missions, les engagements et l'organisation de la Préfecture de Police LGP.">
+<style>
+:root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;--sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+:root[data-theme=dark]{--bleu:#8b8bff;--bleu-f:#a5a5ff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a;--nav:#1b1b1f}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--texte);background:var(--carte);line-height:1.6;padding-bottom:34px}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid #0a76f6;outline-offset:2px}
+.w{max-width:1360px;margin:0 auto;padding:0 24px}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bleu)}.eyebrow::before{content:"";width:22px;height:3px;background:var(--rouge)}
+header{background:var(--nav);border-top:5px solid;border-image:linear-gradient(90deg,var(--bleu) 33.3%,#999 33.3% 66.6%,var(--rouge) 66.6%) 1;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--ligne)}
+header .w{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px;max-width:none}
+.logo{display:flex;align-items:center;gap:16px}.logo img{height:68px;width:auto;display:block}
+nav{display:flex;gap:6px;flex-wrap:wrap}nav a{padding:8px 16px;font-size:.95rem;font-weight:500}nav a:hover,nav a[aria-current]{color:var(--bleu);box-shadow:inset 0 -2px var(--bleu)}
+.actions{display:flex;align-items:center;gap:16px}#theme{width:38px;height:38px;border-radius:50%;border:1px solid var(--ligne);background:var(--carte);color:var(--texte);cursor:pointer;display:grid;place-items:center}
+.btn-co{background:var(--bleu);color:#fff;font-weight:700;padding:12px 24px;border-radius:999px}:root[data-theme=dark] .btn-co{color:#000}
+.band{height:46px;background:var(--bleu)}
+main section{padding:58px 0}
+.intro{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:28px;align-items:start}
+.intro h1,.section-head h2{font-size:clamp(1.55rem,3vw,2rem);line-height:1.2;margin:10px 0 18px}
+.intro-copy p{color:var(--gris);margin:0 0 14px;white-space:pre-line}
+.ministry-logo{display:block;width:100%;max-height:190px;object-fit:contain}
+.ministry-logo[hidden],.building-photo[hidden]{display:none!important}
+.building-photo{display:block;grid-column:1/-1;width:100%;max-height:600px;object-fit:cover;border-radius:4px;margin-top:20px}
+.missions-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+.mission-list{padding:0;list-style:none;margin:10px 0 26px}.mission-list li{position:relative;padding:5px 0 5px 16px;color:var(--gris)}.mission-list li::before{content:"";position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:#4da3ff}
+.video-frame{display:none;position:relative;width:100%;aspect-ratio:16/9;background:#08090d;border-radius:6px;overflow:hidden}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.section-head{margin-bottom:22px}.mission-values{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px}
+.accordion{display:flex;flex-direction:column;gap:9px}.mission-item{border:1px solid var(--ligne);border-radius:4px;background:var(--carte);overflow:hidden}
+.mission-item button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:12px 14px;border:0;background:transparent;color:var(--texte);font:700 .9rem var(--sans);text-align:left;cursor:pointer}
+.mission-item button svg{width:17px;height:17px;transition:transform .2s;flex:none}.mission-item.open button{background:var(--lav);color:var(--bleu)}.mission-item.open button svg{transform:rotate(180deg)}
+.mission-item .answer{display:none;padding:12px 14px;color:var(--gris);font-size:.88rem;white-space:pre-line}.mission-item.open .answer{display:block}
+.value-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.value-card{min-height:142px;border:1px solid var(--ligne);border-radius:5px;background:var(--carte);padding:16px}
+.value-icon{width:36px;height:36px;display:grid;place-items:center;background:var(--lav);color:var(--bleu);border-radius:4px;margin-bottom:9px}.value-icon svg{width:19px;height:19px}
+.value-card h3{font-size:.95rem;margin-bottom:4px}.value-card p{font-size:.84rem;color:var(--gris)}
+.command-section{background:var(--fond)}.command-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.command-card{border:1px solid var(--ligne);border-radius:5px;background:var(--carte);padding:17px 12px;text-align:center;min-height:132px}
+.command-avatar{width:54px;height:54px;border-radius:50%;background:var(--lav);color:var(--bleu);display:grid;place-items:center;margin:0 auto 8px}.command-avatar svg{width:24px;height:24px}
+.command-card h3{font-size:.84rem;line-height:1.3}.command-card p{color:var(--gris);font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+footer{background:var(--pied);color:#ddd;font-size:.92rem}.cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding:54px 0 42px}
+.cols h4{color:#fff;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}.cols li{list-style:none;margin-bottom:9px}.cols ul{padding:0}.cols a:hover{text-decoration:underline}.flogo{background:#fff;display:inline-block;padding:12px 18px;margin-bottom:16px}
+.bas{border-top:1px solid #333;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:22px 0;font-size:.85rem}.bas nav a{padding:0 0 0 18px;font-size:.85rem;font-weight:400}
+.aide{position:fixed;right:20px;bottom:50px;background:#000091;color:#fff;border:0;border-radius:24px;padding:12px 20px;font:700 .9rem var(--sans);cursor:pointer;z-index:30}.aide::after{content:"";display:inline-block;width:10px;height:10px;border:2px solid #7fe0a0;border-radius:50%;margin-left:10px}
+.fictif{position:fixed;left:0;right:0;bottom:0;background:#c9191e;color:#fff;text-align:center;font-size:.8rem;font-weight:700;padding:8px 12px;z-index:30}:root[data-theme=dark] .logo img{background:#fff;padding:4px 10px}
+@media(max-width:1000px){.cols{grid-template-columns:1fr 1fr}header .w{flex-wrap:wrap;padding:10px 18px}.missions-layout,.mission-values{grid-template-columns:1fr;gap:30px}}
+@media(max-width:650px){main section{padding:40px 0}.intro{grid-template-columns:1fr}.ministry-logo{width:110px;max-height:120px;grid-row:1}.command-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:1fr}.aide{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<script src="assets/js/site.js"></script>
+</head>
+<body>
+<header><div class="w">
+  <a class="logo" href="index.html" aria-label="Préfecture de Police LGP — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de Police LGP"></a>
+  <nav aria-label="Navigation principale"><a href="index.html">Accueil</a><a href="presentation.html" aria-current="page">Présentation</a><a href="demarche.html">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a></nav>
+  <div class="actions"><button id="theme" type="button" aria-label="Changer de thème"><svg class="i" style="width:18px;height:18px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></svg></button><a class="btn-co" href="connexion.html">Se connecter</a></div>
+</div></header>
+<main>
+  <div class="band" aria-hidden="true"></div>
+  <section aria-labelledby="presentation-title"><div class="w intro">
+    <div class="intro-copy"><p class="eyebrow" data-content="introEyebrow">Présentation</p><h1 id="presentation-title" data-presentation="introTitle">La Préfecture de Police</h1><div id="intro-paragraphs"></div></div>
+    <img id="ministry-logo" class="ministry-logo" alt="Logo du ministère de l'Intérieur" hidden>
+    <img id="building-photo" class="building-photo" alt="Bâtiment de la Préfecture de Police" hidden>
+  </div></section>
+  <section aria-labelledby="missions-title"><div class="w missions-layout">
+    <div><div class="section-head"><p class="eyebrow" data-content="missionsEyebrow">Missions</p><h2 id="missions-title" data-presentation="missionsTitle">Les missions</h2></div><ul id="mission-list" class="mission-list"></ul><div id="presentation-video" class="video-frame"></div></div>
+    <div class="mission-values">
+      <div><div class="section-head"><p class="eyebrow" data-content="accordionEyebrow">Missions</p><h2 data-presentation="accordionTitle">Ce que nous accomplissons</h2></div><div id="mission-accordion" class="accordion"></div></div>
+      <div><div class="section-head"><p class="eyebrow" data-content="valuesEyebrow">Valeurs</p><h2 data-presentation="valuesTitle">Nos engagements</h2></div><div id="values-grid" class="value-grid"></div></div>
+    </div>
+  </div></section>
+  <section class="command-section" aria-labelledby="command-title"><div class="w">
+    <div class="section-head"><p class="eyebrow" data-content="commandEyebrow">Organigramme</p><h2 id="command-title" data-presentation="commandTitle">Chaîne de commandement</h2></div><div id="command-grid" class="command-grid"></div>
+  </div></section>
+</main>
+<footer><div class="w"><div class="cols">
+  <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de Police LGP" style="height:84px;width:auto;display:block"></div><p>Portail institutionnel fictif au service de la communauté du serveur FiveM Le Grand Paname (LGP) RP.</p></div>
+  <div><h4>Coordonnées</h4><p>1 bis rue de Lutès<br>75004 Paris</p><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">contact@lgp-gouv.rp-info.fr</a></p></div>
+  <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
+  <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
+  <div><h4>Institution</h4><ul><li><a href="presentation.html" aria-current="page">Présentation</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
+</div><div class="bas"><span>© 2026 Préfecture de Police du Grand Paname — Portail fictif à usage exclusif du roleplay.</span><nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="#">Plan du site</a></nav></div></div></footer>
+<button class="aide" type="button">Besoin d'aide ?</button><div class="fictif">Site fictif créé dans le cadre d'un serveur FiveM Roleplay — aucun lien avec une administration réelle.</div>
+<script src="assets/js/auth.js"></script>
+<script>
+try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+document.getElementById("theme").onclick=()=>{const d=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}};
+const escText=(node,value)=>{node.textContent=value||""};
+const iconPaths=["<path d='M12 3 14.5 8.5 20.5 9l-4.5 4 1.2 6L12 16l-5.2 3 1.2-6-4.5-4 6-.5z'/>","<path d='M12 3a9 9 0 1 0 9 9h-9zM14 3.2A9 9 0 0 1 20.8 10H14z'/>","<circle cx='12' cy='12' r='9'/><path d='M12 7v5l3 2'/>","<rect x='4' y='4' width='16' height='16' rx='3'/><path d='m8 12 2.5 2.5L16 9'/>"];
+const renderPresentation=p=>{
+ document.querySelectorAll("[data-presentation]").forEach(node=>escText(node,p[node.dataset.presentation]));
+ const intro=document.getElementById("intro-paragraphs");intro.textContent="";(p.introParagraphs||[]).forEach(text=>{const para=document.createElement("p");para.textContent=text;intro.append(para)});
+ [["ministry-logo",p.ministryLogo],["building-photo",p.buildingPhoto]].forEach(([id,src])=>{const img=document.getElementById(id);if(src&&(src.startsWith("data:image/")||src.startsWith("/assets/img/"))){img.src=src;img.hidden=false}else{img.removeAttribute("src");img.hidden=true}});
+ const list=document.getElementById("mission-list");list.textContent="";(p.missionItems||[]).forEach(text=>{const li=document.createElement("li");li.textContent=text;list.append(li)});
+ const accord=document.getElementById("mission-accordion");accord.textContent="";(p.missionDetails||[]).forEach((item,index)=>{const article=document.createElement("article");article.className="mission-item"+(index===0?" open":"");const button=document.createElement("button");button.type="button";button.setAttribute("aria-expanded",String(index===0));const title=document.createElement("span");title.textContent=item.titre||"Mission";const chevron=document.createElementNS("http://www.w3.org/2000/svg","svg");chevron.classList.add("i");chevron.setAttribute("viewBox","0 0 24 24");chevron.setAttribute("aria-hidden","true");chevron.innerHTML="<path d='m6 9 6 6 6-6'/>";button.append(title,chevron);const answer=document.createElement("div");answer.className="answer";answer.textContent=item.texte||"";button.onclick=()=>{const open=!article.classList.contains("open");accord.querySelectorAll(".mission-item").forEach(row=>{row.classList.remove("open");row.querySelector("button").setAttribute("aria-expanded","false")});if(open){article.classList.add("open");button.setAttribute("aria-expanded","true")}};article.append(button,answer);accord.append(article)});
+ const values=document.getElementById("values-grid");values.textContent="";(p.values||[]).forEach((item,index)=>{const card=document.createElement("article");card.className="value-card";const icon=document.createElement("div");icon.className="value-icon";const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.classList.add("i");svg.setAttribute("viewBox","0 0 24 24");svg.setAttribute("aria-hidden","true");svg.innerHTML=iconPaths[index%iconPaths.length];icon.append(svg);const title=document.createElement("h3");title.textContent=item.titre||"Valeur";const text=document.createElement("p");text.textContent=item.texte||"";card.append(icon,title,text);values.append(card)});
+ const commands=document.getElementById("command-grid");commands.textContent="";(p.command||[]).forEach(item=>{const card=document.createElement("article");card.className="command-card";const avatar=document.createElement("div");avatar.className="command-avatar";avatar.innerHTML="<svg class='i' viewBox='0 0 24 24' aria-hidden='true'><circle cx='12' cy='8' r='3.5'/><path d='M4.5 21c.4-4.2 3-6.5 7.5-6.5s7.1 2.3 7.5 6.5'/></svg>";const role=document.createElement("h3");role.textContent=item.fonction||"Fonction";const name=document.createElement("p");name.textContent=item.nom||"";card.append(avatar,role,name);commands.append(card)});
+ const video=document.getElementById("presentation-video");video.textContent="";video.style.display="none";const value=(p.videoUrl||"").trim();if(value){try{const url=new URL(value);let id="";if(url.hostname==="youtu.be")id=url.pathname.slice(1);else if(url.hostname.endsWith("youtube.com")||url.hostname.endsWith("youtube-nocookie.com")){id=url.searchParams.get("v")||url.pathname.match(/\/(?:embed|shorts)\/([^/?]+)/)?.[1]||""}if(id&&/^[A-Za-z0-9_-]{6,20}$/.test(id)){const frame=document.createElement("iframe");frame.src="https://www.youtube-nocookie.com/embed/"+id;frame.title="Présentation vidéo de la Préfecture de Police";frame.loading="lazy";frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";frame.allowFullscreen=true;video.append(frame);video.style.display="block"}}catch(e){}}
+};
+SITE.ready.then(data=>renderPresentation(Object.assign({},SITE.defaults.presentation,data.presentation||{})));
+</script>
+</body>
+</html>
