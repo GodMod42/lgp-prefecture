@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "texts": {},
   "urgent": {
     "enabled": true,
     "theme": "red",
@@ -17,35 +18,35 @@
     },
     {
       "titre": "Secrétaire Général",
-      "salaire": "5 500 – 8 000 €",
-      "texte": "Assure la direction administrative de la Préfecture, supervise l'ensemble des services et veille au bon fonctionnement quotidien de l'institution."
+      "salaire": "5 500 – 8 000 €+",
+      "texte": "Responsable de l'administration générale de la PP (SGAP). Il gère les moyens (budgets, ressources humaines, logistique), l'organisation des services et le fonctionnement quotidien de l'administration policière."
     },
     {
       "titre": "Attaché d'administration",
-      "salaire": "3 500 – 5 000 €",
-      "texte": "Encadre un service, instruit les dossiers complexes et prépare les actes administratifs soumis à la signature de la hiérarchie."
+      "salaire": "2 800 – 4 500 €",
+      "texte": "Cadre administratif polyvalent (catégorie A). Il instruit et suit les dossiers complexes (gestion, réglementation, projets) et apporte un appui technique ou juridique aux directions."
     },
     {
       "titre": "Secrétaire administratif",
       "salaire": "2 500 – 3 500 €",
-      "texte": "Assure le suivi des dossiers, l'accueil des usagers, la rédaction des courriers et la gestion des démarches en ligne."
+      "texte": "Agent d'encadrement intermédiaire (catégorie B). Il gère les tâches administratives courantes, le suivi des procédures, les dossiers de personnel ou de budget au sein d'un service."
     },
     {
       "titre": "Inspecteur IGPN",
-      "salaire": "4 500 – 6 500 €",
-      "texte": "Inspection Générale de la Police Nationale : mène les enquêtes internes, contrôle le respect de la déontologie et traite les signalements visant les agents."
+      "salaire": "3 000 – 5 000 €+",
+      "texte": "Agent détaché à l'Inspection Générale de la Police Nationale (police des polices). Il conduit des enquêtes internes, audits, inspections déontologiques et investigations sur les manquements des policiers (délégation Paris au sein de l'IGPN)."
     },
     {
       "titre": "Huissier de Justice (à la PP)",
-      "salaire": "4 000 – 6 000 €",
-      "texte": "Signifie les actes officiels, constate les faits et exécute les décisions de justice pour le compte de la Préfecture de Police."
+      "salaire": "2 300 – 3 500 €",
+      "texte": "Agent chargé des significations, constats, audiences administratives et actes officiels (ex. : notifications, expulsions, procédures judiciaires internes)."
     },
     {
       "titre": "Inspecteur",
-      "salaire": "3 500 – 5 000 €",
-      "texte": "Contrôle le respect de la réglementation, réalise des inspections sur le terrain et rédige les rapports remis à la direction."
+      "salaire": "2 900 – 4 800 €",
+      "texte": "L'Inspecteur du travail est un cadre de la fonction publique (catégorie A) chargé de contrôler l'application du droit du travail sur son secteur (entreprises, salariés, conventions collectives)."
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "texts": {}
+  "updated": "2026-09-30T18:49:40.034Z"
 }
