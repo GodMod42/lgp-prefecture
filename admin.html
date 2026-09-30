@@ -128,7 +128,7 @@ async function start(){
     const box=E("div");p.append(box);
     const mv=(i,d)=>{const j=i+d;if(j<0||j>=D.jobs.length)return;[D.jobs[i],D.jobs[j]]=[D.jobs[j],D.jobs[i]];save();dj()};
     const dj=()=>{box.textContent="";D.jobs.forEach((j,i)=>{const c=E("div","job");
-      field(c,"Titre du poste",j,"titre");field(c,"Salaire",j,"salaire");field(c,"Description",j,"texte","area");
+      field(c,"Titre du poste",j,"titre");field(c,"Mention au-dessus du salaire (facultative)",j,"mention");field(c,"Salaire",j,"salaire");field(c,"Description",j,"texte","area");
       const r=E("div","r");
       [["↑",()=>mv(i,-1)],["↓",()=>mv(i,1)],["Supprimer",()=>{if(confirm("Supprimer « "+j.titre+" » ?")){D.jobs.splice(i,1);save();dj()}}]].forEach(([t,f])=>{const b=E("button","b",t);b.type="button";b.onclick=f;r.append(b)});
       c.append(r);box.append(c)});
