@@ -14,4 +14,4 @@ Les comptes connectés peuvent ouvrir un ticket depuis le site. Le bot crée un 
 
 ## Démarrage
 
-Depuis le dossier `Bot`, installe les paquets de `requirements.txt` puis lance `python main.py`. Depuis le dossier du site, lance `npm install`, puis `npm run dev` pour le développement local. Connecte le dépôt à Netlify pour les déploiements. Le site affiche une erreur API 503 tant que `BOT_API_URL` n’est pas défini dans l’environnement des fonctions Netlify.
+Depuis le dossier `Bot`, installe les paquets de `requirements.txt` puis lance `python main.py`. Depuis le dossier du site, lance `npm run dev` (la CLI Netlify est récupérée automatiquement via `npx`) pour le développement local. Connecte le dépôt à Netlify pour les déploiements. Le site affiche une erreur API 503 tant que `BOT_API_URL` n’est pas défini dans l’environnement des fonctions Netlify.

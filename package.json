@@ -3,14 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "netlify dev",
-    "start": "netlify dev",
-    "deploy": "netlify deploy --prod"
+    "dev": "npx --yes netlify-cli@27 dev",
+    "start": "npx --yes netlify-cli@27 dev",
+    "deploy": "npx --yes netlify-cli@27 deploy --prod"
   },
   "engines": {
     "node": ">=18.14.0"
-  },
-  "devDependencies": {
-    "netlify-cli": "latest"
   }
 }
