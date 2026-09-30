@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Préfecture de Police LGP — Démarches en ligne</title>
+<meta name="description" content="Retrouvez les démarches en ligne et les unités de la Préfecture de Police LGP.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Préfecture de Police LGP — Démarches en ligne">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<style>
+:root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;--sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+:root[data-theme=dark]{--bleu:#8b8bff;--bleu-f:#a5a5ff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a;--nav:#1b1b1f}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--texte);background:var(--carte);line-height:1.6;padding-bottom:34px}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+:focus-visible{outline:3px solid #0a76f6;outline-offset:2px}
+.w{max-width:1360px;margin:0 auto;padding:0 24px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bleu)}
+.eyebrow::before{content:"";width:22px;height:3px;background:var(--rouge)}
+header{background:var(--nav);border-top:5px solid;border-image:linear-gradient(90deg,var(--bleu) 33.3%,#999 33.3% 66.6%,var(--rouge) 66.6%) 1;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--ligne)}
+header .w{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px;max-width:none}
+.logo{display:flex;align-items:center;gap:16px}.logo img{height:68px;width:auto;display:block}
+nav{display:flex;gap:6px;flex-wrap:wrap}nav a{padding:8px 16px;font-size:.95rem;font-weight:500}nav a:hover,nav a[aria-current]{color:var(--bleu);box-shadow:inset 0 -2px var(--bleu)}
+.actions{display:flex;align-items:center;gap:16px}#theme{width:38px;height:38px;border-radius:50%;border:1px solid var(--ligne);background:var(--carte);color:var(--texte);cursor:pointer;display:grid;place-items:center}
+.btn-co{background:var(--bleu);color:#fff;font-weight:700;padding:12px 24px;border-radius:999px}:root[data-theme=dark] .btn-co{color:#000}
+.band{height:46px;background:var(--bleu)}
+main section{padding:54px 0 46px}
+.section-head{margin-bottom:24px}.section-head h1,.section-head h2{font-size:clamp(1.55rem,3vw,2rem);line-height:1.2;margin-top:10px}
+.section-head p:not(.eyebrow){color:var(--gris);margin-top:8px}
+.request-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.request-card,.unit-card{border:1px solid var(--ligne);border-radius:6px;background:var(--carte);padding:18px;display:flex;flex-direction:column;align-items:flex-start;min-height:194px}
+.icon{width:40px;height:40px;border-radius:3px;background:var(--lav);color:var(--bleu);display:grid;place-items:center;margin-bottom:10px}
+.icon svg{width:21px;height:21px}
+.request-card h3,.unit-card h3{font-size:.98rem;line-height:1.35;margin-bottom:5px}
+.request-card p,.unit-card p{font-size:.88rem;color:var(--gris);line-height:1.55;margin-bottom:12px}
+.action{margin-top:auto;display:inline-flex;align-items:center;gap:8px;border:0;border-radius:2px;background:var(--bleu);color:#fff;font-weight:700;font-size:.82rem;padding:9px 17px;cursor:pointer}
+.action:hover{background:var(--bleu-f)}:root[data-theme=dark] .action{color:#000}
+.units{background:var(--fond)}
+.unit-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.unit-card{min-height:175px;padding:18px}
+.unit-card .contact{margin-top:auto;color:var(--bleu);font-weight:700;font-size:.84rem;border:0;background:none;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.unit-card .contact svg{width:16px;height:16px}
+.faq{padding-top:62px;padding-bottom:86px}
+.faq-layout{display:grid;grid-template-columns:1fr 2fr;gap:44px;align-items:start}
+.faq-layout h2{font-size:clamp(1.55rem,3vw,2rem);line-height:1.2;margin:10px 0}
+.faq-lead{color:var(--gris);max-width:28em}
+.faq-list{display:flex;flex-direction:column;gap:10px}
+.faq-item{border:1px solid var(--ligne);border-radius:3px;background:var(--carte)}
+.faq-item>button{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;border:0;background:transparent;color:var(--texte);padding:12px 16px;text-align:left;font-size:.9rem;font-weight:700;cursor:pointer}
+.faq-item>button svg{width:18px;height:18px;transition:transform .2s;flex:none}
+.faq-item.open>button{background:var(--lav);color:var(--bleu);outline:2px solid var(--bleu);outline-offset:-2px}
+.faq-item.open>button svg{transform:rotate(180deg)}
+.faq-answer{padding:10px 16px 14px;font-size:.88rem;color:var(--gris)}.faq-item:not(.open) .faq-answer{display:none}
+footer{background:var(--pied);color:#ddd;font-size:.92rem}
+.cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding:54px 0 42px}
+.cols h4{color:#fff;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}.cols li{list-style:none;margin-bottom:9px}.cols ul{padding:0}.cols a:hover{text-decoration:underline}
+.flogo{background:#fff;display:inline-block;padding:12px 18px;margin-bottom:16px}
+.bas{border-top:1px solid #333;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:22px 0;font-size:.85rem}
+.bas nav a{padding:0 0 0 18px;font-size:.85rem;font-weight:400}.bas nav a:hover{box-shadow:none;text-decoration:underline;color:#fff}
+.fictif{position:fixed;left:0;right:0;bottom:0;background:#c9191e;color:#fff;text-align:center;font-size:.8rem;font-weight:700;padding:8px 12px;z-index:30}
+.aide{position:fixed;right:20px;bottom:50px;background:var(--bleu-f);color:#fff;border:0;border-radius:24px;padding:12px 20px;font:700 .9rem var(--sans);cursor:pointer;z-index:30}
+:root[data-theme=dark] .logo img{background:#fff;padding:4px 10px}
+@media(max-width:1000px){.unit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:1fr 1fr}header .w{flex-wrap:wrap;padding-top:10px;padding-bottom:10px}}
+@media(max-width:760px){.request-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.faq-layout{grid-template-columns:1fr;gap:22px}}
+@media(max-width:560px){.request-grid,.unit-grid{grid-template-columns:1fr}.cols{grid-template-columns:1fr}.aide{display:none}main section{padding:40px 0}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<script src="assets/js/site.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="icon-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5M5.5 9v12h13V9M9 21v-7h6v7"/></symbol>
+  <symbol id="icon-pie" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-9zM14 3.2A9 9 0 0 1 20.8 10H14z"/></symbol>
+  <symbol id="icon-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.2 2.4-5 6-5s6 1.8 6 5M16 5.5a3 3 0 0 1 0 5.8M17 15c2.6.2 4 1.8 4 4"/></symbol>
+  <symbol id="icon-card" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M6 16c.7-1.5 1.7-2 3-2s2.3.5 3 2M14 9h4M14 13h4"/></symbol>
+  <symbol id="icon-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4zM22 2 11 13"/></symbol>
+  <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></symbol>
+  <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.8 8.8c0 5-8.8 11-8.8 11s-8.8-6-8.8-11A4.8 4.8 0 0 1 12 6a4.8 4.8 0 0 1 8.8 2.8Z"/></symbol>
+  <symbol id="icon-building" viewBox="0 0 24 24"><path d="M4 21V5l8-3 8 3v16M2 21h20M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1M11 21v-3h2v3"/></symbol>
+  <symbol id="icon-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/></symbol>
+  <symbol id="icon-plus" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></symbol>
+  <symbol id="icon-scale" viewBox="0 0 24 24"><path d="M12 3v18M5 6h14M7 6l-4 8h8L7 6ZM17 6l-4 8h8l-4-8ZM8 21h8"/></symbol>
+  <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></symbol>
+  <symbol id="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+</svg>
+
+<header>
+  <div class="w">
+    <a class="logo" href="index.html" aria-label="Préfecture de Police LGP — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de Police LGP"></a>
+    <nav aria-label="Navigation principale">
+      <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html" aria-current="page">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
+    </nav>
+    <div class="actions"><button id="theme" aria-label="Changer de thème"><svg class="i" style="width:18px;height:18px"><use href="#icon-sun"/></svg></button><a class="btn-co" href="connexion.html">Se connecter</a></div>
+  </div>
+</header>
+
+<main>
+  <div class="band" aria-hidden="true"></div>
+  <section aria-labelledby="demarches-title">
+    <div class="w">
+      <div class="section-head"><h1 class="sr-only" id="demarches-title">Démarches en ligne</h1><p class="eyebrow">Démarches en ligne</p></div>
+      <div class="request-grid">
+        <article class="request-card"><div class="icon"><svg class="i"><use href="#icon-home"/></svg></div><h3>Création d'entreprise</h3><p>Réalisez les formalités de création ou d'immatriculation de votre entreprise.</p><button class="action" type="button">Faire ma demande</button></article>
+        <article class="request-card"><div class="icon"><svg class="i"><use href="#icon-pie"/></svg></div><h3>Demande de subvention(s)</h3><p>Constituez votre dossier de demande ou de renouvellement de subvention.</p><button class="action" type="button">Faire ma demande</button></article>
+        <article class="request-card"><div class="icon"><svg class="i"><use href="#icon-users"/></svg></div><h3>Création d'association</h3><p>Effectuez les démarches de déclaration ou de modification de votre association.</p><button class="action" type="button">Faire ma demande</button></article>
+        <article class="request-card"><div class="icon"><svg class="i"><use href="#icon-card"/></svg></div><h3>Demande de changement de nom</h3><p>Engagez la procédure de changement de nom ou de prénom auprès des services compétents.</p><button class="action" type="button">Faire ma demande</button></article>
+        <article class="request-card"><div class="icon"><svg class="i"><use href="#icon-send"/></svg></div><h3>Déclarer une manifestation</h3><p>Signalez et déclarez la tenue d'un événement ou d'un rassemblement public.</p><button class="action" type="button">Faire ma demande</button></article>
+        <article class="request-card"><div class="icon"><svg class="i"><use href="#icon-calendar"/></svg></div><h3>Prendre rendez-vous</h3><p>Planifiez un rendez-vous avec l'accueil des citoyens.</p><button class="action" type="button">Faire ma demande</button></article>
+        <article class="request-card"><div class="icon"><svg class="i"><use href="#icon-heart"/></svg></div><h3>Donation service public</h3><p>Établissez le reçu d'un don ou d'un versement effectué au profit d'un service public.</p><button class="action" type="button">Faire ma demande</button></article>
+        <article class="request-card"><div class="icon"><svg class="i"><use href="#icon-building"/></svg></div><h3>Mise au point entreprise</h3><p>Déclarez la situation actuelle de votre entreprise (responsable, effectifs, activité, charges).</p><button class="action" type="button">Faire ma demande</button></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="units" aria-labelledby="units-title">
+    <div class="w">
+      <div class="section-head"><p class="eyebrow">Nos unités</p><h2 id="units-title">Contacter une direction spécifique afin de se faire recruter</h2></div>
+      <div class="unit-grid">
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-shield"/></svg></div><h3>Police Nationale</h3><p>Standard général et interventions courantes.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-home"/></svg></div><h3>Police Municipale</h3><p>Tranquillité publique et gestion de la voirie au quotidien.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-users"/></svg></div><h3>Gendarmerie Nationale</h3><p>Sécurité et interventions sur les zones périurbaines et rurales.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-shield"/></svg></div><h3>Armée</h3><p>Défense nationale et opérations extérieures.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-plus"/></svg></div><h3>Sapeur-Pompier</h3><p>Secours d'urgence, incendies et interventions médicales.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-plus"/></svg></div><h3>Centre Hospitalier</h3><p>Prise en charge médicale et urgences hospitalières.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-building"/></svg></div><h3>Préfecture de Police</h3><p>Autorité administrative et coordination des forces de l'ordre.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-scale"/></svg></div><h3>Tribunal de Paris &amp; Cabinet d'avocat</h3><p>Procédures judiciaires et accompagnement juridique.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" aria-labelledby="faq-title">
+    <div class="w faq-layout">
+      <div><p class="eyebrow">Questions fréquentes</p><h2 id="faq-title">Besoin d'aide ?</h2><p class="faq-lead">Retrouvez les réponses aux questions les plus posées par les citoyens.</p></div>
+      <div class="faq-list" id="faq">
+        <article class="faq-item open"><button type="button" aria-expanded="true" aria-controls="faq-answer-1">Combien de temps prend une démarche en ligne ?<svg class="i"><use href="#chev"/></svg></button><div class="faq-answer" id="faq-answer-1">Le délai varie selon la démarche ; comptez généralement une dizaine de minutes.</div></article>
+        <article class="faq-item"><button type="button" aria-expanded="false" aria-controls="faq-answer-2">Dois-je me déplacer physiquement à l'accueil ?<svg class="i"><use href="#chev"/></svg></button><div class="faq-answer" id="faq-answer-2">Cela dépend de la démarche. Si un déplacement est nécessaire, les modalités vous seront indiquées au cours de la procédure.</div></article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="w">
+  <div class="cols">
+    <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de Police LGP" style="height:84px;width:auto;display:block"></div><p>Portail institutionnel fictif au service de la communauté du serveur FiveM Le Grand Paname (LGP) RP.</p></div>
+    <div><h4>Coordonnées</h4><p>1 bis rue de Lutès<br>75004 Paris</p><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">contact@lgp-gouv.rp-info.fr</a></p></div>
+    <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
+    <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
+    <div><h4>Institution</h4><ul><li><a href="#">Organigramme</a></li><li><a href="#">Missions</a></li><li><a href="#">Histoire</a></li><li><a href="emplois.html">Nos emplois</a></li></ul></div>
+  </div>
+  <div class="bas"><span>© 2026 Préfecture de Police du Grand Paname — Portail fictif à usage exclusif du roleplay.</span><nav aria-label="Liens légaux"><a href="#">Mentions légales</a><a href="#">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="#">Plan du site</a></nav></div>
+</div></footer>
+<button class="aide" type="button">Besoin d'aide ?</button>
+<div class="fictif">Site fictif créé dans le cadre d'un serveur FiveM Roleplay — aucun lien avec une administration réelle.</div>
+
+<script src="assets/js/auth.js"></script>
+<script>
+document.querySelectorAll("#faq .faq-item > button").forEach(button=>button.addEventListener("click",()=>{
+  const item=button.closest(".faq-item"),open=!item.classList.contains("open");
+  document.querySelectorAll("#faq .faq-item").forEach(other=>{other.classList.remove("open");other.querySelector("button").setAttribute("aria-expanded","false")});
+  if(open){item.classList.add("open");button.setAttribute("aria-expanded","true")}
+}));
+try{const theme=localStorage.getItem("theme");if(theme)document.documentElement.dataset.theme=theme}catch(e){}
+document.getElementById("theme").onclick=()=>{const theme=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=theme;try{localStorage.setItem("theme",theme)}catch(e){}};
+</script>
+</body>
+</html>
