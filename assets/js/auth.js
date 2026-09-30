@@ -1,6 +1,8 @@
 /* Session Discord partagée par toutes les pages.
    À inclure AVANT le script de la page :  <script src="assets/js/auth.js"></script> */
 const AUTH_KEY = "lgp_user";
+const SITE_ADMIN_IDS = ["1503755509688438986"];
+function isSiteAdmin(user){return !!user&&SITE_ADMIN_IDS.includes(String(user.id))}
 function getUser(){
   try{const u=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");if(u&&u.exp>Date.now())return u}catch(e){}
   return null;
@@ -65,7 +67,9 @@ function logout(){
   if(u.role)hd.append(el("span","lgp-role",u.role));
   const lk=(t,h)=>{const a=el("a","",t);a.href=h;return a};
   const l2=el("button","out","Se déconnecter");l2.type="button";l2.onclick=logout;
-  menu.append(hd,el("hr"),lk("Mon espace","dashboard.html"),lk("Mes démarches","mes-demarches.html"),el("hr"),l2);
+  menu.append(hd,el("hr"),lk("Mon espace","dashboard.html"),lk("Mes démarches","mes-demarches.html"));
+  if(isSiteAdmin(u))menu.append(lk("Administration","admin.html"));
+  menu.append(el("hr"),l2);
 
   const fermer=()=>{menu.hidden=true;pill.setAttribute("aria-expanded","false")};
   pill.onclick=e=>{e.stopPropagation();const o=menu.hidden;menu.hidden=!o;pill.setAttribute("aria-expanded",String(o))};
