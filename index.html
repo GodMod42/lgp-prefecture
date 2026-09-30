@@ -101,6 +101,7 @@ h2{font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.2;font-weight:800;margin:12p
 .demarches .bar{display:block;width:24px;height:3px;background:var(--rouge);margin-bottom:22px}
 .quick{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:40px}
 .quick a{background:#fff;color:#161616;border-radius:6px;padding:24px 18px;font-weight:700;font-size:.9rem;display:flex;flex-direction:column;gap:14px;min-height:114px}
+:root[data-theme=dark] .quick a{background:#1e1e1e;color:#f0f0f0;border:1px solid #3a3a3a}
 .quick a svg{color:var(--bleu-f)}
 .quick a:hover{box-shadow:0 0 0 3px rgba(255,255,255,.4)}
 
@@ -196,12 +197,12 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
       <p class="eyebrow">Directions &amp; unités</p>
       <h2>Les principaux services de la Préfecture</h2>
       <div class="dirs">
-        <article class="dir"><div class="ic"><svg class="i"><use href="#shield"/></svg></div><h3>Police Nationale</h3><p>Sécurité publique, patrouilles et intervention sur l'ensemble de Paris.</p><a href="demarche.html#service-public-join">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
-        <article class="dir"><div class="ic"><svg class="i"><use href="#menu"/></svg></div><h3>BAC</h3><p>Brigade Anti-Criminalité : lutte contre la délinquance et interventions ciblées.</p><a href="demarche.html#service-public-join">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
-        <article class="dir"><div class="ic"><svg class="i"><use href="#flag"/></svg></div><h3>CRS</h3><p>Maintien de l'ordre lors des grands rassemblements et événements publics.</p><a href="demarche.html#service-public-join">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
-        <article class="dir"><div class="ic"><svg class="i"><use href="#bike"/></svg></div><h3>Brigade Motorisée</h3><p>Surveillance des axes routiers et sécurité de la circulation dans la ville de Paris.</p><a href="demarche.html#service-public-join">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
-        <article class="dir"><div class="ic"><svg class="i"><use href="#pie"/></svg></div><h3>Police Judiciaire</h3><p>Enquêtes, investigations et traitement des affaires complexes.</p><a href="demarche.html#service-public-join">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
-        <article class="dir"><div class="ic"><svg class="i"><use href="#user"/></svg></div><h3>Accueil des citoyens</h3><p>Guichet unique pour toutes vos démarches et demandes d'information.</p><a href="demarche.html#service-public-join">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
+        <article class="dir"><div class="ic"><svg class="i"><use href="#shield"/></svg></div><h3>Police Nationale</h3><p>Sécurité publique, patrouilles et intervention sur l'ensemble de Paris.</p><a href="demarche.html#units">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
+        <article class="dir"><div class="ic"><svg class="i"><use href="#menu"/></svg></div><h3>BAC</h3><p>Brigade Anti-Criminalité : lutte contre la délinquance et interventions ciblées.</p><a href="demarche.html#units">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
+        <article class="dir"><div class="ic"><svg class="i"><use href="#flag"/></svg></div><h3>CRS</h3><p>Maintien de l'ordre lors des grands rassemblements et événements publics.</p><a href="demarche.html#units">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
+        <article class="dir"><div class="ic"><svg class="i"><use href="#bike"/></svg></div><h3>Brigade Motorisée</h3><p>Surveillance des axes routiers et sécurité de la circulation dans la ville de Paris.</p><a href="demarche.html#units">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
+        <article class="dir"><div class="ic"><svg class="i"><use href="#pie"/></svg></div><h3>Police Judiciaire</h3><p>Enquêtes, investigations et traitement des affaires complexes.</p><a href="demarche.html#units">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
+        <article class="dir"><div class="ic"><svg class="i"><use href="#user"/></svg></div><h3>Accueil des citoyens</h3><p>Guichet unique pour toutes vos démarches et demandes d'information.</p><a href="demarche.html#units">Découvrir la direction <svg class="i"><use href="#arrow"/></svg></a></article>
       </div>
     </div>
   </section>
@@ -256,7 +257,6 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 /* ===== À CONFIGURER ===== */
 const DISCORD_INVITE = "8RAFH7KfDj";
 const DISCORD_GUILD_ID = "1554544322068873286";
-const ACTUS = [];              // ex. { date:"2026-09-28", titre:"Titre" }
 
 /* Thème clair / sombre */
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
@@ -280,14 +280,17 @@ document.getElementById("theme").onclick=()=>{
 })();
 
 /* Actualités */
-(()=>{
+SITE.ready.then(data=>{
   const b=document.getElementById("actus");
+  const ACTUS=Array.isArray(data.actus)?data.actus.slice():[];
+  ACTUS.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
   if(!ACTUS.length){b.innerHTML='<p class="msg">Aucune actualité pour le moment.</p>';return}
   b.innerHTML="";
-  ACTUS.forEach(a=>{const e=document.createElement("article");e.className="actu";
-    const t=document.createElement("time");t.textContent=a.date;
-    const h=document.createElement("h3");h.textContent=a.titre;e.append(t,h);b.append(e)});
-})();
+  ACTUS.slice(0,3).forEach(a=>{const e=document.createElement("article");e.className="actu";
+    const t=document.createElement("time");t.textContent=a.date?new Date(a.date+"T12:00:00").toLocaleDateString("fr-FR"):"";
+    const h=document.createElement("h3");h.textContent=a.titre||"Actualité";e.append(t,h);
+    if(a.resume){const p=document.createElement("p");p.textContent=a.resume;e.append(p)}b.append(e)});
+});
 </script>
 </body>
 </html>
