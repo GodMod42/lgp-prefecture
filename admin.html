@@ -85,6 +85,8 @@ async function start(){
   D.jobs=D.jobs||JSON.parse(JSON.stringify(S.defaults.jobs));
   D.ticketMotifs=Array.isArray(D.ticketMotifs)?D.ticketMotifs.slice():S.defaults.ticketMotifs.slice();
   D.actus=Array.isArray(D.actus)?D.actus.slice():[];
+  D.presentation=Object.assign({},JSON.parse(JSON.stringify(S.defaults.presentation)),D.presentation||{});
+  ["introParagraphs","missionItems","missionDetails","values","command"].forEach(key=>{if(!Array.isArray(D.presentation[key]))D.presentation[key]=JSON.parse(JSON.stringify(S.defaults.presentation[key]))});
   D.salaryLabel=D.salaryLabel||S.defaults.salaryLabel;
   D.texts=D.texts||{};
 
@@ -101,10 +103,10 @@ async function start(){
   const save=()=>{try{D.updated=new Date().toISOString();localStorage.setItem("lgp_admin_draft",JSON.stringify(D))}catch(e){}
     $("#st").innerHTML="Brouillon enregistré à "+new Date().toLocaleTimeString("fr-FR")+" — <b>pas encore publié</b> : télécharge content.json et remplace celui de ton site."};
   const nav=()=>{const n=$("#nav");n.textContent="";
-    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
+    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["presentationData","Gérer la présentation"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
     it.forEach(x=>{if(!x){n.append(E("div","sep"));return}
       const b=E("button","nv"+(x[0]===view?" on":""),x[1]);b.type="button";
-      const c=(x[0]==="urgent"||x[0]==="jobs"||x[0]==="motifs"||x[0]==="actualites")?0:of(x[0]).filter(f=>D.texts[f.key]!=null).length;
+      const c=(x[0]==="urgent"||x[0]==="jobs"||x[0]==="motifs"||x[0]==="actualites"||x[0]==="presentationData")?0:of(x[0]).filter(f=>D.texts[f.key]!=null).length;
       if(c)b.append(E("i","",c));b.onclick=()=>{view=x[0];nav();draw()};n.append(b)});
     if(missing.length){const m=E("p","bad","Pages introuvables : "+missing.join(", "));m.style.cssText="font-size:.78rem;margin-top:12px;padding:0 14px";n.append(m)}};
 
@@ -235,6 +237,50 @@ async function start(){
     render();
   };
 
+  const drawPresentation=p=>{
+    const c=D.presentation;
+    p.append(E("h2","","Présentation du site"),E("p","sub","Modifie ici les textes, les missions, les valeurs, la chaîne de commandement, les images et la vidéo de la page Présentation. Les images sont incluses dans content.json : 600 Ko maximum chacune, 1 Mo au total."));
+    field(p,"Titre principal",c,"introTitle");field(p,"Titre de la liste des missions",c,"missionsTitle");field(p,"Titre des accordéons",c,"accordionTitle");field(p,"Titre des valeurs",c,"valuesTitle");field(p,"Titre de l'organigramme",c,"commandTitle");
+    const paragraphs=E("div");p.append(E("h3","","Texte de présentation"),paragraphs);
+    const renderParagraphs=()=>{paragraphs.textContent="";c.introParagraphs.forEach((text,i)=>{const row=E("div","job"),label=E("label","","Paragraphe "+(i+1)),area=E("textarea");area.rows=3;area.value=text;area.oninput=()=>{c.introParagraphs[i]=area.value;save()};row.append(label,area);
+      const controls=E("div","r"),move=(dir)=>{const j=i+dir;if(j<0||j>=c.introParagraphs.length)return;[c.introParagraphs[i],c.introParagraphs[j]]=[c.introParagraphs[j],c.introParagraphs[i]];save();renderParagraphs()};
+      [["↑",()=>move(-1)],["↓",()=>move(1)],["Supprimer",()=>{c.introParagraphs.splice(i,1);save();renderParagraphs()}]].forEach(([label,fn])=>{const b=E("button","b",label);b.type="button";b.onclick=fn;controls.append(b)});row.append(controls);paragraphs.append(row)});
+      const add=E("button","b","Ajouter un paragraphe");add.type="button";add.onclick=()=>{c.introParagraphs.push("");save();renderParagraphs()};paragraphs.append(add)};
+    renderParagraphs();
+
+    const media=E("div","job");media.append(E("h3","","Images"),E("p","sub","Ajoute le logo du ministère et la photo du bâtiment. Formats PNG, JPG et WebP."));
+    const renderMedia=()=>{
+      media.querySelectorAll(".media-field").forEach(el=>el.remove());
+      [["Logo du ministère","ministryLogo","Logo institutionnel"],["Photo du bâtiment","buildingPhoto","Photo de la Préfecture"]].forEach(([label,key,alt])=>{
+        const group=E("div","g media-field"),title=E("label","",label),input=E("input"),preview=E("div");input.type="file";input.accept="image/png,image/jpeg,image/webp";
+        group.append(title,input);
+        if(c[key]){const img=E("img");img.src=c[key];img.alt=alt;img.style.cssText="display:block;max-width:100%;max-height:220px;object-fit:contain;margin:10px 0";group.append(img);const remove=E("button","b","Retirer l'image");remove.type="button";remove.onclick=()=>{c[key]="";c[key+"Size"]=0;save();renderMedia()};group.append(remove)}
+        input.onchange=async()=>{const file=input.files&&input.files[0];if(!file)return;if(!/^image\/(png|jpeg|webp)$/.test(file.type)){alert("Choisis une image PNG, JPG ou WebP.");input.value="";return}if(file.size>600*1024){alert("L'image ne doit pas dépasser 600 Ko.");input.value="";return}const total=(Number(c.ministryLogoSize)||0)+(Number(c.buildingPhotoSize)||0)-(Number(c[key+"Size"])||0);if(total+file.size>1024*1024){alert("Les deux images de présentation ne peuvent pas dépasser 1 Mo au total.");input.value="";return}try{c[key]=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file)});c[key+"Size"]=file.size;save();renderMedia()}catch(e){alert("Impossible de lire cette image.")}};
+        media.append(group);
+      });
+    };
+    p.append(media);renderMedia();
+
+    field(p,"Lien YouTube de la vidéo (facultatif)",c,"videoUrl");
+    const addStringList=(heading,key)=>{
+      const section=E("div"),rows=E("div");section.append(E("h3","",heading),rows);p.append(section);
+      const render=()=>{rows.textContent="";c[key].forEach((value,i)=>{const row=E("div","job"),label=E("label","",heading+" "+(i+1)),area=E("textarea");area.rows=2;area.value=value;area.oninput=()=>{c[key][i]=area.value;save()};row.append(label,area);
+        const controls=E("div","r"),move=dir=>{const j=i+dir;if(j<0||j>=c[key].length)return;[c[key][i],c[key][j]]=[c[key][j],c[key][i]];save();render()};
+        [["↑",()=>move(-1)],["↓",()=>move(1)],["Supprimer",()=>{c[key].splice(i,1);save();render()}]].forEach(([text,fn])=>{const b=E("button","b",text);b.type="button";b.onclick=fn;controls.append(b)});row.append(controls);rows.append(row)});
+        const add=E("button","b","Ajouter");add.type="button";add.onclick=()=>{c[key].push("");save();render()};rows.append(add)};render();
+    };
+    addStringList("Mission","missionItems");
+    const addObjectList=(heading,key,fields,makeDefault)=>{
+      const section=E("div"),rows=E("div");section.append(E("h3","",heading),rows);p.append(section);
+      const render=()=>{rows.textContent="";c[key].forEach((item,i)=>{const row=E("div","job");fields.forEach(([label,name,type])=>field(row,label,item,name,type));const controls=E("div","r"),move=dir=>{const j=i+dir;if(j<0||j>=c[key].length)return;[c[key][i],c[key][j]]=[c[key][j],c[key][i]];save();render()};
+        [["↑",()=>move(-1)],["↓",()=>move(1)],["Supprimer",()=>{c[key].splice(i,1);save();render()}]].forEach(([text,fn])=>{const b=E("button","b",text);b.type="button";b.onclick=fn;controls.append(b)});row.append(controls);rows.append(row)});
+        const add=E("button","b","Ajouter");add.type="button";add.onclick=()=>{c[key].push(makeDefault());save();render()};rows.append(add)};render();
+    };
+    addObjectList("Accordéons : missions détaillées","missionDetails",[["Titre","titre"],["Description","texte","area"]],()=>({titre:"Nouvelle mission",texte:""}));
+    addObjectList("Valeurs","values",[["Titre","titre"],["Description","texte","area"]],()=>({titre:"Nouvelle valeur",texte:""}));
+    addObjectList("Chaîne de commandement","command",[["Fonction","fonction"],["Nom","nom"]],()=>({fonction:"Nouvelle fonction",nom:""}));
+  };
+
   const drawFields=(p,k)=>{
     p.append(E("h2","",k==="shared"?"Menu & pied de page":"Page : "+PAGES.find(x=>x[0]===k)[1]),
       E("p","sub",k==="shared"?"Ces textes sont communs à toutes les pages.":"Mise en forme : **gras**, [texte du lien](adresse). Un retour à la ligne reste un retour à la ligne."));
@@ -251,7 +297,7 @@ async function start(){
       if(!box.children.length)box.append(E("p","sub",fs.length?"Aucun résultat.":"Aucun texte trouvé sur cette page."))};
     q.oninput=dr;dr()};
 
-  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):drawFields(p,view)};
+  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):drawFields(p,view)};
 
   $("#pv").onclick=()=>{save();window.open("index.html?preview=1","_blank")};
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
