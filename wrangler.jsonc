@@ -5,7 +5,6 @@
   "assets": {
     "directory": "."
   },
-  {
   "observability": {
     "logs": {
       "enabled": true,
