@@ -61,7 +61,6 @@ input[type=search]{margin-bottom:16px}
 <script src="assets/js/auth.js"></script>
 <script>
 /* ===== À CONFIGURER ===== */
-const ADMIN_IDS = [1503755509688438986];   // IDs Discord autorisés, ex. ["123456789012345678"]
 const PAGES = [["index","Accueil"],["presentation","Présentation"],["demarche","Démarches en ligne"],["wiki","Wiki"],["emplois","Nos emplois"],["actus","Suivre l'actu"],["contact","Nous contacter"],["connexion","Connexion"]];
 
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
@@ -70,8 +69,8 @@ const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=nul
 const gate=(h)=>{const g=$("#gate");g.hidden=false;g.innerHTML=h};
 const u=getUser();
 if(!u) location.replace("connexion.html");
-else if(!ADMIN_IDS.includes(u.id)){
-  gate('<h2>Accès réservé</h2><p style="margin:12px 0">Ton compte Discord n\'est pas autorisé. Pour t\'ajouter, copie ton identifiant dans <b>ADMIN_IDS</b> (en haut du script de admin.html) :</p><p><code style="font-size:1.1rem;user-select:all">'+u.id+'</code></p><p style="margin-top:16px"><a href="index.html" style="text-decoration:underline">Retour au site</a></p>');
+else if(!isSiteAdmin(u)){
+  gate('<h2>Accès réservé</h2><p style="margin:12px 0">Ton compte Discord n\'est pas autorisé. Pour t\'ajouter, ajoute ton identifiant à <b>SITE_ADMIN_IDS</b> dans <b>assets/js/auth.js</b> :</p><p><code style="font-size:1.1rem;user-select:all">'+u.id+'</code></p><p style="margin-top:16px"><a href="index.html" style="text-decoration:underline">Retour au site</a></p>');
 }else start();
 
 async function start(){
