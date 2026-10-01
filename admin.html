@@ -39,6 +39,7 @@ input[type=search]{margin-bottom:16px}
 .job{border:1px solid var(--ligne);border-radius:8px;padding:14px;margin-bottom:12px}
 .job .r{display:flex;gap:8px;margin-top:10px}
 .bad{color:#c9191e;font-weight:600}
+.ticket{border:1px solid var(--ligne);border-radius:8px;padding:14px;margin:10px 0}.ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.ticket-msg{white-space:pre-wrap;background:var(--fond);border-radius:6px;padding:10px;margin:8px 0}.ticket textarea{min-height:80px;margin:8px 0}
 @media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static}}
 </style>
 <script>window.LGP_ADMIN=true</script>
@@ -103,7 +104,7 @@ async function start(){
   const save=()=>{try{D.updated=new Date().toISOString();localStorage.setItem("lgp_admin_draft",JSON.stringify(D))}catch(e){}
     $("#st").innerHTML="Brouillon enregistré à "+new Date().toLocaleTimeString("fr-FR")+" — <b>pas encore publié</b> : télécharge content.json et remplace celui de ton site."};
   const nav=()=>{const n=$("#nav");n.textContent="";
-    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["presentationData","Gérer la présentation"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
+    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["presentationData","Gérer la présentation"],["tickets","Demandes de contact"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
     it.forEach(x=>{if(!x){n.append(E("div","sep"));return}
       const b=E("button","nv"+(x[0]===view?" on":""),x[1]);b.type="button";
       const c=(x[0]==="urgent"||x[0]==="jobs"||x[0]==="motifs"||x[0]==="actualites"||x[0]==="presentationData")?0:of(x[0]).filter(f=>D.texts[f.key]!=null).length;
@@ -297,7 +298,30 @@ async function start(){
       if(!box.children.length)box.append(E("p","sub",fs.length?"Aucun résultat.":"Aucun texte trouvé sur cette page."))};
     q.oninput=dr;dr()};
 
-  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):drawFields(p,view)};
+  const drawTickets=async p=>{
+    p.append(E("h2","","Demandes de contact"),E("p","sub","Consulte les demandes reçues et réponds au demandeur. Les réponses sont également publiées dans le salon Discord associé."));
+    const reload=()=>{p.textContent="";drawTickets(p)};
+    const box=E("div"),refresh=E("button","b","Actualiser");refresh.type="button";refresh.onclick=reload;p.append(refresh,box);
+    const api=async(path,options={})=>{const response=await fetch("/api"+path,{...options,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json",...(options.headers||{})}});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||response.status);return body};
+    box.append(E("p","sub","Chargement…"));
+    try{
+      const tickets=await api("/admin/tickets");box.textContent="";
+      if(!tickets.length){box.append(E("p","sub","Aucune demande pour le moment."));return}
+      tickets.forEach(t=>{
+        const card=E("article","ticket"),head=E("div","ticket-head"),title=E("h3","",`#${t.id} — ${t.objet}`),status=E("b","",`${t.statut} · ${t.motif}`);
+        head.append(title,status);card.append(head,E("p","sub",`${t.nom}${t.tel?" · "+t.tel:""} · ${new Date(t.date).toLocaleString("fr-FR")}`));
+        (t.msgs||[]).forEach(m=>{const row=E("div","ticket-msg");row.textContent=`${m.from==="staff"?"Réponse":"Demande"} · ${m.author||""}\n${m.txt||""}`;card.append(row)});
+        if(t.statut==="Ouvert"){
+          const area=E("textarea");area.placeholder="Ta réponse au demandeur…";area.setAttribute("aria-label","Réponse au demandeur");
+          const send=E("button","b p","Envoyer la réponse");send.type="button";send.onclick=async()=>{send.disabled=true;try{await api(`/admin/tickets/${encodeURIComponent(t.id)}/messages`,{method:"POST",body:JSON.stringify({txt:area.value})});reload()}catch(e){alert("Envoi impossible : "+e.message);send.disabled=false}};
+          card.append(area,send);
+        }
+        box.append(card);
+      });
+    }catch(e){box.textContent="Impossible de charger les demandes ("+e.message+"). Vérifie que ton identifiant figure dans SITE_ADMIN_IDS côté bot et que l’API est disponible."}
+  };
+
+  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p):drawFields(p,view)};
 
   $("#pv").onclick=()=>{save();window.open("index.html?preview=1","_blank")};
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
