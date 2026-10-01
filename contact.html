@@ -312,7 +312,17 @@ form.onsubmit=async event=>{
     status.className="ok";status.textContent="Demande transmise au service concerné. Référence : "+result.reference+". Les réponses seront données sur Discord.";
   }catch(error){
     status.className="ko";
-    status.textContent=error.message==="not_configured"?"Ce motif n’est pas encore configuré. Contactez-nous sur Discord.":"L’envoi a échoué. Réessayez plus tard ou contactez-nous sur Discord.";
+    const issues={
+      not_configured:"Webhook manquant dans les variables d’environnement Vercel. Ajoute-le puis redéploie.",
+      discord_unavailable:"Discord a refusé l’envoi. Vérifie l’URL de webhook de ce motif dans Vercel.",
+      auth:"Ta session Discord a expiré. Déconnecte-toi puis reconnecte-toi.",
+      not_member:"Connecte-toi avec un compte membre du serveur Discord de la Préfecture.",
+      rate_limited:"Tu as envoyé plusieurs demandes récemment. Réessaie dans une heure.",
+      origin_refused:"Le domaine du site ne correspond pas à la configuration Vercel de la fonction.",
+      fields:"Un champ du formulaire est invalide. Vérifie le motif, l’objet et le message.",
+      invalid_request:"La fonction Vercel n’a pas pu traiter la demande. Vérifie son journal d’exécution.",
+    };
+    status.textContent=issues[error.message]||"Fonction /api/contact introuvable ou indisponible. Vérifie que Vercel utilise le dossier Site comme répertoire racine, puis redéploie.";
   }finally{submit.disabled=false;}
 };</script>
 </body>
