@@ -387,16 +387,16 @@ f.onsubmit=async e=>{
     msg.className="ko";
     const errors={
       limite:"Trop de demandes récentes. Réessayez plus tard.",
-      api_not_configured:"L’API du bot n’est pas configurée dans les variables Netlify (BOT_API_URL).",
-      api_requires_https:"L’adresse de l’API du bot doit commencer par https://.",
-      api_unavailable:"Le bot est injoignable. Vérifiez que le bot tourne et que BOT_API_URL pointe vers son API HTTPS.",
+      api_not_configured:"Le service de contact n’est pas encore configuré. Réessayez plus tard ou contactez-nous sur Discord.",
+      api_requires_https:"Le service de contact est momentanément indisponible. Réessayez plus tard.",
+      api_unavailable:"Le service de contact est momentanément indisponible. Réessayez plus tard.",
       guild_unavailable:"Le bot n’est pas connecté au serveur Discord configuré.",
       discord_permissions:"Le bot n’a pas les permissions nécessaires pour créer le salon de demande.",
       discord:"Discord a refusé la création du salon. Vérifiez les permissions et la catégorie de tickets.",
       not_member:"Rejoignez le serveur Discord puis reconnectez-vous au site.",
       champs:"Certains champs sont invalides. Vérifiez le formulaire et réessayez."
     };
-    msg.textContent=errors[err]||"L’envoi a échoué ("+String(err)+"). Consultez les journaux de la fonction API Netlify pour le détail.";
+    msg.textContent=errors[err]||"Votre demande n’a pas pu être envoyée. Réessayez dans un instant.";
   }
   btn.disabled=false;
 };
