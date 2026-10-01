@@ -101,13 +101,13 @@ header nav a[aria-current] { color: var(--bleu); border-color: var(--rouge); box
 .btn-co:hover { background: var(--bleu-f); }
 :root[data-theme="dark"] .btn-co { color: #111; }
 
-/* Home: calmer split hero using the existing Préfecture photograph */
+/* Home: the original deep blue identity, with a cleaner split composition */
 .home .hero {
   position: relative;
   overflow: hidden;
   padding: clamp(48px, 7vw, 88px) 0 32px;
-  background: linear-gradient(110deg, var(--fond) 0%, var(--carte) 74%);
-  color: var(--texte);
+  background: linear-gradient(125deg, #000091 0%, #00006d 100%);
+  color: #fff;
 }
 .home .hero .w {
   display: grid;
@@ -120,34 +120,33 @@ header nav a[aria-current] { color: var(--bleu); border-color: var(--rouge); box
   grid-column: 2;
   grid-row: 1 / 5;
   min-height: clamp(280px, 32vw, 430px);
-  border: 1px solid var(--ligne);
-  border-top: 4px solid var(--bleu);
+  border: 1px solid rgb(255 255 255 / .38);
+  border-top: 4px solid #fff;
   background: url("../img/prefecture-batiment.jpg") center 46% / cover no-repeat;
-  box-shadow: 16px 16px 0 var(--lav);
+  box-shadow: 16px 16px 0 rgb(255 255 255 / .10);
 }
-.home .hero .eyebrow { color: var(--bleu); }
-.home .hero .eyebrow::before { background: var(--rouge); height: 3px; }
+.home .hero .eyebrow { color: #fff; }
+.home .hero .eyebrow::before { background: #fff; height: 2px; }
 .home .hero h1 {
   max-width: 12em;
   margin: 14px 0 18px;
-  color: var(--texte);
+  color: #fff;
   font-size: clamp(2.35rem, 5vw, 4.25rem);
   font-weight: 750;
   letter-spacing: -.045em;
   line-height: 1.06;
 }
-.home .hero p.lead { max-width: 40em; color: var(--gris); font-size: 1.08rem; line-height: 1.7; }
+.home .hero p.lead { max-width: 40em; color: rgb(255 255 255 / .88); font-size: 1.08rem; line-height: 1.7; }
 .home .hero .btns { gap: 10px; margin-top: 26px; }
 .home .hero .btn { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; border-width: 1px; border-radius: var(--rayon); transition: background-color .16s ease, color .16s ease, transform .16s ease; }
-.home .hero .btn.o { border-color: var(--bleu); color: var(--bleu); }
-.home .hero .btn.o:hover { background: var(--lav); }
-.home .hero .btn.p { border-color: var(--bleu); background: var(--bleu); color: #fff; }
-.home .hero .btn.p:hover { background: var(--bleu-f); }
-:root[data-theme="dark"] .home .hero .btn.p { color: #111; }
-.home .stats { grid-column: 1 / -1; margin-top: 44px; border-top: 1px solid var(--ligne); border-radius: 0; background: transparent; color: var(--texte); }
-.home .stats div { padding: 20px 12px; border-left-color: var(--ligne); }
-.home .stats strong { color: var(--bleu); font-size: clamp(1.5rem, 2.2vw, 2rem); }
-.home .stats span { color: var(--gris); font-size: .72rem; letter-spacing: .05em; }
+.home .hero .btn.o { border-color: #fff; color: #fff; }
+.home .hero .btn.o:hover { background: rgb(255 255 255 / .12); }
+.home .hero .btn.p { border-color: #fff; background: #fff; color: #00006d; }
+.home .hero .btn.p:hover { background: #e9edfa; }
+.home .stats { grid-column: 1 / -1; margin-top: 44px; border-top: 1px solid rgb(255 255 255 / .28); border-radius: 0; background: transparent; color: #fff; }
+.home .stats div { padding: 20px 12px; border-left-color: rgb(255 255 255 / .2); }
+.home .stats strong { color: #fff; font-size: clamp(1.5rem, 2.2vw, 2rem); }
+.home .stats span { color: rgb(255 255 255 / .82); font-size: .72rem; letter-spacing: .05em; }
 
 /* Sections, service tiles and content */
 main > section { padding-block: clamp(48px, 6vw, 82px); }
@@ -169,7 +168,8 @@ h2 { letter-spacing: -.025em; }
 }
 .val { background: var(--carte); padding: 22px; }
 .val.t { background: var(--lav); border-color: var(--lav); }
-.val:nth-child(even) { transform: none; }
+.home .vals { row-gap: 28px; }
+.home .val:nth-child(even) { transform: translateY(18px); }
 .dir, .request-card, .unit-card { background: var(--carte); padding: 22px; }
 .request-grid, .dirs, .unit-grid { gap: clamp(12px, 1.8vw, 22px); }
 .request-card h3, .unit-card h3, .dir h3 { font-size: 1.03rem; line-height: 1.35; }
@@ -258,9 +258,11 @@ aside { padding: 8px; border: 1px solid var(--ligne); border-radius: var(--rayon
   header .actions { align-self: center; }
   .home .hero { padding-top: 42px; }
   .home .hero .w { grid-template-columns: 1fr; }
-  .home .hero .w::after { grid-column: 1; grid-row: auto; min-height: 220px; margin: 24px 0 0 8px; box-shadow: 8px 8px 0 var(--lav); }
+  .home .hero .w::after { grid-column: 1; grid-row: auto; min-height: 220px; margin: 24px 0 0 8px; box-shadow: 8px 8px 0 rgb(255 255 255 / .10); }
   .home .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 28px; }
-  .home .stats div { border-left: 0; border-bottom: 1px solid var(--ligne); }
+  .home .stats div { border-left: 0; border-bottom: 1px solid rgb(255 255 255 / .2); }
+  .home .vals { row-gap: 16px; }
+  .home .val:nth-child(even) { transform: none; }
   .request-grid, .dirs, .unit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bas { align-items: flex-start; }
