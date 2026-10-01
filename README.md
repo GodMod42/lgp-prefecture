@@ -1,10 +1,14 @@
 # Déploiement du site sur Vercel
 
-Le dossier `Site` contient le site statique et la fonction Vercel `/api/contact`. Le traitement des demandes n’utilise pas le bot : la fonction vérifie la session OAuth2 Discord, choisit le webhook correspondant au motif et envoie un embed dans le salon du service. Les agents consultent les demandes et répondent directement dans Discord.
+Le dossier `Site` contient le site statique et trois fonctions Vercel qui gèrent les demandes et les conversations. Neon Postgres est la source de données partagée du site ; les webhooks Discord reçoivent les notifications. Aucun bot Discord n’est utilisé pour ces demandes. Le schéma de la base est créé automatiquement au premier appel.
 
-## Configuration Vercel
+## 1. Relier la base de données
 
-Dans Vercel, configure le projet avec `Site` comme **Root Directory**. Dans **Settings → Environment Variables**, ajoute une variable par webhook. Copie chaque URL fournie dans la variable correspondant au motif :
+Dans Vercel, ouvre le projet, puis **Storage / Marketplace** et installe l’intégration **Neon Postgres**. Relie la base à ce projet et à l’environnement Production. L’intégration fournit `DATABASE_URL` au projet. Vercel présente Neon comme une base Postgres serverless installable depuis son Marketplace et injecte ses variables de connexion au projet.
+
+## 2. Définir les webhooks Discord
+
+Dans **Settings → Environment Variables**, ajoute ces variables avec les URL de webhook fournies. Applique-les à Production (et Preview si besoin) :
 
 - `DISCORD_WEBHOOK_SUPPORT_TECHNIQUE` → Support technique
 - `DISCORD_WEBHOOK_RECLAMATION` → Réclamation
@@ -14,18 +18,20 @@ Dans Vercel, configure le projet avec `Site` comme **Root Directory**. Dans **Se
 - `DISCORD_WEBHOOK_IGPN` → IGPN
 - `DISCORD_WEBHOOK_AUTRE` → Autre
 
-Applique les variables aux environnements Production et Preview dont tu as besoin, puis redéploie le projet. Ne colle jamais les URL dans un fichier public du site : la fonction les lit depuis l’environnement du serveur.
+Les URL restent dans les variables serveur et ne sont pas publiées dans les fichiers du site. Si Discord est momentanément indisponible, la demande reste enregistrée dans la base et apparaît dans le panneau admin.
 
-## Connexion Discord et accès admin
+## 3. Connexion Discord et accès admin
 
-Dans le portail développeur Discord, conserve les scopes `identify`, `guilds` et `guilds.members.read`. Ajoute comme redirect URI l’adresse exacte de la page de connexion Vercel, par exemple `https://lgp-prefecture.vercel.app/connexion.html`.
+Dans le portail développeur Discord, conserve les scopes `identify`, `guilds` et `guilds.members.read`. Ajoute comme redirect URI l’adresse exacte de la page de connexion, par exemple `https://lgp-prefecture.vercel.app/connexion.html`.
 
-L’administration du site est réservée au rôle Discord `Staff`, identifié dans le projet par `1554580932411789402`. La connexion Discord charge les rôles du membre ; aucun identifiant individuel d’administrateur n’est requis.
+L’administration est réservée au rôle Discord **Staff**, identifié par `1554580932411789402`. Aucun identifiant individuel d’administrateur n’est utilisé.
 
-## Développement
+## 4. Déployer
 
-Depuis le dossier `Site`, installe les dépendances avec `npm install`, puis lance `npm run dev`. Les URL de webhook doivent être définies dans les variables locales de Vercel pour tester l’envoi. Le déploiement de production se fait avec `npm run deploy` ou depuis le tableau de bord Vercel.
+Configure `Site` comme **Root Directory** du projet Vercel. Après avoir relié Neon et ajouté les variables webhook, redéploie le projet : Vercel applique les changements d’environnement aux nouveaux déploiements.
 
-## Limites du fonctionnement sans bot
+Depuis `Site`, `npm install` installe les dépendances et `npm run dev` lance l’environnement local Vercel. `npm run deploy` lance un déploiement de production.
 
-Les webhooks transmettent les demandes à Discord. Les réponses et le suivi se font dans Discord ; elles ne sont pas synchronisées vers l’espace du site, car le webhook ne peut pas lire les messages du salon. Pour garder les URL secrètes, l’envoi passe par la petite fonction Vercel du dossier `api` : aucun bot Discord ni serveur API externe n’est à héberger.
+## Fonctionnement
+
+Le formulaire enregistre la demande dans Neon puis envoie un embed au webhook du motif. Le panneau admin lit cette même demande et permet d’y répondre ; la réponse est sauvegardée dans la conversation et notifiée sur Discord. La page « Mes démarches » permet au demandeur de lire les réponses et d’ajouter un message. Les réponses écrites directement dans Discord ne sont pas synchronisées vers le site : cela nécessiterait une intégration d’événements Discord distincte.
