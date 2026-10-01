@@ -38,8 +38,8 @@ input[type=search]{margin-bottom:16px}
 .pv{margin:8px 0 20px;border:1px dashed var(--ligne)}
 .job{border:1px solid var(--ligne);border-radius:8px;padding:14px;margin-bottom:12px}
 .job .r{display:flex;gap:8px;margin-top:10px}
+.ticket{border:1px solid var(--ligne);border-radius:8px;padding:14px;margin:12px 0}.ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.ticket-msg{white-space:pre-wrap;background:var(--fond);border-radius:6px;padding:10px;margin:8px 0}.ticket textarea{min-height:80px;margin:8px 0}.ticket small{color:var(--gris)}
 .bad{color:#c9191e;font-weight:600}
-.ticket{border:1px solid var(--ligne);border-radius:8px;padding:14px;margin:10px 0}.ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.ticket-msg{white-space:pre-wrap;background:var(--fond);border-radius:6px;padding:10px;margin:8px 0}.ticket textarea{min-height:80px;margin:8px 0}
 @media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static}}
 </style>
 <script>window.LGP_ADMIN=true</script>
@@ -73,7 +73,7 @@ const gate=(h)=>{const g=$("#gate");g.hidden=false;g.innerHTML=h};
 const u=getUser();
 if(!u) location.replace("connexion.html");
 else if(!isSiteAdmin(u)){
-  gate('<h2>Accès réservé</h2><p style="margin:12px 0">Ton compte Discord n\'est pas autorisé. Pour t\'ajouter, ajoute ton identifiant à <b>SITE_ADMIN_IDS</b> dans <b>assets/js/auth.js</b> :</p><p><code style="font-size:1.1rem;user-select:all">'+u.id+'</code></p><p style="margin-top:16px"><a href="index.html" style="text-decoration:underline">Retour au site</a></p>');
+  gate('<h2>Accès réservé</h2><p style="margin:12px 0">L’accès à l’administration est réservé aux membres portant le rôle Discord Staff. Vérifie que tu es connecté avec le bon compte.</p><p style="margin-top:16px"><a href="index.html" style="text-decoration:underline">Retour au site</a></p>');
 }else start();
 
 async function start(){
@@ -282,6 +282,34 @@ async function start(){
     addObjectList("Chaîne de commandement","command",[["Fonction","fonction"],["Nom","nom"]],()=>({fonction:"Nouvelle fonction",nom:""}));
   };
 
+  const drawTickets=async p=>{
+    p.append(E("h2","","Demandes de contact"),E("p","sub","Les demandes et les échanges sont conservés dans la base du site. Les webhooks Discord reçoivent aussi les nouvelles demandes et les réponses."));
+    const box=E("div"),refresh=E("button","b","Actualiser");refresh.type="button";refresh.onclick=()=>{p.textContent="";drawTickets(p)};p.append(refresh,box);
+    const call=async(method,body)=>{
+      const response=await fetch("/api/admin/tickets",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+      const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||String(response.status));return data;
+    };
+    box.append(E("p","sub","Chargement des demandes…"));
+    try{
+      const tickets=await call("GET");box.textContent="";
+      if(!Array.isArray(tickets)||!tickets.length){box.append(E("p","sub","Aucune demande pour le moment."));return}
+      tickets.forEach(ticket=>{
+        const card=E("article","ticket"),head=E("div","ticket-head"),title=E("h3","",`${ticket.motif} — ${ticket.subject}`),status=E("b","",ticket.status);
+        head.append(title,status);card.append(head,E("small","",`Réf. ${ticket.reference} · ${ticket.requester_name} · ${ticket.discord_username} · ${new Date(ticket.created_at).toLocaleString("fr-FR")}`));
+        (ticket.messages||[]).forEach(message=>{const row=E("div","ticket-msg");row.textContent=`${message.sender==="prefecture"?"Préfecture":"Demandeur"} · ${message.author||""}\n${message.text||""}`;card.append(row)});
+        if(ticket.status==="Ouvert"){
+          const area=E("textarea");area.placeholder="Écrire une réponse…";area.setAttribute("aria-label","Réponse au demandeur");
+          const actions=E("div","r"),send=E("button","b p","Enregistrer et notifier sur Discord");send.type="button";
+          send.onclick=async()=>{if(!area.value.trim())return;send.disabled=true;try{const result=await call("POST",{reference:ticket.reference,text:area.value});if(!result.discordNotified)alert("Réponse enregistrée. Discord n’a pas reçu sa notification ; tu peux la retrouver dans la demande du panneau.");p.textContent="";await drawTickets(p)}catch(error){alert("Impossible d’enregistrer la réponse : "+error.message);send.disabled=false}};
+          const close=E("button","b","Clôturer");close.type="button";close.onclick=async()=>{if(!confirm("Clôturer cette demande ?"))return;close.disabled=true;try{await call("PATCH",{reference:ticket.reference});p.textContent="";await drawTickets(p)}catch(error){alert("Impossible de clôturer : "+error.message);close.disabled=false}};
+          actions.append(send,close);card.append(area,actions);
+        }
+        if(!ticket.discord_notified)card.append(E("small","bad","Notification Discord non délivrée : la demande reste disponible ici."));
+        box.append(card);
+      });
+    }catch(error){box.textContent=error.message==="admin_required"?"Ton compte n’a pas le rôle Discord Staff.":error.message==="database_not_configured"?"La base de données n’est pas encore reliée au projet Vercel.":"Impossible de charger les demandes. Vérifie la connexion de la base de données et réessaie."}
+  };
+
   const drawFields=(p,k)=>{
     p.append(E("h2","",k==="shared"?"Menu & pied de page":"Page : "+PAGES.find(x=>x[0]===k)[1]),
       E("p","sub",k==="shared"?"Ces textes sont communs à toutes les pages.":"Mise en forme : **gras**, [texte du lien](adresse). Un retour à la ligne reste un retour à la ligne."));
@@ -297,29 +325,6 @@ async function start(){
         box.append(r)});
       if(!box.children.length)box.append(E("p","sub",fs.length?"Aucun résultat.":"Aucun texte trouvé sur cette page."))};
     q.oninput=dr;dr()};
-
-  const drawTickets=async p=>{
-    p.append(E("h2","","Demandes de contact"),E("p","sub","Consulte les demandes reçues et réponds au demandeur. Les réponses sont également publiées dans le salon Discord associé."));
-    const reload=()=>{p.textContent="";drawTickets(p)};
-    const box=E("div"),refresh=E("button","b","Actualiser");refresh.type="button";refresh.onclick=reload;p.append(refresh,box);
-    const api=async(path,options={})=>{const response=await fetch("/api"+path,{...options,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json",...(options.headers||{})}});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||response.status);return body};
-    box.append(E("p","sub","Chargement…"));
-    try{
-      const tickets=await api("/admin/tickets");box.textContent="";
-      if(!tickets.length){box.append(E("p","sub","Aucune demande pour le moment."));return}
-      tickets.forEach(t=>{
-        const card=E("article","ticket"),head=E("div","ticket-head"),title=E("h3","",`#${t.id} — ${t.objet}`),status=E("b","",`${t.statut} · ${t.motif}`);
-        head.append(title,status);card.append(head,E("p","sub",`${t.nom}${t.tel?" · "+t.tel:""} · ${new Date(t.date).toLocaleString("fr-FR")}`));
-        (t.msgs||[]).forEach(m=>{const row=E("div","ticket-msg");row.textContent=`${m.from==="staff"?"Réponse":"Demande"} · ${m.author||""}\n${m.txt||""}`;card.append(row)});
-        if(t.statut==="Ouvert"){
-          const area=E("textarea");area.placeholder="Ta réponse au demandeur…";area.setAttribute("aria-label","Réponse au demandeur");
-          const send=E("button","b p","Envoyer la réponse");send.type="button";send.onclick=async()=>{send.disabled=true;try{await api(`/admin/tickets/${encodeURIComponent(t.id)}/messages`,{method:"POST",body:JSON.stringify({txt:area.value})});reload()}catch(e){alert("Envoi impossible : "+e.message);send.disabled=false}};
-          card.append(area,send);
-        }
-        box.append(card);
-      });
-    }catch(e){box.textContent="Impossible de charger les demandes ("+e.message+"). Vérifie que ton identifiant figure dans SITE_ADMIN_IDS côté bot et que l’API est disponible."}
-  };
 
   const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p):drawFields(p,view)};
 
