@@ -315,6 +315,7 @@ form.onsubmit=async event=>{
     const issues={
       discord_unavailable:"Discord a refusé l’envoi. Vérifie l’URL de webhook de ce motif dans Vercel.",
       auth:"Ta session Discord a expiré. Déconnecte-toi puis reconnecte-toi.",
+      discord_auth_unavailable:"Discord met trop de temps à répondre. Ta demande n’a pas été envoyée ; réessaie dans un instant.",
       not_member:"Connecte-toi avec un compte membre du serveur Discord de la Préfecture.",
       rate_limited:"Tu as envoyé plusieurs demandes récemment. Réessaie dans une heure.",
       origin_refused:"Le domaine du site ne correspond pas à la configuration Vercel de la fonction.",
@@ -329,3 +330,4 @@ form.onsubmit=async event=>{
 };</script>
 </body>
 </html>
+
