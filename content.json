@@ -7,9 +7,9 @@
   },
   "urgent": {
     "enabled": true,
-    "theme": "red",
+    "theme": "blue",
     "tag": "URGENT",
-    "text": "Toute belle chose a une fin... Mais c'est le début d'une nouvelle aventure !",
+    "text": "C'est le début d'une nouvelle aventure !",
     "linkText": "→ Discord Préfecture",
     "linkUrl": "https://discord.gg/8RAFH7KfDj",
     "closable": true
@@ -55,7 +55,7 @@
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "updated": "2026-10-01T16:15:07.406Z",
+  "updated": "2026-10-01T22:01:56.186Z",
   "ticketMotifs": [
     "Support technique",
     "Réclamation",
