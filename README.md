@@ -1,23 +1,31 @@
-# Liaison du site et du bot Discord
+# Déploiement du site sur Vercel
 
-Le site est servi par Netlify. Une fonction Netlify relaie les appels `/api/*` vers l’API aiohttp du bot Python. L’API vérifie chaque jeton de connexion auprès de Discord, confirme que le compte est membre du serveur, puis gère les demandes dans SQLite et leurs salons privés Discord.
+Le dossier `Site` contient le site statique et la fonction Vercel `/api/contact`. Le traitement des demandes n’utilise pas le bot : la fonction vérifie la session OAuth2 Discord, choisit le webhook correspondant au motif et envoie un embed dans le salon du service. Les agents consultent les demandes et répondent directement dans Discord.
 
-## Configuration
+## Configuration Vercel
 
-1. Héberge le bot Python sur une machine qui reste en ligne et rends son port `25606` accessible à Netlify derrière une adresse HTTPS. Utilise un tunnel ou un reverse proxy HTTPS ; évite d’exposer directement le port HTTP du bot.
-2. Dans les variables d’environnement du site Netlify, ajoute `BOT_API_URL` avec l’URL HTTPS de l’API, sans `/api` à la fin. Par exemple : `https://bot-api.example.com`. Donne à cette variable le scope **Functions**. La fonction retire automatiquement le préfixe `/api` avant de transmettre la requête.
-3. Déploie le site depuis ce dossier. `netlify.toml` configure le dossier statique et les fonctions dans `netlify/functions` ; `npm run dev` lance l’aperçu local.
-4. Dans le `.env` du bot, configure `DISCORD_TOKEN`, `GUILD_ID`, `TICKET_CATEGORY_ID` et `TICKET_STAFF_ROLE_ID`. Le bot a besoin des permissions de gérer les salons, voir et envoyer des messages, joindre des fichiers et intégrer des liens. Active les intents Membres et Contenu des messages dans le portail Discord.
-5. Dans le portail Discord, configure l’URL de redirection OAuth exactement comme l’adresse de `connexion.html` sur Netlify ou sur ton domaine personnalisé (par exemple `https://ton-site.netlify.app/connexion.html`). L’application Discord doit autoriser les scopes `identify`, `guilds` et `guilds.members.read` utilisés par la page.
+Dans Vercel, configure le projet avec `Site` comme **Root Directory**. Dans **Settings → Environment Variables**, ajoute une variable par webhook. Copie chaque URL fournie dans la variable correspondant au motif :
 
-## Demandes de contact et administration
+- `DISCORD_WEBHOOK_SUPPORT_TECHNIQUE` → Support technique
+- `DISCORD_WEBHOOK_RECLAMATION` → Réclamation
+- `DISCORD_WEBHOOK_DECLARATION_DEMARCHE` → Déclaration / démarche
+- `DISCORD_WEBHOOK_SIGNALEMENT` → Signalement
+- `DISCORD_WEBHOOK_RECRUTEMENT` → Recrutement
+- `DISCORD_WEBHOOK_IGPN` → IGPN
+- `DISCORD_WEBHOOK_AUTRE` → Autre
 
-Le formulaire de contact utilise le relais `/api` pour que les jetons Discord et les URL des webhooks restent traités côté serveur. Dans le `.env` du bot, ajoute `SITE_ADMIN_IDS` avec les identifiants Discord des administrateurs (séparés par des virgules), puis `CONTACT_WEBHOOKS_JSON` comme objet JSON dont chaque clé est le libellé exact d’un motif et chaque valeur son URL de webhook Discord. Exemple de structure : `{"Renseignement":"https://discord.com/api/webhooks/ID/TOKEN","Autre":"https://discord.com/api/webhooks/ID/TOKEN"}`. Ne place jamais ces URL dans les fichiers du site ni dans `content.json`.
+Applique les variables aux environnements Production et Preview dont tu as besoin, puis redéploie le projet. Ne colle jamais les URL dans un fichier public du site : la fonction les lit depuis l’environnement du serveur.
 
-Les demandes restent enregistrées dans SQLite et apparaissent dans l’onglet « Demandes de contact » du panneau admin. Une réponse envoyée depuis cet onglet est ajoutée à la conversation et transmise au salon Discord associé ; l’envoi au webhook sert à notifier le service concerné. Les motifs sans webhook configuré continuent d’être visibles dans le salon de tickets existant.
+## Connexion Discord et accès admin
 
-Les comptes connectés peuvent ouvrir un ticket depuis le site. Le bot crée un salon visible du demandeur et du staff ; les réponses du staff apparaissent sur le site, et le bouton du salon ferme le ticket. Les demandes sont conservées dans `Bot/data/bot.db`.
+Dans le portail développeur Discord, conserve les scopes `identify`, `guilds` et `guilds.members.read`. Ajoute comme redirect URI l’adresse exacte de la page de connexion Vercel, par exemple `https://lgp-prefecture.vercel.app/connexion.html`.
 
-## Démarrage
+L’administration du site est réservée au rôle Discord `Staff`, identifié dans le projet par `1554580932411789402`. La connexion Discord charge les rôles du membre ; aucun identifiant individuel d’administrateur n’est requis.
 
-Depuis le dossier `Bot`, installe les paquets de `requirements.txt` puis lance `python main.py`. Depuis le dossier du site, lance `npm install`, puis `npm run dev` pour le développement local. Connecte le dépôt à Netlify pour les déploiements. Le site affiche une erreur API 503 tant que `BOT_API_URL` n’est pas défini dans l’environnement des fonctions Netlify.
+## Développement
+
+Depuis le dossier `Site`, installe les dépendances avec `npm install`, puis lance `npm run dev`. Les URL de webhook doivent être définies dans les variables locales de Vercel pour tester l’envoi. Le déploiement de production se fait avec `npm run deploy` ou depuis le tableau de bord Vercel.
+
+## Limites du fonctionnement sans bot
+
+Les webhooks transmettent les demandes à Discord. Les réponses et le suivi se font dans Discord ; elles ne sont pas synchronisées vers l’espace du site, car le webhook ne peut pas lire les messages du salon. Pour garder les URL secrètes, l’envoi passe par la petite fonction Vercel du dossier `api` : aucun bot Discord ni serveur API externe n’est à héberger.
