@@ -227,7 +227,7 @@ textarea{height:150px;padding:12px;resize:vertical}
 <main>
 <div class="page"><div class="wide">
   <div class="who"><span id="who"></span><a id="out">Se déconnecter</a></div>
-  <div class="info"><svg class="i"><use href="#info"/></svg><div><b>Suivi en ligne</b><br>Votre demande est directement transmise à un agent de la Préfecture. Vous pouvez suivre l'échange et y répondre depuis votre espace.</div></div>
+  <div class="info"><svg class="i"><use href="#info"/></svg><div><b>Transmission directe au service concerné</b><br>Votre demande est envoyée dans le salon Discord correspondant au motif. Le suivi et les réponses se font sur Discord.</div></div>
   <div id="nv">
   <form class="fcard" id="f" novalidate>
     <p class="eyebrow" style="font-size:.7rem">Formulaire de contact</p>
@@ -237,22 +237,11 @@ textarea{height:150px;padding:12px;resize:vertical}
       <div class="c4"><label for="tel">Téléphone (optionnel)</label><input id="tel" type="tel" placeholder="06 12 34 56 78"></div>
       <div class="c6"><label for="motif">Motif de la demande</label><select id="motif" required><option value="">Choisissez un motif</option></select></div>
       <div class="c6"><label for="objet">Objet</label><input id="objet" required maxlength="100" placeholder="Résumez votre demande en quelques mots"></div>
-      <div class="c12"><label for="txt">Votre message</label><textarea id="txt" required maxlength="1500" placeholder="Décrivez votre demande en détail. Vous pourrez joindre des documents ou photos une fois la conversation ouverte."></textarea></div>
+      <div class="c12"><label for="txt">Votre message</label><textarea id="txt" required maxlength="1500" placeholder="Décrivez votre demande en détail."></textarea></div>
     </div>
     <button class="send" id="send" type="submit">Envoyer ma demande</button>
     <p id="msg" role="status"></p>
   </form>
-  <div id="lst" data-notx hidden></div>
-  </div>
-  <div id="tk" hidden>
-    <div class="tkh"><div><span class="st" id="tkst" data-notx>Ouvert</span><p class="tkm" id="tkm" data-notx></p></div><button class="back" id="back" type="button">← Retour à la liste</button></div>
-    <div class="tkc">
-      <div id="th" data-notx></div>
-      <hr>
-      <textarea id="rep" maxlength="1500" placeholder="Écrivez votre message…"></textarea>
-      <div class="tkr"><div><input type="file" id="fl" multiple accept="image/*,.pdf,.doc,.docx,.txt"><div id="fln" data-notx></div></div><button class="send" id="rp" type="button">Envoyer</button></div>
-      <p class="tip">Astuce : vous pouvez aussi coller (Ctrl+V) une image ou un fichier copié (jusqu'à 3 fichiers par message), sans passer par le bouton ci-dessus.</p>
-    </div>
   </div>
 </div></div></main>
 
@@ -288,120 +277,43 @@ document.getElementById("theme").onclick=()=>{
 };
 
 
-/* ===== À CONFIGURER ===== */
-const API_URL = "/api";   // API relayée par la fonction Netlify
-
 const user=getUser();
-if(!user||!user.token){logout();throw new Error("session")}   // il faut se reconnecter (nouveau système de tickets)
+if(!user||!user.token){logout();throw new Error("session")}
 const $=id=>document.getElementById(id);
-const motifSelect=$("motif");
+const motifSelect=$("motif"), form=$("f"), status=$("msg"), submit=$("send");
 const fillMotifs=motifs=>{
   const selected=motifSelect.value;
   motifSelect.replaceChildren(new Option("Choisissez un motif",""));
-  (Array.isArray(motifs)?motifs:[]).filter(x=>typeof x==="string"&&x.trim()).forEach(x=>{
-    const option=document.createElement("option");option.value=x.trim();option.textContent=x.trim();motifSelect.append(option);
-  });
+  (Array.isArray(motifs)?motifs:[]).filter(x=>typeof x==="string"&&x.trim()).forEach(x=>motifSelect.add(new Option(x.trim(),x.trim())));
   if([...motifSelect.options].some(x=>x.value===selected))motifSelect.value=selected;
 };
 fillMotifs(SITE.defaults.ticketMotifs);
-SITE.ready.then(d=>fillMotifs(d.ticketMotifs??SITE.defaults.ticketMotifs));
+SITE.ready.then(data=>fillMotifs(data.ticketMotifs??SITE.defaults.ticketMotifs));
 $("who").textContent="Connecté en tant que "+user.name;
 $("nom").value=user.name;
 $("out").onclick=logout;
-
-const f=$("f"),msg=$("msg"),btn=$("send"),MAXF=3,MAXMO=8;
-const fmt=t=>new Date(t).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).replace(",","");
-async function api(p,o={}){
-  o.headers=Object.assign({Authorization:"Bearer "+user.token},o.headers||{});
-  const r=await fetch(API_URL+p,o);
-  if(r.status===401){alert("Session expirée : reconnecte-toi.");logout();throw 0}
-  if(!r.ok){const e=await r.json().catch(()=>({}));throw e.error||r.status}
-  return r.json();
-}
-let cur=null,pend=[],poll=null,last="";
-
-async function renderList(){
-  const l=$("lst");
-  try{
-    const a=await api("/tickets");l.textContent="";l.hidden=!a.length;if(!a.length)return;
-    const h=document.createElement("h3");h.textContent="Mes demandes";l.append(h);
-    a.forEach(t=>{const b=document.createElement("button");b.type="button";b.className="li";
-      const d=document.createElement("div"),n=document.createElement("b"),sm=document.createElement("small"),st=document.createElement("span");
-      n.textContent=t.objet;sm.textContent="#"+t.id+" · "+t.motif+" · "+fmt(t.date);
-      st.className="st"+(t.statut==="Ouvert"?"":" off");st.textContent=t.statut;
-      d.append(n,sm);b.append(d,st);b.onclick=()=>showT(t.id);l.append(b)});
-  }catch(e){l.hidden=true}
-}
-function avatar(x){
-  const ini=()=>{const e=document.createElement("span");e.className="mav";e.textContent=(x.author||"?").charAt(0).toUpperCase();return e};
-  if(!x.avatar)return ini();
-  const a=document.createElement("img");a.className="mav";a.alt="";a.src=x.avatar;a.onerror=()=>a.replaceWith(ini());return a;
-}
-function renderT(t){
-  const m=$("tkm");m.textContent="";const b=document.createElement("b");b.textContent=t.nom;
-  m.append("Demandeur : ",b," · "+(t.tel?t.tel+" · ":"")+t.motif+" · #"+t.id);
-  const s=$("tkst");s.textContent=t.statut;s.className="st"+(t.statut==="Ouvert"?"":" off");
-  const closed=t.statut!=="Ouvert";$("rep").disabled=$("rp").disabled=$("fl").disabled=closed;
-  const th=$("th");th.textContent="";
-  t.msgs.forEach(x=>{
-    if(x.from==="system"){const d=document.createElement("div");d.className="sys";d.textContent=x.txt+" · "+fmt(x.date);th.append(d);return}
-    const r=document.createElement("div"),c=document.createElement("div"),mt=document.createElement("div"),bb=document.createElement("div"),staff=x.from==="staff";
-    r.className="m"+(staff?" l":"");mt.className="mt";mt.textContent=(staff?"Préfecture · ":"")+x.author+" · "+fmt(x.date);bb.className="bb";bb.textContent=x.txt||"";
-    if(x.files&&x.files.length){const sm=document.createElement("small");sm.append("Pièces jointes : ");
-      x.files.forEach((fl,i)=>{if(i)sm.append(", ");if(fl.url&&/^https:\/\//.test(fl.url)){const a=document.createElement("a");a.href=fl.url;a.target="_blank";a.rel="noopener";a.textContent=fl.name;sm.append(a)}else sm.append(fl.name)});bb.append(sm)}
-    c.append(mt,bb);staff?r.append(avatar(x),c):r.append(c,avatar(x));th.append(r)});
-}
-async function load(){
-  if(!cur)return;
-  try{const t=await api("/tickets/"+cur);if(t.id!==cur)return;
-    const k=t.statut+"|"+t.msgs.length;if(k===last)return;
-    const grew=last&&k!==last;last=k;renderT(t);
-    if(grew)$("th").lastElementChild&&$("th").lastElementChild.scrollIntoView({block:"nearest"});
-  }catch(e){}
-}
-function showT(id){cur=id;last="";$("nv").hidden=true;$("tk").hidden=false;pend=[];fileNames();load();clearInterval(poll);poll=setInterval(()=>{if(!document.hidden)load()},5000);scrollTo(0,0)}
-$("back").onclick=()=>{clearInterval(poll);cur=null;$("tk").hidden=true;$("nv").hidden=false;renderList()};
-function fileNames(){$("fln").textContent=pend.length?pend.length+" fichier(s) : "+pend.map(x=>x.name).join(", "):""}
-function addFiles(fs){fs.forEach(x=>{if(pend.length>=MAXF||x.size>MAXMO*1048576)return;pend.push(x)});fileNames()}
-$("fl").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
-$("rep").addEventListener("paste",e=>{const fs=[...(e.clipboardData?e.clipboardData.files:[])];if(fs.length){e.preventDefault();addFiles(fs)}});
-$("rp").onclick=async()=>{
-  const txt=$("rep").value.trim();if(!txt&&!pend.length)return;
-  $("rp").disabled=true;
-  try{
-    const fd=new FormData();fd.append("txt",txt);pend.forEach(x=>fd.append("files",x,x.name));
-    await api("/tickets/"+cur+"/messages",{method:"POST",body:fd});
-    $("rep").value="";pend=[];fileNames();last="";await load();
-  }catch(e){alert(e==="ferme"?"Ce ticket est fermé.":"L'envoi a échoué. Réessayez dans un instant.")}
-  $("rp").disabled=false;
-};
-f.onsubmit=async e=>{
-  e.preventDefault();
-  const v=id=>$(id).value.trim();
-  if(!v("nom")||!v("motif")||!v("objet")||!v("txt")){msg.className="ko";msg.textContent="Merci de remplir tous les champs obligatoires.";return}
-  btn.disabled=true;msg.className="";msg.textContent="Envoi en cours...";
-  try{
-    const t=await api("/tickets",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nom:v("nom"),tel:v("tel"),motif:v("motif"),objet:v("objet"),txt:v("txt")})});
-    f.reset();$("nom").value=user.name;msg.textContent="";showT(t.id);
-  }catch(err){
-    msg.className="ko";
-    const errors={
-      limite:"Trop de demandes récentes. Réessayez plus tard.",
-      api_not_configured:"Le service de contact n’est pas encore configuré. Réessayez plus tard ou contactez-nous sur Discord.",
-      api_requires_https:"Le service de contact est momentanément indisponible. Réessayez plus tard.",
-      api_unavailable:"Le service de contact est momentanément indisponible. Réessayez plus tard.",
-      guild_unavailable:"Le bot n’est pas connecté au serveur Discord configuré.",
-      discord_permissions:"Le bot n’a pas les permissions nécessaires pour créer le salon de demande.",
-      discord:"Discord a refusé la création du salon. Vérifiez les permissions et la catégorie de tickets.",
-      not_member:"Rejoignez le serveur Discord puis reconnectez-vous au site.",
-      champs:"Certains champs sont invalides. Vérifiez le formulaire et réessayez."
-    };
-    msg.textContent=errors[err]||"Votre demande n’a pas pu être envoyée. Réessayez dans un instant.";
+form.onsubmit=async event=>{
+  event.preventDefault();
+  const value=id=>$(id).value.trim();
+  if(!value("nom")||!value("motif")||!value("objet")||!value("txt")){
+    status.className="ko";status.textContent="Merci de remplir tous les champs obligatoires.";return;
   }
-  btn.disabled=false;
-};
-renderList();
-
-</script>
+  submit.disabled=true;status.className="";status.textContent="Transmission de votre demande…";
+  try{
+    const response=await fetch("/api/contact",{
+      method:"POST",
+      headers:{"Content-Type":"application/json",Authorization:"Bearer "+user.token},
+      body:JSON.stringify({nom:value("nom"),tel:value("tel"),motif:value("motif"),objet:value("objet"),txt:value("txt")})
+    });
+    const result=await response.json().catch(()=>({}));
+    if(response.status===401){alert("Votre session Discord a expiré. Reconnectez-vous.");logout();return;}
+    if(!response.ok)throw new Error(result.error||"send_failed");
+    form.reset();$("nom").value=user.name;
+    status.className="ok";status.textContent="Demande transmise au service concerné. Référence : "+result.reference+". Les réponses seront données sur Discord.";
+  }catch(error){
+    status.className="ko";
+    status.textContent=error.message==="not_configured"?"Ce motif n’est pas encore configuré. Contactez-nous sur Discord.":"L’envoi a échoué. Réessayez plus tard ou contactez-nous sur Discord.";
+  }finally{submit.disabled=false;}
+};</script>
 </body>
 </html>
