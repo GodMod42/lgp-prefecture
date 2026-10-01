@@ -282,6 +282,8 @@ async function start(){
     addObjectList("Chaîne de commandement","command",[["Fonction","fonction"],["Nom","nom"]],()=>({fonction:"Nouvelle fonction",nom:""}));
   };
 
+  const showTicketAttachments=(container,attachments)=>{(attachments||[]).forEach(file=>{if(!file?.data||!file?.name)return;const link=E("a","",`📎 ${file.name}`);link.href=file.data;link.download=file.name;link.target="_blank";link.rel="noopener noreferrer";link.style.cssText="display:block;margin-top:6px;color:var(--bleu);overflow-wrap:anywhere";container.append(link)})};
+  const readTicketAttachments=files=>Promise.all([...files].map(file=>{if(file.size>1024*1024)throw new Error("Chaque pièce jointe doit faire 1 Mo maximum.");if(!["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","image/jpeg","image/png","image/webp","text/plain"].includes(file.type))throw new Error("Format de pièce jointe non accepté.");return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type,size:file.size,data:reader.result});reader.onerror=()=>reject(new Error("Impossible de lire une pièce jointe."));reader.readAsDataURL(file)})})).then(items=>{if(items.reduce((sum,item)=>sum+item.size,0)>2.5*1024*1024)throw new Error("La taille totale des pièces jointes ne peut pas dépasser 2,5 Mo.");return items});
   const drawTickets=async p=>{
     p.append(E("h2","","Demandes de contact"),E("p","sub","Les demandes et les échanges sont conservés dans la base du site. Les webhooks Discord reçoivent aussi les nouvelles demandes et les réponses."));
     const box=E("div"),refresh=E("button","b","Actualiser");refresh.type="button";refresh.onclick=()=>{p.textContent="";drawTickets(p)};p.append(refresh,box);
@@ -296,13 +298,15 @@ async function start(){
       tickets.forEach(ticket=>{
         const card=E("article","ticket"),head=E("div","ticket-head"),title=E("h3","",`${ticket.motif} — ${ticket.subject}`),status=E("b","",ticket.status);
         head.append(title,status);card.append(head,E("small","",`Réf. ${ticket.reference} · ${ticket.requester_name} · ${ticket.discord_username} · ${new Date(ticket.created_at).toLocaleString("fr-FR")}`));
-        (ticket.messages||[]).forEach(message=>{const row=E("div","ticket-msg");row.textContent=`${message.sender==="prefecture"?"Préfecture":"Demandeur"} · ${message.author||""}\n${message.text||""}`;card.append(row)});
+        (ticket.messages||[]).forEach(message=>{const row=E("div","ticket-msg"),text=E("div","",`${message.sender==="prefecture"?"Préfecture":"Demandeur"} · ${message.author||""}\n${message.text||""}`);row.append(text);showTicketAttachments(row,message.attachments);card.append(row)});
         if(ticket.status==="Ouvert"){
           const area=E("textarea");area.placeholder="Écrire une réponse…";area.setAttribute("aria-label","Réponse au demandeur");
+          const picker=E("input");picker.type="file";picker.multiple=true;picker.accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,image/webp,text/plain";
+          const hint=E("small","sub","Pièces jointes : PDF, Word, JPG, PNG, WebP ou TXT — 1 Mo par fichier, 2,5 Mo au total.");
           const actions=E("div","r"),send=E("button","b p","Enregistrer et notifier sur Discord");send.type="button";
-          send.onclick=async()=>{if(!area.value.trim())return;send.disabled=true;try{const result=await call("POST",{reference:ticket.reference,text:area.value});if(!result.discordNotified)alert("Réponse enregistrée. Discord n’a pas reçu sa notification ; tu peux la retrouver dans la demande du panneau.");p.textContent="";await drawTickets(p)}catch(error){alert("Impossible d’enregistrer la réponse : "+error.message);send.disabled=false}};
+          send.onclick=async()=>{if(!area.value.trim()&&!picker.files.length)return;send.disabled=true;try{const attachments=await readTicketAttachments(picker.files);const result=await call("POST",{reference:ticket.reference,text:area.value,attachments});if(!result.discordNotified)alert("Réponse enregistrée. Discord n’a pas reçu sa notification ; tu peux la retrouver dans la demande du panneau.");p.textContent="";await drawTickets(p)}catch(error){alert("Impossible d’enregistrer la réponse : "+error.message);send.disabled=false}};
           const close=E("button","b","Clôturer");close.type="button";close.onclick=async()=>{if(!confirm("Clôturer cette demande ?"))return;close.disabled=true;try{await call("PATCH",{reference:ticket.reference});p.textContent="";await drawTickets(p)}catch(error){alert("Impossible de clôturer : "+error.message);close.disabled=false}};
-          actions.append(send,close);card.append(area,actions);
+          actions.append(send,close);card.append(area,hint,picker,actions);
         }
         if(!ticket.discord_notified)card.append(E("small","bad","Notification Discord non délivrée : la demande reste disponible ici."));
         box.append(card);
