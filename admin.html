@@ -307,7 +307,7 @@ async function start(){
         if(!ticket.discord_notified)card.append(E("small","bad","Notification Discord non délivrée : la demande reste disponible ici."));
         box.append(card);
       });
-    }catch(error){box.textContent=error.message==="admin_required"?"Ton compte n’a pas le rôle Discord Staff.":error.message==="database_not_configured"?"La base de données n’est pas encore reliée au projet Vercel.":"Impossible de charger les demandes. Vérifie la connexion de la base de données et réessaie."}
+    }catch(error){box.textContent=error.message==="admin_required"?"Ton compte n’a pas le rôle Discord Staff.":error.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessaie dans un instant.":error.message==="database_not_configured"?"La base de données n’est pas encore reliée au projet Vercel.":"Impossible de charger les demandes. Vérifie le stockage Vercel et réessaie."}
   };
 
   const drawFields=(p,k)=>{
@@ -338,3 +338,4 @@ async function start(){
 </script>
 </body>
 </html>
+

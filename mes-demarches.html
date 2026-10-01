@@ -229,9 +229,9 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
   <div class="band"></div>
   <section class="pg">
     <div class="w">
-      <div class="hd"><div><p class="eyebrow">Espace citoyen</p><h2>Mes discussions</h2></div><a class="cta" href="contact.html">+ Nouvelle demande</a></div>
-      <div class="alert-b" id="empty"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></svg><span>Vous n'avez encore ouvert aucune demande. <a href="contact.html">Contactez la Préfecture</a> pour en créer une.</span></div>
-      <div class="dl" id="lst" data-notx></div>
+      <div class="hd"><div><p class="eyebrow">Espace citoyen</p><h2>Suivre ma demande</h2></div><a class="cta" href="contact.html">+ Nouvelle demande</a></div>
+      <div class="alert-b"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></svg><span>Retrouvez ici vos demandes, les réponses des services et la possibilité d’ajouter un message.</span></div>
+      <div class="dl" id="tickets"></div>
     </div>
   </section>
 </main>
@@ -262,27 +262,35 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 <script>
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 document.getElementById("theme").onclick=()=>{const d=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}};
-const $=id=>document.getElementById(id);
-const API_URL="/api";   // comme dans contact.html
-const u=getUser();
-if(!u||!u.token){logout();throw new Error("session")}
-const fmt=t=>new Date(t).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).replace(",","");
-(async()=>{
+const user=getUser(),list=document.getElementById("tickets");
+if(!user||!user.token)logout();
+else loadTickets();
+async function loadTickets(){
+  list.textContent="Chargement…";
   try{
-    const r=await fetch(API_URL+"/tickets",{headers:{Authorization:"Bearer "+u.token}});
-    if(r.status===401){alert("Session expirée : reconnecte-toi.");logout();return}
-    const a=await r.json();if(!Array.isArray(a))throw 0;
-    if(!a.length)return;
-    $("empty").hidden=true;
-    a.forEach(t=>{
-      const l=document.createElement("a"),d=document.createElement("div"),n=document.createElement("b"),s=document.createElement("small"),st=document.createElement("span");
-      l.className="li";l.href="contact.html?ticket="+encodeURIComponent(t.id);
-      n.textContent=t.objet;s.textContent="#"+t.id+" · "+t.motif+" · "+fmt(t.date);
-      st.className="st"+(t.statut==="Ouvert"?"":" off");st.textContent=t.statut;
-      d.append(n,s);l.append(d,st);$("lst").append(l);
+    const response=await fetch("/api/tickets",{headers:{Authorization:"Bearer "+user.token},signal:AbortSignal.timeout(15000)}),tickets=await response.json().catch(()=>null);
+    if(response.status===401){logout();return}
+    if(!response.ok||!Array.isArray(tickets))throw new Error(tickets?.error||"load_failed");
+    list.textContent="";
+    if(!tickets.length){list.textContent="Aucune demande pour le moment. Utilisez « Nouvelle demande » pour contacter un service.";return}
+    tickets.forEach(ticket=>{
+      const card=document.createElement("article");card.className="ticket";card.style.cssText="border:1px solid var(--ligne);border-radius:8px;padding:16px;margin:14px 0";
+      const title=document.createElement("h3");title.textContent=ticket.motif+" — "+ticket.subject+" · "+ticket.status;
+      const meta=document.createElement("small");meta.textContent="Réf. "+ticket.reference+" · "+new Date(ticket.created_at).toLocaleString("fr-FR");
+      card.append(title,meta);
+      (ticket.messages||[]).forEach(message=>{const item=document.createElement("p");item.style.cssText="white-space:pre-wrap;background:var(--fond);border-radius:6px;padding:10px;margin:8px 0";item.textContent=(message.sender==="prefecture"?"Préfecture":"Vous")+" · "+(message.author||"")+"\n"+(message.text||"");card.append(item)});
+      if(ticket.status==="Ouvert"){
+        const area=document.createElement("textarea");area.maxLength=1500;area.placeholder="Ajouter un message à cette demande";area.style.cssText="width:100%;min-height:76px;margin:8px 0;padding:10px";
+        const send=document.createElement("button");send.type="button";send.className="cta";send.textContent="Envoyer un message";
+        send.onclick=async()=>{if(!area.value.trim())return;send.disabled=true;try{const r=await fetch("/api/tickets",{method:"POST",headers:{Authorization:"Bearer "+user.token,"Content-Type":"application/json"},body:JSON.stringify({reference:ticket.reference,text:area.value})});if(!r.ok)throw new Error();await loadTickets()}catch(e){alert("Le message n’a pas pu être envoyé. Réessayez plus tard.");send.disabled=false}};
+        card.append(area,send);
+      }
+      if(!ticket.discord_notified){const warning=document.createElement("p");warning.textContent="La notification Discord n’a pas été envoyée ; votre demande reste enregistrée sur le site.";warning.style.color="#b42318";card.append(warning)}
+      list.append(card);
     });
-  }catch(e){$("empty").querySelector("span").textContent="Impossible de charger vos demandes pour le moment."}
-})();
+  }catch(e){list.textContent=e.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessayez dans un instant.":e.message==="database_not_configured"?"Le stockage des demandes n’est pas encore relié à Vercel.":"Impossible de charger les demandes. Réessayez plus tard."}
+}
 </script>
 </body>
 </html>
+
