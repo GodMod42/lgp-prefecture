@@ -2,12 +2,19 @@
   "name": "lgp-prefecture-site",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "npx --yes netlify-cli@27 dev",
-    "start": "npx --yes netlify-cli@27 dev",
-    "deploy": "npx --yes netlify-cli@27 deploy --prod"
+    "dev": "vercel dev",
+    "start": "vercel dev",
+    "deploy": "vercel --prod"
   },
   "engines": {
     "node": ">=18.14.0"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "latest"
+  },
+  "devDependencies": {
+    "vercel": "latest"
   }
 }
