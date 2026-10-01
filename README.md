@@ -1,6 +1,6 @@
 # Déploiement du site sur Vercel
 
-Le dossier `Site` contient le site statique et trois fonctions Vercel qui gèrent les demandes et les conversations. Neon Postgres est la source de données partagée du site ; les webhooks Discord reçoivent les notifications. Aucun bot Discord n’est utilisé pour ces demandes. Le schéma de la base est créé automatiquement au premier appel.
+Le dépôt GitHub Vercel contient uniquement le site : ses fichiers doivent donc être à la racine du dépôt (copie le contenu du dossier local `Site`, pas le dossier `Site` lui-même). Vercel héberge les pages et exécute les fonctions placées dans `api/`. Neon Postgres conserve les demandes et les conversations partagées entre les visiteurs et l’équipe. Les webhooks Discord servent uniquement aux notifications ; aucun bot Discord n’est utilisé. Le schéma de la base est créé automatiquement au premier appel.
 
 ## 1. Relier la base de données
 
@@ -28,9 +28,9 @@ L’administration est réservée au rôle Discord **Staff**, identifié par `15
 
 ## 4. Déployer
 
-Configure `Site` comme **Root Directory** du projet Vercel. Après avoir relié Neon et ajouté les variables webhook, redéploie le projet : Vercel applique les changements d’environnement aux nouveaux déploiements.
+Dans **Settings → Build and Deployment**, laisse **Root Directory** vide (racine du dépôt). Après avoir relié Neon et ajouté les variables webhook, redéploie le projet : Vercel applique les changements d’environnement aux nouveaux déploiements.
 
-Depuis `Site`, `npm install` installe les dépendances et `npm run dev` lance l’environnement local Vercel. `npm run deploy` lance un déploiement de production.
+Depuis la racine locale du site, `npm install` installe les dépendances et `npm run dev` lance l’environnement local Vercel. `npm run deploy` lance un déploiement de production.
 
 ## Fonctionnement
 
