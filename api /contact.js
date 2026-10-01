@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 const GUILD_ID = "1554544322068873286";
 const WEBHOOK_BY_MOTIF = {
   "Support technique": "DISCORD_WEBHOOK_SUPPORT_TECHNIQUE",
@@ -62,7 +64,7 @@ export default async function handler(req, res) {
     stamps.push(now);
     recent.set(member.id, stamps);
 
-    const reference = crypto.randomUUID().slice(0, 8).toUpperCase();
+    const reference = randomUUID().slice(0, 8).toUpperCase();
     const sent = await fetch(`${webhook}?wait=true`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
