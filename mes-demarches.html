@@ -263,6 +263,9 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 document.getElementById("theme").onclick=()=>{const d=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}};
 const user=getUser(),list=document.getElementById("tickets");
+const attachmentAccept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,image/webp,text/plain";
+function showAttachments(container,attachments){(attachments||[]).forEach(file=>{if(!file?.data||!file?.name)return;const link=document.createElement("a");link.href=file.data;link.download=file.name;link.target="_blank";link.rel="noopener noreferrer";link.textContent="📎 "+file.name;link.style.cssText="display:inline-block;margin:6px 10px 0 0;color:var(--bleu);text-decoration:underline;overflow-wrap:anywhere";container.append(link)})}
+function readAttachments(files){return Promise.all([...files].map(file=>{if(file.size>1024*1024)throw new Error("Chaque pièce jointe doit faire 1 Mo maximum.");if(file.type&&!new Set(["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","image/jpeg","image/png","image/webp","text/plain"]).has(file.type))throw new Error("Format de pièce jointe non accepté.");return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type||"application/octet-stream",size:file.size,data:reader.result});reader.onerror=()=>reject(new Error("Impossible de lire une pièce jointe."));reader.readAsDataURL(file)})})).then(items=>{if(items.reduce((sum,item)=>sum+item.size,0)>2.5*1024*1024)throw new Error("La taille totale des pièces jointes ne peut pas dépasser 2,5 Mo.");return items})}
 if(!user||!user.token)logout();
 else loadTickets();
 async function loadTickets(){
@@ -278,12 +281,14 @@ async function loadTickets(){
       const title=document.createElement("h3");title.textContent=ticket.motif+" — "+ticket.subject+" · "+ticket.status;
       const meta=document.createElement("small");meta.textContent="Réf. "+ticket.reference+" · "+new Date(ticket.created_at).toLocaleString("fr-FR");
       card.append(title,meta);
-      (ticket.messages||[]).forEach(message=>{const item=document.createElement("p");item.style.cssText="white-space:pre-wrap;background:var(--fond);border-radius:6px;padding:10px;margin:8px 0";item.textContent=(message.sender==="prefecture"?"Préfecture":"Vous")+" · "+(message.author||"")+"\n"+(message.text||"");card.append(item)});
+      (ticket.messages||[]).forEach(message=>{const item=document.createElement("div");item.style.cssText="white-space:pre-wrap;background:var(--fond);border-radius:6px;padding:10px;margin:8px 0";const text=document.createElement("div");text.textContent=(message.sender==="prefecture"?"Préfecture":"Vous")+" · "+(message.author||"")+"\n"+(message.text||"");item.append(text);showAttachments(item,message.attachments);card.append(item)});
       if(ticket.status==="Ouvert"){
         const area=document.createElement("textarea");area.maxLength=1500;area.placeholder="Ajouter un message à cette demande";area.style.cssText="width:100%;min-height:76px;margin:8px 0;padding:10px";
+        const picker=document.createElement("input");picker.type="file";picker.multiple=true;picker.accept=attachmentAccept;picker.style.display="block";
+        const help=document.createElement("small");help.textContent="Pièces jointes : PDF, Word, JPG, PNG, WebP ou TXT — 1 Mo par fichier, 2,5 Mo au total.";
         const send=document.createElement("button");send.type="button";send.className="cta";send.textContent="Envoyer un message";
-        send.onclick=async()=>{if(!area.value.trim())return;send.disabled=true;try{const r=await fetch("/api/tickets",{method:"POST",headers:{Authorization:"Bearer "+user.token,"Content-Type":"application/json"},body:JSON.stringify({reference:ticket.reference,text:area.value})});if(!r.ok)throw new Error();await loadTickets()}catch(e){alert("Le message n’a pas pu être envoyé. Réessayez plus tard.");send.disabled=false}};
-        card.append(area,send);
+        send.onclick=async()=>{if(!area.value.trim()&&!picker.files.length)return;send.disabled=true;try{const attachments=await readAttachments(picker.files);const r=await fetch("/api/tickets",{method:"POST",headers:{Authorization:"Bearer "+user.token,"Content-Type":"application/json"},body:JSON.stringify({reference:ticket.reference,text:area.value,attachments})});if(!r.ok){const error=await r.json().catch(()=>({}));throw new Error(error.error||"send_failed")}await loadTickets()}catch(e){alert(e.message==="attachments_too_large"?"Les pièces jointes dépassent la limite autorisée.":e.message==="send_failed"?"Le message n’a pas pu être envoyé. Réessayez plus tard.":e.message);send.disabled=false}};
+        card.append(area,help,picker,send);
       }
       if(!ticket.discord_notified){const warning=document.createElement("p");warning.textContent="La notification Discord n’a pas été envoyée ; votre demande reste enregistrée sur le site.";warning.style.color="#b42318";card.append(warning)}
       list.append(card);
