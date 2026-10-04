@@ -3,7 +3,7 @@ import {
   db, discordUser, ensureSchema, isKnownMotif, notifyDiscord, sendJson,
 } from "../lib/contact-data.js";
 
-const MAX_MESSAGE = 1500;
+const MAX_MESSAGE = 3800;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return sendJson(res, 405, { error: "method_not_allowed" });
