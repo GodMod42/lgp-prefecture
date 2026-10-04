@@ -323,7 +323,7 @@ async function start(){
     const controls=E("div","ticket-tools"),refresh=E("button","b","Actualiser"),expand=E("button","b","Tout développer"),collapse=E("button","b","Tout replier"),closeAll=E("button","b danger","Clôturer toutes les demandes ouvertes de cet onglet"),box=E("div");
     refresh.type=expand.type=collapse.type=closeAll.type="button";refresh.onclick=()=>{p.textContent="";drawTickets(p,ticketType)};
     expand.onclick=()=>box.querySelectorAll("details").forEach(item=>item.open=true);collapse.onclick=()=>box.querySelectorAll("details").forEach(item=>item.open=false);
-    closeAll.onclick=async()=>{if(!confirm("Clôturer toutes les demandes ouvertes de l’onglet « "+title+" » ? Cette action concerne uniquement cette catégorie."))return;closeAll.disabled=true;try{const result=await call("PATCH",{closeAll:true,ticketType});alert(result.closed+" demande(s) clôturée(s).");await drawTickets(p,ticketType)}catch(error){alert("Impossible de clôturer les demandes : "+error.message);closeAll.disabled=false}};
+    closeAll.onclick=async()=>{if(!confirm("Clôturer toutes les demandes ouvertes de l’onglet « "+title+" » ? Cette action concerne uniquement cette catégorie."))return;closeAll.disabled=true;try{const result=await call("PATCH",{closeAll:true,ticketType});alert(result.closed+" demande(s) clôturée(s).");await reload()}catch(error){alert("Impossible de clôturer les demandes : "+error.message);closeAll.disabled=false}};
     controls.append(refresh,expand,collapse,closeAll);p.append(controls,box);
     const call=async(method,body)=>{
       const response=await fetch("/api/admin/tickets",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
