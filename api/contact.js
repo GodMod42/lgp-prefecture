@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       (reference, discord_user_id, discord_username, requester_name, phone, motif, subject, messages)
       VALUES (${reference}, ${identity.user.id}, ${identity.user.username}, ${name}, ${phone}, ${motif}, ${subject}, ${JSON.stringify(messages)}::jsonb)`;
 
-    const notified = await notifyDiscord(motif, {
+    const notification = await notifyDiscord(motif, {
       title: `${motif} — ${subject}`.slice(0, 256),
       description: text,
       color: 0x000091,
@@ -42,9 +42,11 @@ export default async function handler(req, res) {
       ],
       footer: { text: `Compte Discord : ${identity.user.id}` },
       timestamp: createdAt,
-    });
-    if (notified) await db()`UPDATE contact_tickets SET discord_notified = TRUE WHERE reference = ${reference}`;
-    return sendJson(res, 201, { ok: true, reference, discordNotified: notified });
+    }, { subject, reference });
+    if (notification.ok) await db()`UPDATE contact_tickets
+      SET discord_notified = TRUE, discord_thread_id = ${notification.threadId || null}
+      WHERE reference = ${reference}`;
+    return sendJson(res, 201, { ok: true, reference, discordNotified: notification.ok });
   } catch (error) {
     console.error("Contact submission failed:", error?.message || error);
     if (error?.message === "database_not_configured")
@@ -52,3 +54,4 @@ export default async function handler(req, res) {
     return sendJson(res, 500, { error: "contact_unavailable" });
   }
 }
+

@@ -32,7 +32,7 @@ export default async function handler(req, res) {
     if (parsedAttachments.error) return sendJson(res, 400, { error: parsedAttachments.error });
     if (!text && !parsedAttachments.files.length) return sendJson(res, 400, { error: "message_required" });
 
-    const rows = await db()`SELECT motif, subject, messages, status FROM contact_tickets WHERE reference = ${reference}`;
+    const rows = await db()`SELECT motif, subject, messages, status, discord_thread_id FROM contact_tickets WHERE reference = ${reference}`;
     if (!rows.length) return sendJson(res, 404, { error: "not_found" });
     const ticket = rows[0];
     if (ticket.status !== "Ouvert") return sendJson(res, 409, { error: "closed" });
@@ -42,15 +42,17 @@ export default async function handler(req, res) {
     const updated = await db()`UPDATE contact_tickets
       SET messages = messages || ${JSON.stringify([reply])}::jsonb, updated_at = NOW()
       WHERE reference = ${reference} RETURNING messages`;
-    const notified = await notifyDiscord(ticket.motif, {
+    const notification = await notifyDiscord(ticket.motif, {
       title: `Réponse — ${ticket.motif} — ${ticket.subject}`.slice(0, 256),
       description: [text, parsedAttachments.files.length ? `${parsedAttachments.files.length} pièce(s) jointe(s), visibles dans le panneau du site.` : ""].filter(Boolean).join("\n\n").slice(0, 4096),
       color: 0x000091,
       fields: [{ name: "Référence de la demande", value: reference }],
       footer: { text: `Réponse de ${reply.author}` },
       timestamp: createdAt,
-    });
-    return sendJson(res, 200, { ok: true, messages: updated[0].messages, discordNotified: notified });
+    }, { subject: ticket.subject, threadId: ticket.discord_thread_id });
+    if (notification.threadId && notification.threadId !== ticket.discord_thread_id)
+      await db()`UPDATE contact_tickets SET discord_thread_id = ${notification.threadId} WHERE reference = ${reference}`;
+    return sendJson(res, 200, { ok: true, messages: updated[0].messages, discordNotified: notification.ok });
   } catch (error) {
     console.error("Admin ticket operation failed:", error?.message || error);
     if (error?.message === "database_not_configured")
