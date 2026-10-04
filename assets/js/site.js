@@ -66,7 +66,7 @@ S.setMarkup=(el,v)=>{const nl=el.closest('a,button');el.textContent='';
    else{const a=document.createElement('a');a.href=u;a.textContent=t;if(/^https?:/i.test(u)){a.target='_blank';a.rel='noopener'}el.append(a)}return m});
   if(last<line.length)el.append(line.slice(last))})};
 S.scan=(doc,page)=>{const out=[],cnt={};
- const add=(el,o)=>{const scope=el.closest('header,footer,.fictif,.aide')?'shared':page,k=scope+':'+hash(o.def),n=cnt[k]=(cnt[k]||0)+1;
+ const add=(el,o)=>{const scope=el.closest('header,footer,.aide')?'shared':page,k=scope+':'+hash(o.def),n=cnt[k]=(cnt[k]||0)+1;
   out.push(Object.assign(o,{el,scope,tag:el.tagName,key:n>1?k+'.'+(n-1):k}))};
  const walk=el=>{
   if(/^(script|style|svg|symbol|noscript|select|textarea|option|iframe)$/i.test(el.tagName)||el.hasAttribute('data-notx')||el.matches('.actions,.urgent,.lgp-urgent,.lgp-prev'))return;
