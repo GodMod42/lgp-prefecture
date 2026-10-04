@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     if (req.method === "GET") {
       const tickets = await db()`SELECT reference, requester_name, phone, motif, subject, status,
         messages, created_at, updated_at FROM contact_tickets
-        WHERE discord_user_id = ${identity.user.id} ORDER BY updated_at DESC`;
+        WHERE discord_user_id = ${identity.user.id} AND is_test = FALSE ORDER BY updated_at DESC`;
       return sendJson(res, 200, tickets);
     }
 
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     if (!reference || (!text && !parsedAttachments.files.length)) return sendJson(res, 400, { error: "fields" });
 
     const rows = await db()`SELECT motif, subject, messages, status, discord_thread_id FROM contact_tickets
-      WHERE reference = ${reference} AND discord_user_id = ${identity.user.id}`;
+      WHERE reference = ${reference} AND discord_user_id = ${identity.user.id} AND is_test = FALSE`;
     if (!rows.length) return sendJson(res, 404, { error: "not_found" });
     const ticket = rows[0];
     if (ticket.status !== "Ouvert") return sendJson(res, 409, { error: "closed" });
