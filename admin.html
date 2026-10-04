@@ -39,6 +39,7 @@ input[type=search]{margin-bottom:16px}
 .job{border:1px solid var(--ligne);border-radius:8px;padding:14px;margin-bottom:12px}
 .job .r{display:flex;gap:8px;margin-top:10px}
 .ticket{border:1px solid var(--ligne);border-radius:8px;padding:14px;margin:12px 0}.ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.ticket-msg{white-space:pre-wrap;background:var(--fond);border-radius:6px;padding:10px;margin:8px 0}.ticket textarea{min-height:80px;margin:8px 0}.ticket small{color:var(--gris)}
+.ticket-section-title{font-size:1.08rem;margin:24px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--ligne)}.ticket-category{border:1px solid var(--ligne);border-radius:8px;margin:10px 0;padding:12px 16px}.ticket-category>summary{font-weight:700;color:var(--bleu);cursor:pointer}.ticket-category[open]>summary{margin-bottom:10px}.ticket-category .ticket{margin-left:10px}
 .bad{color:#c9191e;font-weight:600}
 @media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static}}
 </style>
@@ -296,6 +297,14 @@ async function start(){
     try{
       const tickets=await call("GET");box.textContent="";
       if(!Array.isArray(tickets)||!tickets.length){box.append(E("p","sub","Aucune demande pour le moment."));return}
+      const categories=new Map(),contactCards=[];
+      const categoryFor=ticket=>{
+        if(ticket.motif!=="Déclaration / démarche")return "";
+        const prefix="Démarche en ligne — ";
+        if(ticket.subject.startsWith(prefix))return ticket.subject.slice(prefix.length).trim()||"Autres démarches";
+        if(ticket.subject.startsWith("Création d'entreprise —"))return "Création d'entreprise";
+        return "Autres démarches";
+      };
       tickets.forEach(ticket=>{
         const card=E("article","ticket"),head=E("div","ticket-head"),title=E("h3","",`${ticket.motif} — ${ticket.subject}`),status=E("b","",ticket.status);
         head.append(title,status);card.append(head,E("small","",`Réf. ${ticket.reference} · ${ticket.requester_name} · ${ticket.discord_username} · ${new Date(ticket.created_at).toLocaleString("fr-FR")}`));
@@ -310,8 +319,19 @@ async function start(){
           actions.append(send,close);card.append(area,hint,picker,actions);
         }
         if(!ticket.discord_notified)card.append(E("small","bad","Notification Discord non délivrée : la demande reste disponible ici."));
-        box.append(card);
+        const category=categoryFor(ticket);
+        if(category){if(!categories.has(category))categories.set(category,[]);categories.get(category).push(card)}
+        else contactCards.push(card);
       });
+      if(contactCards.length){box.append(E("h3","ticket-section-title","Demandes de contact"));contactCards.forEach(card=>box.append(card))}
+      if(categories.size){
+        box.append(E("h3","ticket-section-title","Démarche en ligne"));
+        [...categories.entries()].sort(([a],[b])=>a.localeCompare(b,"fr")).forEach(([name,cards])=>{
+          const group=E("details","ticket-category"),summary=E("summary","",name+" ("+cards.length+")");
+          if(name==="Création d'entreprise")group.open=true;
+          group.append(summary,...cards);box.append(group);
+        });
+      }
     }catch(error){box.textContent=error.message==="admin_required"?"Ton compte n’a pas le rôle Discord Staff.":error.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessaie dans un instant.":error.message==="database_not_configured"?"La base de données n’est pas encore reliée au projet Vercel.":"Impossible de charger les demandes. Vérifie le stockage Vercel et réessaie."}
   };
 
