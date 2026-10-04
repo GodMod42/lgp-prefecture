@@ -287,7 +287,7 @@ async function start(){
   const readTicketAttachments=files=>Promise.all([...files].map(file=>{if(file.size>1024*1024)throw new Error("Chaque pièce jointe doit faire 1 Mo maximum.");if(!["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","image/jpeg","image/png","image/webp","text/plain"].includes(file.type))throw new Error("Format de pièce jointe non accepté.");return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type,size:file.size,data:reader.result});reader.onerror=()=>reject(new Error("Impossible de lire une pièce jointe."));reader.readAsDataURL(file)})})).then(items=>{if(items.reduce((sum,item)=>sum+item.size,0)>2.5*1024*1024)throw new Error("La taille totale des pièces jointes ne peut pas dépasser 2,5 Mo.");return items});
   const procedureName=ticket=>{
     const prefix="Démarche en ligne — ";
-    if(ticket.subject?.startsWith(prefix))return ticket.subject.slice(prefix.length).trim()||"Autres démarches";
+    if(ticket.subject?.startsWith(prefix))return ticket.subject.slice(prefix.length).replace(/ \[TEST\]$/," ").trim()||"Autres démarches";
     if(ticket.subject?.startsWith("Création d'entreprise —"))return "Création d'entreprise";
     return "Autres démarches";
   };
@@ -296,7 +296,7 @@ async function start(){
     const heading=E("strong","",ticket.subject?.replace(/^Démarche en ligne — /,"Démarche : ")||"Demande sans objet");
     const meta=E("div","ticket-summary-meta");
     meta.append(E("span","","Réf. "+(ticket.reference||"—")),E("span","",ticket.requester_name||"Demandeur inconnu"),E("span","",ticket.discord_username||""),E("span","",new Date(ticket.created_at||Date.now()).toLocaleString("fr-FR")));
-    main.append(heading,meta);summary.append(main,E("span","ticket-status"+(ticket.status==="Fermé"?" closed":""),ticket.status||"Ouvert"));card.append(summary);
+    main.append(heading,meta);summary.append(main);if(ticket.is_test)summary.append(E("span","demo-badge","TEST"));summary.append(E("span","ticket-status"+(ticket.status==="Fermé"?" closed":""),ticket.status||"Ouvert"));card.append(summary);
     const body=E("div","ticket-content");
     body.append(E("div","ticket-head",ticket.motif+" · "+(ticket.phone?"Téléphone : "+ticket.phone:"Aucun téléphone renseigné")));
     (ticket.messages||[]).forEach(message=>{
@@ -345,17 +345,18 @@ async function start(){
     }catch(error){box.textContent=error.message==="admin_required"?"Ton compte n’a pas le rôle Discord Staff.":error.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessaie dans un instant.":error.message==="database_not_configured"?"La base de données n’est pas encore reliée au projet Vercel.":"Impossible de charger les demandes. Vérifie le stockage Vercel et réessaie."}
   };
   const drawFormTests=p=>{
-    p.append(E("h2","","Tests des formulaires"),E("p","sub","Génère des exemples visuels dans ce panneau pour vérifier la présentation des demandes. Ces simulations ne sont ni enregistrées, ni envoyées sur Discord."));
-    const buttons=E("div","ticket-tools"),preview=E("div","ticket-demo");p.append(buttons,preview);
-    const now=new Date().toISOString();
-    const sample=(kind)=>kind==="contact"?{
-      reference:"TEST-CONTACT",motif:"Support technique",subject:"Problème de connexion au portail",requester_name:"Alex Martin",discord_username:"alex_lgp",phone:"Non renseigné",status:"Ouvert",discord_notified:true,created_at:now,
-      messages:[{sender:"citoyen",author:"Alex Martin",text:"Bonjour, je n'arrive plus à ouvrir mon espace depuis la dernière mise à jour.\nLe message affiché indique que ma session a expiré.",createdAt:now},{sender:"prefecture",author:"Agent de test",text:"Bonjour, merci pour le signalement. Peux-tu essayer de te reconnecter puis nous confirmer si le problème persiste ?",createdAt:now}]
-    }:{
-      reference:"TEST-DEMARCHE",motif:"Déclaration / démarche",subject:kind==="creation"?"Démarche en ligne — Création d'entreprise":"Démarche en ligne — Demande de subvention",requester_name:"Camille Durand",discord_username:"camille_rp",phone:"Téléphone RP non renseigné",status:"Ouvert",discord_notified:true,created_at:now,
-      messages:[{sender:"citoyen",author:"Camille Durand",text:kind==="creation"?"Déclaration de création d’une entreprise RP.\nNom commercial : Atelier des Quais\nActivité : commerce de détail fictif.":"Demande de subvention RP.\nObjet : financement d’un projet associatif fictif.",createdAt:now}]
-    };
-    [["contact","Tester une demande de contact"],["creation","Tester une création d’entreprise"],["procedure","Tester une autre démarche"]].forEach(([kind,label])=>{const button=E("button","b",label);button.type="button";button.onclick=()=>{preview.textContent="";preview.append(E("p","demo-badge","Aperçu de test uniquement"),ticketCard(sample(kind),{demo:true}))};buttons.append(button)});
+    p.append(E("h2","","Tests des formulaires"),E("p","sub","Chaque bouton crée un vrai ticket marqué TEST et l’envoie au webhook du motif. Le demandeur, le sujet, le message Discord et le fil de création d’entreprise portent tous cette mention."));
+    const controls=E("div","ticket-tools"),motif=E("select"),sendContact=E("button","b p","Envoyer le test de contact"),sendCreation=E("button","b p","Envoyer le test de création d’entreprise"),sendProcedure=E("button","b","Envoyer le test d’une autre démarche"),status=E("p","sub"),history=E("div");
+    (D.ticketMotifs||[]).filter(item=>item!=="Déclaration / démarche").forEach(item=>motif.add(new Option(item,item)));
+    sendContact.type=sendCreation.type=sendProcedure.type="button";
+    controls.append(motif,sendContact,sendCreation,sendProcedure);p.append(controls,status,E("h3","ticket-section-title","Demandes de test récentes"),history);
+    const api=async(method,body)=>{const response=await fetch("/api/admin/tickets",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||String(response.status));return data};
+    const refreshHistory=async()=>{history.textContent="Chargement…";try{const tickets=await api("GET"),tests=tickets.filter(item=>item.is_test).slice(0,20);history.textContent="";if(!tests.length){history.append(E("p","sub","Aucun test envoyé pour le moment."));return}tests.forEach(ticket=>history.append(ticketCard(ticket,{call:api,reload:refreshHistory})))}catch(error){history.textContent="Impossible de charger l’historique des tests : "+error.message}};
+    const sendTest=async(button,testForm,selectedMotif)=>{button.disabled=true;status.className="sub";status.textContent="Envoi du test au webhook…";try{const result=await api("POST",{testForm,motif:selectedMotif});status.className=result.discordNotified?"sub":"bad";status.textContent=result.discordNotified?"Test envoyé au webhook · Référence : "+result.reference:"Ticket de test créé ("+result.reference+") mais Discord n’a pas reçu l’envoi. Vérifie le webhook Vercel du motif.";await refreshHistory()}catch(error){status.className="bad";status.textContent="Échec du test : "+error.message}finally{button.disabled=false}};
+    sendContact.onclick=()=>sendTest(sendContact,"contact",motif.value||"Support technique");
+    sendCreation.onclick=()=>sendTest(sendCreation,"creation");
+    sendProcedure.onclick=()=>sendTest(sendProcedure,"procedure");
+    refreshHistory();
   };
 
   const drawFields=(p,k)=>{
