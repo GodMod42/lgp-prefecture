@@ -2,6 +2,16 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(() => {
+  let user = null;
+  try { user = JSON.parse(localStorage.getItem("lgp_user") || "null"); } catch {}
+  if (!user || !user.token || !(user.exp > Date.now())) {
+    try { sessionStorage.setItem("lgp_after_login", "creation-entreprise.html"); } catch {}
+    location.replace("connexion.html");
+  }
+})();
+</script>
 <title>Création d’entreprise — Préfecture de Police LGP</title>
 <meta name="description" content="Démarche de création ou d'immatriculation d'entreprise.">
 <link rel="icon" type="image/png" href="assets/img/favicon2.png">
@@ -38,17 +48,20 @@ footer{background:#1e1e1e;color:#ddd;font-size:.92rem}
 @media(max-width:650px){.cols{grid-template-columns:1fr}header nav{overflow-x:auto;flex-wrap:nowrap;white-space:nowrap}.form-actions{flex-direction:column-reverse;align-items:stretch}.form-actions .btn{text-align:center;justify-content:center}}</style>
 </head>
 <body>
-<header><div class="w">
-<a class="logo" href="index.html" aria-label="Préfecture de Police LGP — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de Police LGP — Liberté Égalité Fraternité"></a>
-<nav aria-label="Navigation principale"><a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html" aria-current="page">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a></nav>
-<div class="actions"><button id="theme" type="button" aria-label="Changer de thème"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></svg></button><a class="btn-co" href="connexion.html">Se connecter</a></div>
-</div></header>
+<header>
+  <div class="w">
+    <a class="logo" href="index.html" aria-label="Préfecture de Police LGP — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de Police LGP"></a>
+    <nav aria-label="Navigation principale">
+      <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html" aria-current="page">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
+    </nav>
+    <div class="actions"><button id="theme" aria-label="Changer de thème"><svg class="i" style="width:18px;height:18px"><use href="#icon-sun"/></svg></button><a class="btn-co" href="connexion.html">Se connecter</a></div>
+  </div>
+</header>
 <div class="band"></div>
 <main><div class="wrap">
 <a class="back" href="demarche.html">← Retour aux démarches en ligne</a>
 <div class="intro"><p class="eyebrow">Démarches en ligne · Entreprises</p><h1>Création d'entreprise</h1><p>Déclaration de création ou d'immatriculation d'entreprise.</p></div>
 <div class="notice"><strong>Cette démarche est traitée par l&#39;équipe du portail.</strong> Elle n&#39;a pas de valeur administrative et n&#39;est transmise à aucun organisme public. N&#39;indiquez aucun numéro de sécurité sociale, coordonnée privée ou document d&#39;identité réel.</div>
-<p id="login-prompt" hidden>Pour envoyer cette démarche, <a href="connexion.html">connecte-toi avec Discord</a>. Tu reviendras ensuite sur ce formulaire.</p>
 <form id="company-form">
 <fieldset class="card"><legend>1. Activité antérieure</legend><div class="field"><label>Avez-vous déjà exercé une activité non salariée ?</label><div class="inline"><label><input type="radio" name="previous_activity" value="Oui"> Oui</label><label><input type="radio" name="previous_activity" value="Non"> Non</label></div></div><div class="field"><label for="previous-id">Si oui, identifiant de référence</label><input id="previous-id" name="previous_id" maxlength="80" autocomplete="off"></div></fieldset>
 <fieldset class="card"><legend>2. Mode d'exercice</legend><div class="inline"><label><input type="radio" name="business_mode" value="Entrepreneur individuel (EI)" required> 2A — Entrepreneur individuel (EI)</label><label><input type="radio" name="business_mode" value="Entrepreneur individuel à responsabilité limitée (EIRL)"> 2B — Entrepreneur individuel à responsabilité limitée (EIRL)</label></div></fieldset>
@@ -73,20 +86,23 @@ footer{background:#1e1e1e;color:#ddd;font-size:.92rem}
 <fieldset class="card"><legend>21. Signature</legend><fieldset class="choice"><legend>Signataire</legend><div class="vertical"><label><input type="radio" name="signer_role" value="Déclarant" required> Déclarant désigné au cadre 3</label><label><input type="radio" name="signer_role" value="Mandataire"> Mandataire ayant procuration</label></div></fieldset><div class="field"><label for="mandate">Si mandataire : nom, prénom et adresse</label><input id="mandate" name="mandate" maxlength="200" autocomplete="off"></div><p class="checks"><label><input type="checkbox" name="accuracy" value="Confirmé" required> Je certifie l'exactitude des renseignements communiqués.</label></p><div class="grid"><div class="field"><label for="signed-place">Fait à</label><input id="signed-place" name="signed_place" maxlength="100" autocomplete="off"></div><div class="field"><label for="signed-date">Le</label><input id="signed-date" name="signed_date" type="date"></div></div></fieldset>
 <div class="form-actions"><a class="btn secondary" href="demarche.html">Annuler</a><button class="btn" type="submit" id="submit-form">Envoyer la déclaration</button></div><p class="status" id="form-status" role="status" aria-live="polite"></p>
 </form></div></main>
-<footer><div class="w"><div class="cols">
-<div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de Police LGP" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
-<div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
-<div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
-<div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
-<div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
-</div><div class="bas"><span>© 2026 Préfecture de Police du Grand Paname — Portail de services communautaires.</span><nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav></div></div></footer>
+<footer><div class="w">
+  <div class="cols">
+    <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de Police LGP" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
+    <div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
+    <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
+    <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
+    <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
+  </div>
+  <div class="bas"><span>© 2026 Préfecture de Police du Grand Paname — Portail de services communautaires.</span><nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="plan-du-site.html">Plan du site</a></nav></div>
+</div></footer>
 
 <script src="assets/js/auth.js"></script>
 <script>
 try{const saved=localStorage.getItem("theme");if(saved)document.documentElement.dataset.theme=saved}catch(e){}
 document.getElementById("theme").onclick=()=>{const dark=document.documentElement.dataset.theme==="dark";document.documentElement.dataset.theme=dark?"light":"dark";try{localStorage.setItem("theme",dark?"light":"dark")}catch(e){}};
 const form=document.getElementById("company-form"),status=document.getElementById("form-status"),submit=document.getElementById("submit-form");
-let user=getUser();if(!user||!user.token){sessionStorage.setItem("lgp_after_login","creation-entreprise.html");document.getElementById("login-prompt").hidden=false;submit.disabled=true}
+let user=getUser();if(!user||!user.token){sessionStorage.setItem("lgp_after_login","creation-entreprise.html");location.replace("connexion.html")}
 function summary(){const rows=["DÉCLARATION DE CRÉATION D’ENTREPRISE"];for(const c of form.elements){if(!c.name||c.disabled||["submit","button","reset"].includes(c.type)||(["radio","checkbox"].includes(c.type)&&!c.checked))continue;const v=String(c.value||"").trim();if(!v)continue;const question=c.closest(".field")?.querySelector(":scope > label")?.textContent?.trim(),group=c.closest("fieldset.choice")?.querySelector("legend")?.textContent?.trim(),own=c.closest("label")?.textContent?.trim(),label=question||group||own||c.name.replaceAll("_"," ");rows.push(label+": "+v)}return rows.join("\n")}
 form.addEventListener("submit",async e=>{e.preventDefault();if(!user||!user.token){sessionStorage.setItem("lgp_after_login","creation-entreprise.html");location.href="connexion.html";return}if(!form.reportValidity())return;const owner=(document.getElementById("birth-name").value+" "+document.getElementById("first-names").value).trim(),text=summary();if(text.length>3800){status.className="status err";status.textContent="Le formulaire est trop long. Raccourcis les observations ou descriptions.";return}submit.disabled=true;status.className="status";status.textContent="Envoi de la déclaration…";try{const r=await fetch("/api/contact",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+user.token},body:JSON.stringify({nom:owner,tel:document.getElementById("mail-phone").value.trim(),motif:"Déclaration / démarche",objet:"Démarche en ligne — Création d'entreprise",txt:text})}),data=await r.json().catch(()=>({}));if(r.status===401){sessionStorage.setItem("lgp_after_login","creation-entreprise.html");logout();return}if(!r.ok)throw new Error(data.error||"send_failed");status.className="status ok";status.textContent="Déclaration envoyée. Référence : "+data.reference+". Tu peux suivre et compléter la conversation dans « Mes démarches ».";form.reset();const link=document.createElement("a");link.href="mes-demarches.html";link.textContent="Voir mes démarches";status.append(document.createElement("br"),link)}catch(err){status.className="status err";status.textContent=err.message==="database_not_configured"?"Le stockage des demandes n'est pas configuré sur Vercel.":err.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Ta demande n'a pas été envoyée. Réessaie dans un instant.":"L'envoi a échoué. Réessaie plus tard.";submit.disabled=false}});
 </script>
