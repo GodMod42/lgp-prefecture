@@ -1,6 +1,7 @@
 import {
-  db, discordUser, ensureSchema, notifyDiscord, parseAttachments, sendJson,
+  db, discordUser, ensureSchema, isKnownMotif, notifyDiscord, parseAttachments, sendJson,
 } from "../../lib/contact-data.js";
+import { randomUUID } from "node:crypto";
 
 export default async function handler(req, res) {
   const identity = await discordUser(req, true).catch(() => ({ error: "discord_auth_unavailable", status: 502 }));
@@ -10,12 +11,62 @@ export default async function handler(req, res) {
     await ensureSchema();
     if (req.method === "GET") {
       const tickets = await db()`SELECT reference, discord_user_id, discord_username, requester_name,
-        phone, motif, subject, status, messages, discord_notified, created_at, updated_at
+        phone, motif, subject, status, messages, discord_notified, is_test, created_at, updated_at
         FROM contact_tickets ORDER BY CASE WHEN status = 'Ouvert' THEN 0 ELSE 1 END, updated_at DESC`;
       return sendJson(res, 200, tickets);
     }
 
     const payload = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    if (req.method === "POST" && payload.testForm) {
+      const testForm = String(payload.testForm);
+      let motif, subject, formLabel;
+      if (testForm === "contact") {
+        motif = String(payload.motif || "Support technique").trim();
+        if (!isKnownMotif(motif) || motif === "Déclaration / démarche")
+          return sendJson(res, 400, { error: "unknown_motif" });
+        subject = "[TEST] Formulaire de contact";
+        formLabel = "formulaire de contact";
+      } else if (testForm === "creation") {
+        motif = "Déclaration / démarche";
+        subject = "Démarche en ligne — Création d'entreprise [TEST]";
+        formLabel = "formulaire de création d’entreprise";
+      } else if (testForm === "procedure") {
+        motif = "Déclaration / démarche";
+        subject = "Démarche en ligne — Demande de subvention [TEST]";
+        formLabel = "formulaire d’une autre démarche";
+      } else {
+        return sendJson(res, 400, { error: "test_form_invalid" });
+      }
+
+      const reference = "TEST-" + randomUUID().replaceAll("-", "").slice(0, 10).toUpperCase();
+      const author = "TEST — " + String(identity.member.nick || identity.user.username || "Admin").slice(0, 80);
+      const requester = "TEST — " + String(identity.member.nick || identity.user.username || "Admin").slice(0, 80);
+      const username = "TEST — " + String(identity.user.username || "Admin").slice(0, 80);
+      const phone = "TEST — aucun numéro réel";
+      const text = `[TEST] Soumission de test du ${formLabel}, générée depuis le panel admin. Les informations ci-dessous sont fictives et servent uniquement à vérifier l’arrivée de la demande et des réponses.`;
+      const createdAt = new Date().toISOString();
+      const messages = [{ sender: "citoyen", author, text, createdAt }];
+      await db()`INSERT INTO contact_tickets
+        (reference, discord_user_id, discord_username, requester_name, phone, motif, subject, messages, is_test)
+        VALUES (${reference}, ${identity.user.id}, ${username}, ${requester}, ${phone}, ${motif}, ${subject}, ${JSON.stringify(messages)}::jsonb, TRUE)`;
+
+      const notification = await notifyDiscord(motif, {
+        title: `${motif} — ${subject}`.slice(0, 256),
+        description: text,
+        color: 0xff8a00,
+        fields: [
+          { name: "Demandeur", value: requester, inline: true },
+          { name: "Téléphone", value: phone, inline: true },
+          { name: "Référence de test", value: reference, inline: true },
+        ],
+        footer: { text: `TEST · webhook du motif ${motif}` },
+        timestamp: createdAt,
+      }, { subject, reference, test: true });
+      if (notification.ok) await db()`UPDATE contact_tickets
+        SET discord_notified = TRUE, discord_thread_id = ${notification.threadId || null}
+        WHERE reference = ${reference}`;
+      return sendJson(res, 201, { ok: true, reference, discordNotified: notification.ok });
+    }
     if (req.method === "PATCH" && payload.closeAll === true) {
       const ticketType = String(payload.ticketType || "");
       let closed;
@@ -46,13 +97,19 @@ export default async function handler(req, res) {
     if (parsedAttachments.error) return sendJson(res, 400, { error: parsedAttachments.error });
     if (!text && !parsedAttachments.files.length) return sendJson(res, 400, { error: "message_required" });
 
-    const rows = await db()`SELECT motif, subject, messages, status, discord_thread_id FROM contact_tickets WHERE reference = ${reference}`;
+    const rows = await db()`SELECT motif, subject, messages, status, discord_thread_id, is_test FROM contact_tickets WHERE reference = ${reference}`;
     if (!rows.length) return sendJson(res, 404, { error: "not_found" });
     const ticket = rows[0];
     if (ticket.status !== "Ouvert") return sendJson(res, 409, { error: "closed" });
 
     const createdAt = new Date().toISOString();
-    const reply = { sender: "prefecture", author: identity.member.nick || identity.user.username, text, attachments: parsedAttachments.files, createdAt };
+    const reply = {
+      sender: "prefecture",
+      author: ticket.is_test ? `TEST — ${identity.member.nick || identity.user.username}` : (identity.member.nick || identity.user.username),
+      text: ticket.is_test ? `[TEST] ${text}` : text,
+      attachments: parsedAttachments.files,
+      createdAt,
+    };
     const updated = await db()`UPDATE contact_tickets
       SET messages = messages || ${JSON.stringify([reply])}::jsonb, updated_at = NOW()
       WHERE reference = ${reference} RETURNING messages`;
@@ -63,7 +120,7 @@ export default async function handler(req, res) {
       fields: [{ name: "Référence de la demande", value: reference }],
       footer: { text: `Réponse de ${reply.author}` },
       timestamp: createdAt,
-    }, { subject: ticket.subject, threadId: ticket.discord_thread_id });
+    }, { subject: ticket.subject, threadId: ticket.discord_thread_id, test: ticket.is_test });
     if (notification.threadId && notification.threadId !== ticket.discord_thread_id)
       await db()`UPDATE contact_tickets SET discord_thread_id = ${notification.threadId} WHERE reference = ${reference}`;
     return sendJson(res, 200, { ok: true, messages: updated[0].messages, discordNotified: notification.ok });
