@@ -247,7 +247,7 @@ const REDIRECT = location.origin + location.pathname;
 
 const msg=document.getElementById("msg");
 const say=(t,c)=>{msg.className=c||"";msg.innerHTML=t};
-if(getUser()&&!location.hash.includes("access_token")) location.replace("contact.html");
+if(getUser()&&!location.hash.includes("access_token")){const next=sessionStorage.getItem("lgp_after_login")||"contact.html";sessionStorage.removeItem("lgp_after_login");location.replace(next)}
 
 document.getElementById("go").onclick=()=>{
   if(!CLIENT_ID||location.protocol==="file:"){say("Connexion Discord non configurée : renseigne CLIENT_ID et héberge le site (le fichier ne peut pas être ouvert en local).","ko");return}
@@ -276,7 +276,7 @@ document.getElementById("go").onclick=()=>{
     const ROLES=[["1554580932411789402","Staff"],["1554577683273486407","Citoyen"]];
     const role=(ROLES.find(r=>(m.roles||[]).includes(r[0]))||[])[1]||"";
     localStorage.setItem(AUTH_KEY,JSON.stringify({id:u.id,name,avatar,role,roles:m.roles||[],token:h.get("access_token"),exp:Date.now()+(+h.get("expires_in")||3600)*1000}));
-    location.replace("contact.html");
+    const next=sessionStorage.getItem("lgp_after_login")||"contact.html";sessionStorage.removeItem("lgp_after_login");location.replace(next);
   }catch(e){say("Impossible de contacter Discord. Réessaie dans un instant.","ko")}
 })();
 
