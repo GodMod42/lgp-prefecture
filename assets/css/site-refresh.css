@@ -175,6 +175,7 @@ h2 { letter-spacing: -.025em; }
 .faq-item.open > button { background: var(--lav); color: var(--bleu-f); outline: 0; border-left: 3px solid var(--bleu); }
 .faq-answer { padding: 12px 18px 18px; line-height: 1.7; }
 .demarches { background: var(--bleu-f); }
+.demarches h2 { color: #fff; }
 .quick { gap: 12px; }
 .quick a { border: 1px solid rgb(255 255 255 / .28); border-radius: var(--rayon); transition: transform .16s ease, box-shadow .16s ease; }
 .quick a:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgb(0 0 0 / .18); }
