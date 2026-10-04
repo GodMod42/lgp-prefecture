@@ -1,5 +1,5 @@
 import {
-  db, discordUser, ensureSchema, notifyDiscord, sendJson,
+  db, discordUser, ensureSchema, notifyDiscord, parseAttachments, sendJson,
 } from "../../lib/contact-data.js";
 
 export default async function handler(req, res) {
@@ -28,7 +28,9 @@ export default async function handler(req, res) {
 
     if (req.method !== "POST") return sendJson(res, 405, { error: "method_not_allowed" });
     const text = String(payload.text || "").trim().slice(0, 1500);
-    if (!text) return sendJson(res, 400, { error: "message_required" });
+    const parsedAttachments = parseAttachments(payload.attachments || []);
+    if (parsedAttachments.error) return sendJson(res, 400, { error: parsedAttachments.error });
+    if (!text && !parsedAttachments.files.length) return sendJson(res, 400, { error: "message_required" });
 
     const rows = await db()`SELECT motif, subject, messages, status FROM contact_tickets WHERE reference = ${reference}`;
     if (!rows.length) return sendJson(res, 404, { error: "not_found" });
@@ -36,13 +38,13 @@ export default async function handler(req, res) {
     if (ticket.status !== "Ouvert") return sendJson(res, 409, { error: "closed" });
 
     const createdAt = new Date().toISOString();
-    const reply = { sender: "prefecture", author: identity.member.nick || identity.user.username, text, createdAt };
+    const reply = { sender: "prefecture", author: identity.member.nick || identity.user.username, text, attachments: parsedAttachments.files, createdAt };
     const updated = await db()`UPDATE contact_tickets
       SET messages = messages || ${JSON.stringify([reply])}::jsonb, updated_at = NOW()
       WHERE reference = ${reference} RETURNING messages`;
     const notified = await notifyDiscord(ticket.motif, {
       title: `Réponse — ${ticket.motif} — ${ticket.subject}`.slice(0, 256),
-      description: text,
+      description: [text, parsedAttachments.files.length ? `${parsedAttachments.files.length} pièce(s) jointe(s), visibles dans le panneau du site.` : ""].filter(Boolean).join("\n\n").slice(0, 4096),
       color: 0x000091,
       fields: [{ name: "Référence de la demande", value: reference }],
       footer: { text: `Réponse de ${reply.author}` },
@@ -56,3 +58,4 @@ export default async function handler(req, res) {
     return sendJson(res, 500, { error: "admin_unavailable" });
   }
 }
+
