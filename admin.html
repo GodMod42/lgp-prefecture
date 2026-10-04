@@ -38,8 +38,7 @@ input[type=search]{margin-bottom:16px}
 .pv{margin:8px 0 20px;border:1px dashed var(--ligne)}
 .job{border:1px solid var(--ligne);border-radius:8px;padding:14px;margin-bottom:12px}
 .job .r{display:flex;gap:8px;margin-top:10px}
-.ticket{border:1px solid var(--ligne);border-radius:8px;padding:14px;margin:12px 0}.ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.ticket-msg{white-space:pre-wrap;background:var(--fond);border-radius:6px;padding:10px;margin:8px 0}.ticket textarea{min-height:80px;margin:8px 0}.ticket small{color:var(--gris)}
-.ticket-section-title{font-size:1.08rem;margin:24px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--ligne)}.ticket-category{border:1px solid var(--ligne);border-radius:8px;margin:10px 0;padding:12px 16px}.ticket-category>summary{font-weight:700;color:var(--bleu);cursor:pointer}.ticket-category[open]>summary{margin-bottom:10px}.ticket-category .ticket{margin-left:10px}
+.ticket{border:1px solid var(--ligne);border-radius:9px;background:var(--carte);margin:10px 0;overflow:hidden}.ticket>summary{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;list-style:none}.ticket>summary::-webkit-details-marker,.ticket-category>summary::-webkit-details-marker{display:none}.ticket-summary-main{flex:1;min-width:0}.ticket-summary-main strong{display:block;overflow-wrap:anywhere}.ticket-summary-meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;color:var(--gris);font-size:.82rem}.ticket-status{flex:none;border-radius:20px;padding:3px 10px;background:var(--lav);font-size:.78rem;font-weight:700}.ticket-status.closed{background:var(--fond);color:var(--gris)}.ticket-content{padding:4px 16px 16px;border-top:1px solid var(--ligne)}.ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.ticket-message{border-left:3px solid var(--ligne);background:var(--fond);border-radius:0 7px 7px 0;padding:10px 12px;margin:10px 0}.ticket-message.staff{border-color:var(--bleu)}.ticket-message-head{display:flex;justify-content:space-between;gap:10px;color:var(--gris);font-size:.8rem;font-weight:700}.ticket-message-text{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px}.ticket textarea{min-height:80px;margin:8px 0}.ticket small{color:var(--gris)}.ticket-tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.ticket-tools .b.danger{color:#b42318;border-color:#d94a4a}.ticket-tools .b.danger:hover{background:#fff1f0}.ticket-section-title{font-size:1.08rem;margin:22px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--ligne)}.ticket-category{border:1px solid var(--ligne);border-radius:9px;margin:12px 0;padding:0 12px 8px}.ticket-category>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 4px;font-weight:700;color:var(--bleu);cursor:pointer;list-style:none}.ticket-category[open]>summary{border-bottom:1px solid var(--ligne)}.ticket-category .ticket{margin:10px 0}.ticket-demo{border:1px dashed var(--bleu);background:var(--lav);border-radius:8px;padding:14px;margin-top:14px}.ticket-demo .ticket{border-style:dashed}.demo-badge{font-size:.75rem;font-weight:800;color:var(--bleu);text-transform:uppercase;letter-spacing:.04em}
 .bad{color:#c9191e;font-weight:600}
 @media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static}}
 </style>
@@ -106,7 +105,7 @@ async function start(){
   const save=()=>{try{D.updated=new Date().toISOString();localStorage.setItem("lgp_admin_draft",JSON.stringify(D))}catch(e){}
     $("#st").innerHTML="Brouillon enregistré à "+new Date().toLocaleTimeString("fr-FR")+" — <b>pas encore publié</b> : télécharge content.json et remplace celui de ton site."};
   const nav=()=>{const n=$("#nav");n.textContent="";
-    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["presentationData","Gérer la présentation"],["tickets","Demandes de contact"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
+    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["presentationData","Gérer la présentation"],["tickets","Demandes de contact"],["procedures","Démarches en ligne"],["testForms","Tests des formulaires"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
     it.forEach(x=>{if(!x){n.append(E("div","sep"));return}
       const b=E("button","nv"+(x[0]===view?" on":""),x[1]);b.type="button";
       const c=(x[0]==="urgent"||x[0]==="jobs"||x[0]==="motifs"||x[0]==="actualites"||x[0]==="presentationData")?0:of(x[0]).filter(f=>D.texts[f.key]!=null).length;
@@ -286,53 +285,77 @@ async function start(){
 
   const showTicketAttachments=(container,attachments)=>{(attachments||[]).forEach(file=>{if(!file?.data||!file?.name)return;const link=E("a","",`📎 ${file.name}`);link.href=file.data;link.download=file.name;link.target="_blank";link.rel="noopener noreferrer";link.style.cssText="display:block;margin-top:6px;color:var(--bleu);overflow-wrap:anywhere";container.append(link)})};
   const readTicketAttachments=files=>Promise.all([...files].map(file=>{if(file.size>1024*1024)throw new Error("Chaque pièce jointe doit faire 1 Mo maximum.");if(!["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","image/jpeg","image/png","image/webp","text/plain"].includes(file.type))throw new Error("Format de pièce jointe non accepté.");return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type,size:file.size,data:reader.result});reader.onerror=()=>reject(new Error("Impossible de lire une pièce jointe."));reader.readAsDataURL(file)})})).then(items=>{if(items.reduce((sum,item)=>sum+item.size,0)>2.5*1024*1024)throw new Error("La taille totale des pièces jointes ne peut pas dépasser 2,5 Mo.");return items});
-  const drawTickets=async p=>{
-    p.append(E("h2","","Demandes de contact"),E("p","sub","Les demandes et les échanges sont conservés dans la base du site. Les webhooks Discord reçoivent aussi les nouvelles demandes et les réponses."));
-    const box=E("div"),refresh=E("button","b","Actualiser");refresh.type="button";refresh.onclick=()=>{p.textContent="";drawTickets(p)};p.append(refresh,box);
+  const procedureName=ticket=>{
+    const prefix="Démarche en ligne — ";
+    if(ticket.subject?.startsWith(prefix))return ticket.subject.slice(prefix.length).trim()||"Autres démarches";
+    if(ticket.subject?.startsWith("Création d'entreprise —"))return "Création d'entreprise";
+    return "Autres démarches";
+  };
+  const ticketCard=(ticket,{demo=false,call=null,reload=null}={})=>{
+    const card=E("details","ticket ticket-card"),summary=E("summary"),main=E("div","ticket-summary-main");
+    const heading=E("strong","",ticket.subject?.replace(/^Démarche en ligne — /,"Démarche : ")||"Demande sans objet");
+    const meta=E("div","ticket-summary-meta");
+    meta.append(E("span","","Réf. "+(ticket.reference||"—")),E("span","",ticket.requester_name||"Demandeur inconnu"),E("span","",ticket.discord_username||""),E("span","",new Date(ticket.created_at||Date.now()).toLocaleString("fr-FR")));
+    main.append(heading,meta);summary.append(main,E("span","ticket-status"+(ticket.status==="Fermé"?" closed":""),ticket.status||"Ouvert"));card.append(summary);
+    const body=E("div","ticket-content");
+    body.append(E("div","ticket-head",ticket.motif+" · "+(ticket.phone?"Téléphone : "+ticket.phone:"Aucun téléphone renseigné")));
+    (ticket.messages||[]).forEach(message=>{
+      const staff=message.sender==="prefecture",row=E("div","ticket-message"+(staff?" staff":"")),header=E("div","ticket-message-head");
+      header.append(E("span","",(staff?"Réponse de la Préfecture":"Message du demandeur")+(message.author?" · "+message.author:"")),E("span","",message.createdAt?new Date(message.createdAt).toLocaleString("fr-FR"):""));
+      row.append(header,E("div","ticket-message-text",message.text||"(Message vide)"));showTicketAttachments(row,message.attachments);body.append(row);
+    });
+    if(ticket.status==="Ouvert"&&!demo&&call){
+      const area=E("textarea");area.placeholder="Rédige une réponse claire…";area.setAttribute("aria-label","Réponse au demandeur");
+      const picker=E("input");picker.type="file";picker.multiple=true;picker.accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,image/webp,text/plain";
+      const hint=E("small","sub","Pièces jointes : PDF, Word, JPG, PNG, WebP ou TXT — 1 Mo par fichier, 2,5 Mo au total.");
+      const actions=E("div","ticket-tools"),send=E("button","b p","Envoyer la réponse");send.type="button";
+      send.onclick=async()=>{if(!area.value.trim()&&!picker.files.length)return;send.disabled=true;try{const attachments=await readTicketAttachments(picker.files);const result=await call("POST",{reference:ticket.reference,text:area.value,attachments});if(!result.discordNotified)alert("Réponse enregistrée sur le site. Discord n’a pas reçu sa notification.");await reload()}catch(error){alert("Impossible d’enregistrer la réponse : "+error.message);send.disabled=false}};
+      const close=E("button","b","Clôturer cette demande");close.type="button";close.onclick=async()=>{if(!confirm("Clôturer la demande "+ticket.reference+" ?"))return;close.disabled=true;try{await call("PATCH",{reference:ticket.reference});await reload()}catch(error){alert("Impossible de clôturer : "+error.message);close.disabled=false}};
+      actions.append(send,close);body.append(area,hint,picker,actions);
+    }
+    if(!demo&&!ticket.discord_notified)body.append(E("p","bad","Notification Discord non délivrée. La demande reste conservée sur le site."));
+    if(demo)body.prepend(E("p","demo-badge","Simulation locale · rien n’est enregistré ni envoyé"));
+    card.append(body);if(demo)card.open=true;return card;
+  };
+  const drawTickets=async(p,ticketType="contact")=>{
+    const procedures=ticketType==="procedure",title=procedures?"Démarches en ligne":"Demandes de contact";
+    p.append(E("h2","",title),E("p","sub",procedures?"Les déclarations et formulaires de démarches sont regroupés ici par type.":"Les demandes générales sont séparées des démarches administratives. Ouvre une fiche pour lire la conversation et répondre."));
+    const controls=E("div","ticket-tools"),refresh=E("button","b","Actualiser"),expand=E("button","b","Tout développer"),collapse=E("button","b","Tout replier"),closeAll=E("button","b danger","Clôturer toutes les demandes ouvertes de cet onglet"),box=E("div");
+    refresh.type=expand.type=collapse.type=closeAll.type="button";refresh.onclick=()=>{p.textContent="";drawTickets(p,ticketType)};
+    expand.onclick=()=>box.querySelectorAll("details").forEach(item=>item.open=true);collapse.onclick=()=>box.querySelectorAll("details").forEach(item=>item.open=false);
+    closeAll.onclick=async()=>{if(!confirm("Clôturer toutes les demandes ouvertes de l’onglet « "+title+" » ? Cette action concerne uniquement cette catégorie."))return;closeAll.disabled=true;try{const result=await call("PATCH",{closeAll:true,ticketType});alert(result.closed+" demande(s) clôturée(s).");await reload()}catch(error){alert("Impossible de clôturer les demandes : "+error.message);closeAll.disabled=false}};
+    controls.append(refresh,expand,collapse,closeAll);p.append(controls,box);
     const call=async(method,body)=>{
       const response=await fetch("/api/admin/tickets",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
       const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||String(response.status));return data;
     };
+    const reload=()=>{p.textContent="";return drawTickets(p,ticketType)};
     box.append(E("p","sub","Chargement des demandes…"));
     try{
-      const tickets=await call("GET");box.textContent="";
-      if(!Array.isArray(tickets)||!tickets.length){box.append(E("p","sub","Aucune demande pour le moment."));return}
-      const categories=new Map(),contactCards=[];
-      const categoryFor=ticket=>{
-        if(ticket.motif!=="Déclaration / démarche")return "";
-        const prefix="Démarche en ligne — ";
-        if(ticket.subject.startsWith(prefix))return ticket.subject.slice(prefix.length).trim()||"Autres démarches";
-        if(ticket.subject.startsWith("Création d'entreprise —"))return "Création d'entreprise";
-        return "Autres démarches";
-      };
-      tickets.forEach(ticket=>{
-        const card=E("article","ticket"),head=E("div","ticket-head"),title=E("h3","",`${ticket.motif} — ${ticket.subject}`),status=E("b","",ticket.status);
-        head.append(title,status);card.append(head,E("small","",`Réf. ${ticket.reference} · ${ticket.requester_name} · ${ticket.discord_username} · ${new Date(ticket.created_at).toLocaleString("fr-FR")}`));
-        (ticket.messages||[]).forEach(message=>{const row=E("div","ticket-msg"),text=E("div","",`${message.sender==="prefecture"?"Préfecture":"Demandeur"} · ${message.author||""}\n${message.text||""}`);row.append(text);showTicketAttachments(row,message.attachments);card.append(row)});
-        if(ticket.status==="Ouvert"){
-          const area=E("textarea");area.placeholder="Écrire une réponse…";area.setAttribute("aria-label","Réponse au demandeur");
-          const picker=E("input");picker.type="file";picker.multiple=true;picker.accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,image/webp,text/plain";
-          const hint=E("small","sub","Pièces jointes : PDF, Word, JPG, PNG, WebP ou TXT — 1 Mo par fichier, 2,5 Mo au total.");
-          const actions=E("div","r"),send=E("button","b p","Enregistrer et notifier sur Discord");send.type="button";
-          send.onclick=async()=>{if(!area.value.trim()&&!picker.files.length)return;send.disabled=true;try{const attachments=await readTicketAttachments(picker.files);const result=await call("POST",{reference:ticket.reference,text:area.value,attachments});if(!result.discordNotified)alert("Réponse enregistrée. Discord n’a pas reçu sa notification ; tu peux la retrouver dans la demande du panneau.");p.textContent="";await drawTickets(p)}catch(error){alert("Impossible d’enregistrer la réponse : "+error.message);send.disabled=false}};
-          const close=E("button","b","Clôturer");close.type="button";close.onclick=async()=>{if(!confirm("Clôturer cette demande ?"))return;close.disabled=true;try{await call("PATCH",{reference:ticket.reference});p.textContent="";await drawTickets(p)}catch(error){alert("Impossible de clôturer : "+error.message);close.disabled=false}};
-          actions.append(send,close);card.append(area,hint,picker,actions);
-        }
-        if(!ticket.discord_notified)card.append(E("small","bad","Notification Discord non délivrée : la demande reste disponible ici."));
-        const category=categoryFor(ticket);
-        if(category){if(!categories.has(category))categories.set(category,[]);categories.get(category).push(card)}
-        else contactCards.push(card);
-      });
-      if(contactCards.length){box.append(E("h3","ticket-section-title","Demandes de contact"));contactCards.forEach(card=>box.append(card))}
-      if(categories.size){
-        box.append(E("h3","ticket-section-title","Démarche en ligne"));
-        [...categories.entries()].sort(([a],[b])=>a.localeCompare(b,"fr")).forEach(([name,cards])=>{
-          const group=E("details","ticket-category"),summary=E("summary","",name+" ("+cards.length+")");
-          if(name==="Création d'entreprise")group.open=true;
-          group.append(summary,...cards);box.append(group);
+      const all=await call("GET"),tickets=all.filter(ticket=>procedures?ticket.motif==="Déclaration / démarche":ticket.motif!=="Déclaration / démarche");box.textContent="";
+      if(!tickets.length){box.append(E("p","sub","Aucune demande ouverte ou archivée dans cette rubrique."));return}
+      if(procedures){
+        const categories=new Map();tickets.forEach(ticket=>{const name=procedureName(ticket);if(!categories.has(name))categories.set(name,[]);categories.get(name).push(ticket)});
+        [...categories.entries()].sort(([a],[b])=>a.localeCompare(b,"fr")).forEach(([name,items])=>{
+          const group=E("details","ticket-category"),label=E("summary"),openCount=items.filter(t=>t.status==="Ouvert").length;
+          label.append(E("span","",name),E("span","ticket-status",`${items.length} demande(s) · ${openCount} ouverte(s)`));group.append(label);
+          items.forEach(ticket=>group.append(ticketCard(ticket,{call,reload})));box.append(group);
         });
-      }
+      }else tickets.forEach(ticket=>box.append(ticketCard(ticket,{call,reload})));
     }catch(error){box.textContent=error.message==="admin_required"?"Ton compte n’a pas le rôle Discord Staff.":error.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessaie dans un instant.":error.message==="database_not_configured"?"La base de données n’est pas encore reliée au projet Vercel.":"Impossible de charger les demandes. Vérifie le stockage Vercel et réessaie."}
+  };
+  const drawFormTests=p=>{
+    p.append(E("h2","","Tests des formulaires"),E("p","sub","Génère des exemples visuels dans ce panneau pour vérifier la présentation des demandes. Ces simulations ne sont ni enregistrées, ni envoyées sur Discord."));
+    const buttons=E("div","ticket-tools"),preview=E("div","ticket-demo");p.append(buttons,preview);
+    const now=new Date().toISOString();
+    const sample=(kind)=>kind==="contact"?{
+      reference:"TEST-CONTACT",motif:"Support technique",subject:"Problème de connexion au portail",requester_name:"Alex Martin",discord_username:"alex_lgp",phone:"Non renseigné",status:"Ouvert",discord_notified:true,created_at:now,
+      messages:[{sender:"citoyen",author:"Alex Martin",text:"Bonjour, je n'arrive plus à ouvrir mon espace depuis la dernière mise à jour.\nLe message affiché indique que ma session a expiré.",createdAt:now},{sender:"prefecture",author:"Agent de test",text:"Bonjour, merci pour le signalement. Peux-tu essayer de te reconnecter puis nous confirmer si le problème persiste ?",createdAt:now}]
+    }:{
+      reference:"TEST-DEMARCHE",motif:"Déclaration / démarche",subject:kind==="creation"?"Démarche en ligne — Création d'entreprise":"Démarche en ligne — Demande de subvention",requester_name:"Camille Durand",discord_username:"camille_rp",phone:"Téléphone RP non renseigné",status:"Ouvert",discord_notified:true,created_at:now,
+      messages:[{sender:"citoyen",author:"Camille Durand",text:kind==="creation"?"Déclaration de création d’une entreprise RP.\nNom commercial : Atelier des Quais\nActivité : commerce de détail fictif.":"Demande de subvention RP.\nObjet : financement d’un projet associatif fictif.",createdAt:now}]
+    };
+    [["contact","Tester une demande de contact"],["creation","Tester une création d’entreprise"],["procedure","Tester une autre démarche"]].forEach(([kind,label])=>{const button=E("button","b",label);button.type="button";button.onclick=()=>{preview.textContent="";preview.append(E("p","demo-badge","Aperçu de test uniquement"),ticketCard(sample(kind),{demo:true}))};buttons.append(button)});
   };
 
   const drawFields=(p,k)=>{
@@ -351,7 +374,7 @@ async function start(){
       if(!box.children.length)box.append(E("p","sub",fs.length?"Aucun résultat.":"Aucun texte trouvé sur cette page."))};
     q.oninput=dr;dr()};
 
-  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p):drawFields(p,view)};
+  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p,"contact"):view==="procedures"?drawTickets(p,"procedure"):view==="testForms"?drawFormTests(p):drawFields(p,view)};
 
   $("#pv").onclick=()=>{save();window.open("index.html?preview=1","_blank")};
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
