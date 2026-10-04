@@ -103,7 +103,13 @@ export default async function handler(req, res) {
     if (ticket.status !== "Ouvert") return sendJson(res, 409, { error: "closed" });
 
     const createdAt = new Date().toISOString();
-    const reply = { sender: "prefecture", author: identity.member.nick || identity.user.username, text, attachments: parsedAttachments.files, createdAt };
+    const reply = {
+      sender: "prefecture",
+      author: ticket.is_test ? `TEST — ${identity.member.nick || identity.user.username}` : (identity.member.nick || identity.user.username),
+      text: ticket.is_test ? `[TEST] ${text}` : text,
+      attachments: parsedAttachments.files,
+      createdAt,
+    };
     const updated = await db()`UPDATE contact_tickets
       SET messages = messages || ${JSON.stringify([reply])}::jsonb, updated_at = NOW()
       WHERE reference = ${reference} RETURNING messages`;
