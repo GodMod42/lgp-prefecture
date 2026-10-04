@@ -16,6 +16,20 @@ export default async function handler(req, res) {
     }
 
     const payload = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    if (req.method === "PATCH" && payload.closeAll === true) {
+      const ticketType = String(payload.ticketType || "");
+      let closed;
+      if (ticketType === "contact") {
+        closed = await db()`UPDATE contact_tickets SET status = 'Fermé', updated_at = NOW()
+          WHERE status = 'Ouvert' AND motif <> 'Déclaration / démarche' RETURNING reference`;
+      } else if (ticketType === "procedure") {
+        closed = await db()`UPDATE contact_tickets SET status = 'Fermé', updated_at = NOW()
+          WHERE status = 'Ouvert' AND motif = 'Déclaration / démarche' RETURNING reference`;
+      } else {
+        return sendJson(res, 400, { error: "ticket_type_invalid" });
+      }
+      return sendJson(res, 200, { ok: true, closed: closed.length });
+    }
     const reference = String(payload.reference || "").trim().slice(0, 32);
     if (!reference) return sendJson(res, 400, { error: "reference_required" });
 
