@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       const requester = "TEST — " + String(identity.member.nick || identity.user.username || "Admin").slice(0, 80);
       const username = "TEST — " + String(identity.user.username || "Admin").slice(0, 80);
       const phone = "TEST — aucun numéro réel";
-      const text = `[TEST] Soumission de test du ${formLabel}, générée depuis le panel admin. Les informations ci-dessous sont fictives et servent uniquement à vérifier l’arrivée de la demande et des réponses.`;
+      const text = `[TEST] Soumission de test du ${formLabel}, générée depuis le panel admin. Ces données de test servent uniquement à vérifier la réception de la demande et des réponses.`;
       const createdAt = new Date().toISOString();
       const messages = [{ sender: "citoyen", author, text, createdAt }];
       await db()`INSERT INTO contact_tickets
