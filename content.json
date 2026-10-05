@@ -6,9 +6,9 @@
     "emplois:f2h5ce": "Oui, chaque poste bénéficie d'une formation initiale adaptée, suivie d'un accompagnement et de formations continues tout au long de la carrière."
   },
   "urgent": {
-    "enabled": true,
+    "enabled": false,
     "theme": "blue",
-    "tag": "URGENT",
+    "tag": "INFORMATION",
     "text": "C'est le début d'une nouvelle aventure !",
     "linkText": "→ Discord Préfecture",
     "linkUrl": "https://discord.gg/8RAFH7KfDj",
@@ -18,44 +18,42 @@
     {
       "titre": "Directeur de cabinet",
       "salaire": "6 000 – 9 000 €+",
-      "texte": "Bras droit du Préfet. Il pilote le cabinet, coordonne les actions prioritaires, gère les affaires sensibles, les relations avec les autorités (Élysée, ministère, Ville de Paris) et prépare les décisions du Préfet."
+      "texte": "Bras droit du Préfet. Il pilote le cabinet, coordonne les actions prioritaires, gère les affaires sensibles, les relations avec les autorités (Élysée, ministère, Ville de Paris) et prépare les décisions du Préfet.",
+      "mention": "🟢- DISPONIBLE"
     },
     {
       "titre": "Secrétaire Général",
       "salaire": "5 500 – 8 000 €+",
-      "texte": "Responsable de l'administration générale de la PP (SGAP). Il gère les moyens (budgets, ressources humaines, logistique), l'organisation des services et le fonctionnement quotidien de l'administration policière."
+      "texte": "Responsable de l'administration générale de la PP (SGAP). Il gère les moyens (budgets, ressources humaines, logistique), l'organisation des services et le fonctionnement quotidien de l'administration policière.",
+      "mention": "🟢- DISPONIBLE"
     },
     {
       "titre": "Attaché d'administration",
       "salaire": "2 800 – 4 500 €",
-      "texte": "Cadre administratif polyvalent (catégorie A). Il instruit et suit les dossiers complexes (gestion, réglementation, projets) et apporte un appui technique ou juridique aux directions."
+      "texte": "Cadre administratif polyvalent (catégorie A). Il instruit et suit les dossiers complexes (gestion, réglementation, projets) et apporte un appui technique ou juridique aux directions.",
+      "mention": "🟢- DISPONIBLE"
     },
     {
-      "titre": "Secrétaire administratif",
-      "salaire": "2 500 – 3 500 €",
-      "texte": "Agent d'encadrement intermédiaire (catégorie B). Il gère les tâches administratives courantes, le suivi des procédures, les dossiers de personnel ou de budget au sein d'un service."
+      "titre": "Instance Judiciaire de la Préfecture",
+      "salaire": "3 000 à 4 000 € ",
+      "texte": "L’Instance Judiciaire de la Préfecture est chargée d’assurer le suivi des affaires à caractère juridique concernant la Préfecture. Elle veille au respect des lois et des procédures administratives et judiciaires, tout en assurant le lien entre la Préfecture et les différentes institutions judiciaires.",
+      "mention": "🟢- DISPONIBLE"
     },
     {
-      "titre": "Inspecteur IGPN",
+      "titre": "Inspecteur à l'IGPN",
       "salaire": "3 000 – 5 000 €+",
       "texte": "Agent détaché à l'Inspection Générale de la Police Nationale (police des polices). Il conduit des enquêtes internes, audits, inspections déontologiques et investigations sur les manquements des policiers (délégation Paris au sein de l'IGPN).",
-      "mention": "Sous l'autorité de la Préfecture De Police de Paris"
+      "mention": "🟢- DISPONIBLE"
     },
     {
-      "titre": "Huissier de Justice (à la PP)",
-      "salaire": "2 300 – 3 500 €",
-      "texte": "Agent chargé des significations, constats, audiences administratives et actes officiels (ex. : notifications, expulsions, procédures judiciaires internes).",
-      "mention": "Sous l'autorité de la Préfecture De Police de Paris"
-    },
-    {
-      "titre": "Inspecteur",
-      "salaire": "2 900 – 4 800 €",
-      "texte": "L'Inspecteur du travail est un cadre de la fonction publique (catégorie A) chargé de contrôler l'application du droit du travail sur son secteur (entreprises, salariés, conventions collectives).",
-      "mention": "Sous l'autorité de la Préfecture De Police de Paris"
+      "titre": "Inspecteur à la Direction Générale Des Finances Publiques",
+      "salaire": "2 500 €",
+      "texte": "L’Inspecteur des Finances publiques est un cadre de la DGFP chargé de contrôler, analyser et assurer le suivi des dossiers fiscaux et financiers. Il participe à la bonne application de la réglementation fiscale et contribue à la lutte contre la fraude.",
+      "mention": "🟢- DISPONIBLE"
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "updated": "2026-10-01T22:01:56.186Z",
+  "updated": "2026-10-05T17:17:28.280Z",
   "ticketMotifs": [
     "Support technique",
     "Réclamation",
