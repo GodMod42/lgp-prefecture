@@ -136,6 +136,15 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .job button svg{width:20px;height:20px;flex:none;transition:transform .2s}
 .job.open button{background:var(--lav);color:var(--bleu)}
 .job.open button svg{transform:rotate(180deg)}
+.job .availability{display:inline-flex;align-items:center;gap:7px;margin-left:auto;padding:5px 10px;border-radius:999px;background:#f0f0f0;color:#555;font-size:.76rem;font-weight:700;white-space:nowrap}
+.job .availability::before{content:"";width:8px;height:8px;border-radius:50%;background:#777}
+.job .availability[data-status="Disponible"]{background:#e8f5ec;color:#176b35}
+.job .availability[data-status="Disponible"]::before{background:#218838}
+.job .availability[data-status="Indisponible"]{background:#fff0f0;color:#a61b1b}
+.job .availability[data-status="Indisponible"]::before{background:#c62828}
+:root[data-theme=dark] .job .availability{background:#303030;color:#ccc}
+:root[data-theme=dark] .job .availability[data-status="Disponible"]{background:#173d25;color:#a8e6b8}
+:root[data-theme=dark] .job .availability[data-status="Indisponible"]{background:#4b2020;color:#ffc0c0}
 .job .body{display:none;padding:20px 20px 28px}
 .job.open .body{display:block}
 .job .sal{font-weight:700;font-size:.95rem;margin-bottom:16px}
@@ -282,8 +291,10 @@ SITE.ready.then(d=>{
   box.textContent="";
   jobs.forEach((j,i)=>{
     const e=document.createElement("div");e.className="job"+(i===0?" open":"");
-    e.innerHTML='<button type="button" aria-expanded="'+(i===0)+'" aria-controls="job'+i+'"><span></span><svg class="i"><use href="#chev"/></svg></button><div class="body" id="job'+i+'"><p class="mention"></p><p class="sal"></p><p></p></div>';
-    e.querySelector("span").textContent=j.titre;
+    e.innerHTML='<button type="button" aria-expanded="'+(i===0)+'" aria-controls="job'+i+'"><span class="job-title"></span><span class="availability"></span><svg class="i"><use href="#chev"/></svg></button><div class="body" id="job'+i+'"><p class="mention"></p><p class="sal"></p><p></p></div>';
+    e.querySelector(".job-title").textContent=j.titre;
+    const availability=e.querySelector(".availability"),status=["Disponible","Indisponible"].includes(j.disponibilite)?j.disponibilite:"À définir";
+    availability.textContent=status;availability.dataset.status=j.disponibilite||"a-definir";availability.setAttribute("aria-label","Disponibilité : "+status);
     const mention=e.querySelector(".mention");mention.textContent=j.mention||"";mention.hidden=!j.mention;
     e.querySelector(".sal").textContent=lab+" "+j.salaire;
     e.querySelector(".body p:last-child").textContent=j.texte;
