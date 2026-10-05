@@ -3,7 +3,8 @@
   "texts": {
     "emplois:1os50vb": "Être de nationalité française, majeur, jouir de ses droits civiques et remplir les conditions d'aptitude physique et de diplôme propres à chaque poste.",
     "emplois:1526hth": "Comptez en moyenne plusieurs semaines entre le dépôt du dossier, les épreuves de sélection et l'entretien final, selon le poste visé.",
-    "emplois:f2h5ce": "Oui, chaque poste bénéficie d'une formation initiale adaptée, suivie d'un accompagnement et de formations continues tout au long de la carrière."
+    "emplois:f2h5ce": "Oui, chaque poste bénéficie d'une formation initiale adaptée, suivie d'un accompagnement et de formations continues tout au long de la carrière.",
+    "index:1o0nj1a": "Préfecture de LGP"
   },
   "urgent": {
     "enabled": true,
@@ -62,7 +63,7 @@
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "updated": "2026-10-05T19:01:51.346Z",
+  "updated": "2026-10-05T19:22:52.488Z",
   "ticketMotifs": [
     "Support technique",
     "Réclamation",
