@@ -19,7 +19,8 @@ body{font-family:var(--sans);background:var(--fond);color:var(--texte);line-heig
 :root[data-theme=dark] .b.p{background:#8b8bff;color:#000}
 .note{background:var(--lav);color:var(--texte);font-size:.85rem;padding:8px 24px}
 .lay{display:grid;grid-template-columns:260px 1fr;gap:24px;max-width:1300px;margin:0 auto;padding:24px}
-aside{position:sticky;top:120px;align-self:start;display:flex;flex-direction:column;gap:4px}
+aside{position:sticky;top:120px;align-self:start;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 140px);overflow:auto;padding-right:4px}
+.nav-group{display:flex;flex-direction:column;gap:2px}.nav-group-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--gris);font-weight:800;padding:6px 12px 3px}.nav-group-items{display:grid;gap:2px}
 .nv{all:unset;box-sizing:border-box;display:flex;justify-content:space-between;gap:8px;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.92rem}
 .nv:hover{background:var(--lav)}.nv.on{background:var(--bleu);color:#fff}:root[data-theme=dark] .nv.on{color:#000}
 .nv:focus-visible,.b:focus-visible{outline:3px solid #0a76f6}
@@ -42,7 +43,7 @@ input[type=search]{margin-bottom:16px}
 .bad{color:#c9191e;font-weight:600}
 .finance-company{border:1px solid var(--ligne);border-radius:10px;margin:12px 0;overflow:hidden}.finance-company>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;cursor:pointer;list-style:none;font-weight:700}.finance-company>summary::-webkit-details-marker{display:none}.finance-company[open]>summary{border-bottom:1px solid var(--ligne);background:var(--fond)}.finance-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:18px}.finance-field{min-width:0}.finance-field.full{grid-column:1/-1}.finance-field label{display:block;font-size:.82rem;font-weight:700;margin-bottom:5px}.finance-field input,.finance-field select,.finance-field textarea{width:100%;padding:9px 11px;border:1px solid var(--ligne);border-radius:6px;background:var(--carte);color:var(--texte);font:inherit}.finance-field textarea{min-height:100px;resize:vertical}.finance-meta{padding:0 18px 14px;color:var(--gris);font-size:.78rem}.finance-head-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}.finance-save{font-size:.8rem;color:var(--gris)}
 @media(max-width:600px){.finance-form{grid-template-columns:1fr}.finance-field.full{grid-column:auto}}
-@media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static}}
+@media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static;max-height:none;overflow:visible;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));align-items:start}}
 </style>
 <script>window.LGP_ADMIN=true</script>
 <script src="assets/js/site.js"></script>
@@ -107,11 +108,18 @@ async function start(){
   const save=()=>{try{D.updated=new Date().toISOString();localStorage.setItem("lgp_admin_draft",JSON.stringify(D))}catch(e){}
     $("#st").innerHTML="Brouillon enregistré à "+new Date().toLocaleTimeString("fr-FR")+" — <b>pas encore publié</b> : télécharge content.json et remplace celui de ton site."};
   const nav=()=>{const n=$("#nav");n.textContent="";
-    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["presentationData","Gérer la présentation"],["tickets","Demandes de contact"],["procedures","Démarches en ligne"],["finances","Direction Générale des Finances Publiques"],["testForms","Tests des formulaires"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
-    it.forEach(x=>{if(!x){n.append(E("div","sep"));return}
-      const b=E("button","nv"+(x[0]===view?" on":""),x[1]);b.type="button";
-      const c=(x[0]==="urgent"||x[0]==="jobs"||x[0]==="motifs"||x[0]==="actualites"||x[0]==="presentationData")?0:of(x[0]).filter(f=>D.texts[f.key]!=null).length;
-      if(c)b.append(E("i","",c));b.onclick=()=>{view=x[0];nav();draw()};n.append(b)});
+    const groups=[
+      ["Vue d'ensemble",[["urgent","Bandeau urgent"],["jobs","Liste des emplois"],["actualites","Actualités"],["presentationData","Présentation"]]],
+      ["Demandes",[["tickets","Demandes de contact"],["procedures","Démarches en ligne"]]],
+      ["Finances publiques",[["finances","Direction Générale des Finances Publiques"]]],
+      ["Outils et réglages",[["testForms","Tests des formulaires"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"]]],
+      ["Pages du site",PAGES.filter(p=>F[p[0]]).map(p=>[p[0],p[1]])],
+    ];
+    groups.forEach(([title,items])=>{if(!items.length)return;const group=E("section","nav-group"),heading=E("h2","nav-group-title",title),links=E("div","nav-group-items");
+      items.forEach(x=>{const b=E("button","nv"+(x[0]===view?" on":""),x[1]);b.type="button";
+        const c=(x[0]==="urgent"||x[0]==="jobs"||x[0]==="motifs"||x[0]==="actualites"||x[0]==="presentationData")?0:of(x[0]).filter(f=>D.texts[f.key]!=null).length;
+        if(c)b.append(E("i","",c));b.onclick=()=>{view=x[0];nav();draw()};links.append(b)});
+      group.append(heading,links);n.append(group)});
     if(missing.length){const m=E("p","bad","Pages introuvables : "+missing.join(", "));m.style.cssText="font-size:.78rem;margin-top:12px;padding:0 14px";n.append(m)}};
 
   const field=(g,lab,obj,key,type)=>{const w=E("div","g"+(type==="checkbox"?" c":"")),l=E("label","",lab);let i;
