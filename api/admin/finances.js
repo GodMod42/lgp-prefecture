@@ -30,7 +30,7 @@ function valueFromSummary(text, label) {
 }
 
 async function syncSubmittedCompanies(sql) {
-  const submissions = await sql()`SELECT reference, messages FROM contact_tickets
+  const submissions = await sql`SELECT reference, messages FROM contact_tickets
     WHERE motif = 'Déclaration / démarche'
       AND subject = 'Démarche en ligne — Création d''entreprise'`;
   for (const submission of submissions) {
@@ -43,7 +43,7 @@ async function syncSubmittedCompanies(sql) {
     const companyName = clean(tradeName || sign || (person ? `Entreprise de ${person}` : ""), 120);
     if (!companyName) continue;
     const key = companyName.normalize("NFKC").toLocaleLowerCase("fr-FR");
-    await sql()`INSERT INTO dgi_companies (company_key, company_name, source_reference)
+    await sql`INSERT INTO dgi_companies (company_key, company_name, source_reference)
       VALUES (${key}, ${companyName}, ${submission.reference})
       ON CONFLICT (company_key) DO UPDATE SET
         source_reference = COALESCE(dgi_companies.source_reference, EXCLUDED.source_reference)`;
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
 
     if (req.method === "GET") {
       await syncSubmittedCompanies(sql);
-      const companies = await sql()`SELECT id, company_name, source_reference, tax_status, tax_period,
+      const companies = await sql`SELECT id, company_name, source_reference, tax_status, tax_period,
         tax_details, investigation, notes, created_at, updated_at
         FROM dgi_companies ORDER BY lower(company_name), id`;
       return sendJson(res, 200, companies);
@@ -71,13 +71,13 @@ export default async function handler(req, res) {
       const companyName = clean(payload.company_name, 120);
       if (!companyName) return sendJson(res, 400, { error: "company_name_required" });
       const key = companyName.normalize("NFKC").toLocaleLowerCase("fr-FR");
-      const created = await sql()`INSERT INTO dgi_companies (company_key, company_name)
+      const created = await sql`INSERT INTO dgi_companies (company_key, company_name)
         VALUES (${key}, ${companyName})
         ON CONFLICT (company_key) DO NOTHING
         RETURNING id, company_name, source_reference, tax_status, tax_period, tax_details,
           investigation, notes, created_at, updated_at`;
       if (created.length) return sendJson(res, 201, created[0]);
-      const existing = await sql()`SELECT id, company_name, source_reference, tax_status, tax_period,
+      const existing = await sql`SELECT id, company_name, source_reference, tax_status, tax_period,
         tax_details, investigation, notes, created_at, updated_at
         FROM dgi_companies WHERE company_key = ${key}`;
       return sendJson(res, 200, existing[0]);
@@ -93,7 +93,7 @@ export default async function handler(req, res) {
       if (!companyName) return sendJson(res, 400, { error: "company_name_required" });
       if (!STATUSES.has(taxStatus)) return sendJson(res, 400, { error: "tax_status_invalid" });
 
-      const updated = await sql()`UPDATE dgi_companies SET
+      const updated = await sql`UPDATE dgi_companies SET
         company_key = ${companyName.normalize("NFKC").toLocaleLowerCase("fr-FR")},
         company_name = ${companyName}, tax_status = ${taxStatus},
         tax_period = ${clean(payload.tax_period, 80)},
@@ -108,7 +108,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "DELETE") {
-      const deleted = await sql()`DELETE FROM dgi_companies WHERE id = ${id} RETURNING id`;
+      const deleted = await sql`DELETE FROM dgi_companies WHERE id = ${id} RETURNING id`;
       if (!deleted.length) return sendJson(res, 404, { error: "company_not_found" });
       return sendJson(res, 200, { ok: true });
     }
