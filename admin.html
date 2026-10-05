@@ -123,7 +123,7 @@ async function start(){
     if(missing.length){const m=E("p","bad","Pages introuvables : "+missing.join(", "));m.style.cssText="font-size:.78rem;margin-top:12px;padding:0 14px";n.append(m)}};
 
   const field=(g,lab,obj,key,type)=>{const w=E("div","g"+(type==="checkbox"?" c":"")),l=E("label","",lab);let i;
-    if(type==="select"){i=E("select");[["red","Urgent (rouge)"],["blue","Information (bleu)"],["yellow","Attention (jaune)"]].forEach(o=>{const op=E("option","",o[1]);op.value=o[0];i.append(op)});i.value=obj[key]}
+    if(type==="select"||type==="availability"){i=E("select");const options=type==="availability"?[["","À définir"],["Disponible","Disponible"],["Indisponible","Indisponible"]]:[["red","Urgent (rouge)"],["blue","Information (bleu)"],["yellow","Attention (jaune)"]];options.forEach(o=>{const op=E("option","",o[1]);op.value=o[0];i.append(op)});i.value=obj[key]||""}
     else if(type==="area"){i=E("textarea");i.rows=3;i.value=obj[key]||""}
     else if(type==="checkbox"){i=E("input");i.type="checkbox";i.checked=!!obj[key];l.prepend(i)}
     else{i=E("input");i.type=type==="date"?"date":"text";i.value=obj[key]||""}
@@ -146,7 +146,7 @@ async function start(){
     const box=E("div");p.append(box);
     const mv=(i,d)=>{const j=i+d;if(j<0||j>=D.jobs.length)return;[D.jobs[i],D.jobs[j]]=[D.jobs[j],D.jobs[i]];save();dj()};
     const dj=()=>{box.textContent="";D.jobs.forEach((j,i)=>{const c=E("div","job");
-      field(c,"Titre du poste",j,"titre");field(c,"Mention au-dessus du salaire (facultative)",j,"mention");field(c,"Salaire",j,"salaire");field(c,"Description",j,"texte","area");
+      field(c,"Titre du poste",j,"titre");field(c,"Disponibilité du poste",j,"disponibilite","availability");field(c,"Mention au-dessus du salaire (facultative)",j,"mention");field(c,"Salaire",j,"salaire");field(c,"Description",j,"texte","area");
       const r=E("div","r");
       [["↑",()=>mv(i,-1)],["↓",()=>mv(i,1)],["Supprimer",()=>{if(confirm("Supprimer « "+j.titre+" » ?")){D.jobs.splice(i,1);save();dj()}}]].forEach(([t,f])=>{const b=E("button","b",t);b.type="button";b.onclick=f;r.append(b)});
       c.append(r);box.append(c)});
