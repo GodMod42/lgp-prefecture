@@ -201,20 +201,20 @@
     "commandTitle": "Chaîne de commandement",
     "command": [
       {
+        "fonction": "Préfet de Région",
+        "nom": "BLACKWOOD Raven"
+      },
+      {
+        "fonction": "Préfet Départementale",
+        "nom": "Jason Marley"
+      },
+      {
         "fonction": "Préfet de Police",
         "nom": "John SNOW"
       },
       {
-        "fonction": "Sous-Préfet",
-        "nom": "Alexandre MARCHAND"
-      },
-      {
-        "fonction": "Commissaire Général",
-        "nom": "MR X"
-      },
-      {
-        "fonction": "Commissaire Divisionnaire",
-        "nom": "MR X"
+        "fonction": "Sous-Préfet de Police",
+        "nom": "Thomas Park"
       }
     ]
   }
