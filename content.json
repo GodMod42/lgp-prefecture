@@ -203,20 +203,20 @@
     "commandTitle": "Chaîne de commandement",
     "command": [
       {
-        "fonction": "Préfet de Police",
-        "nom": "John SNOW"
+        "fonction": "Préfet",
+        "nom": "BLACKWOOD Raven"
       },
       {
         "fonction": "Sous-Préfet",
-        "nom": "Alexandre MARCHAND"
+        "nom": "John SNOW"
       },
       {
-        "fonction": "Commissaire Général",
-        "nom": "MR X"
+        "fonction": "Directeur de Cabinet",
+        "nom": "Thomas Park"
       },
       {
-        "fonction": "Commissaire Divisionnaire",
-        "nom": "MR X"
+        "fonction": "Secretaire Générale",
+        "nom": "Brechenmacher Wilfried"
       }
     ]
   }
