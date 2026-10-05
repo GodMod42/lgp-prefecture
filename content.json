@@ -8,12 +8,12 @@
   },
   "urgent": {
     "enabled": true,
-    "theme": "blue",
+    "theme": "red",
     "tag": "URGENT",
-    "text": "C'est le début d'une nouvelle aventure !",
+    "text": "Ce site est une reproduction du site de la préfecture de l'IDF à usage uniquement immersif !",
     "linkText": "→ Discord Préfecture",
     "linkUrl": "https://discord.gg/8RAFH7KfDj",
-    "closable": true
+    "closable": false
   },
   "jobs": [
     {
