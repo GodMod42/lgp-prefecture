@@ -201,20 +201,20 @@
     "commandTitle": "Chaîne de commandement",
     "command": [
       {
-        "fonction": "Préfet de Région",
+        "fonction": "Préfet",
         "nom": "BLACKWOOD Raven"
       },
       {
-        "fonction": "Préfet Départementale",
-        "nom": "Jason Marley"
-      },
-      {
-        "fonction": "Préfet de Police",
+        "fonction": "Sous-Préfet",
         "nom": "John SNOW"
       },
       {
-        "fonction": "Sous-Préfet de Police",
+        "fonction": "Directeur de Cabinet",
         "nom": "Thomas Park"
+      },
+      {
+        "fonction": "Secretaire Générale",
+        "nom": "Brechenmacher Wilfried"
       }
     ]
   }
