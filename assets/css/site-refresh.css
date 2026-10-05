@@ -90,7 +90,7 @@ header nav a[aria-current] { color: #fff; border-color: #fff; box-shadow: none; 
   color: #fff;
   transition: background-color .16s ease, transform .16s ease;
 }
-#theme:hover { background: var(--fond); }
+#theme:hover { background: rgb(7 14 28 / .72); }
 .btn-co {
   display: inline-flex;
   min-height: 42px;
