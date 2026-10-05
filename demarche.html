@@ -51,7 +51,8 @@ main section{padding:54px 0 46px}
 .units{background:var(--fond)}
 .unit-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 .unit-card{min-height:175px;padding:18px}
-.unit-card .contact{margin-top:auto;color:var(--bleu);font-weight:700;font-size:.84rem;border:0;background:none;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.unit-card .contact{margin-top:auto;color:var(--bleu);font-weight:700;font-size:.84rem;border:0;background:none;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:7px;text-decoration:none}
+.unit-card .contact:hover{text-decoration:underline}
 .unit-card .contact svg{width:16px;height:16px}
 .faq{padding-top:62px;padding-bottom:86px}
 .faq-layout{display:grid;grid-template-columns:1fr 2fr;gap:44px;align-items:start}
@@ -132,11 +133,11 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
     <div class="w">
       <div class="section-head"><p class="eyebrow">Nos unités</p><h2 id="units-title">Contacter une direction spécifique afin de se faire recruter</h2></div>
       <div class="unit-grid">
-        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-shield"/></svg></div><h3>Police Nationale</h3><p>Standard général et interventions courantes.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
-        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-home"/></svg></div><h3>Police Municipale</h3><p>Tranquillité publique et gestion de la voirie au quotidien.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
-        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-users"/></svg></div><h3>Gendarmerie Nationale</h3><p>Sécurité et interventions sur les zones périurbaines et rurales.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-shield"/></svg></div><h3>Police Nationale</h3><p>Standard général et interventions courantes.</p><a class="contact" href="https://discord.gg/uueeTR9t5" target="_blank" rel="noopener">Contacter <svg class="i"><use href="#icon-arrow"/></svg></a></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-home"/></svg></div><h3>Police Municipale</h3><p>Tranquillité publique et gestion de la voirie au quotidien.</p><a class="contact" href="https://discord.gg/a5kdyQsqu" target="_blank" rel="noopener">Contacter <svg class="i"><use href="#icon-arrow"/></svg></a></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-users"/></svg></div><h3>Gendarmerie Nationale</h3><p>Sécurité et interventions sur les zones périurbaines et rurales.</p><a class="contact" href="https://discord.gg/ABc2jFJqW" target="_blank" rel="noopener">Contacter <svg class="i"><use href="#icon-arrow"/></svg></a></article>
         <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-shield"/></svg></div><h3>Armée</h3><p>Défense nationale et opérations extérieures.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
-        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-plus"/></svg></div><h3>Sapeur-Pompier</h3><p>Secours d'urgence, incendies et interventions médicales.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
+        <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-plus"/></svg></div><h3>Sapeur-Pompier</h3><p>Secours d'urgence, incendies et interventions médicales.</p><a class="contact" href="https://discord.gg/kxrmx2pGzr" target="_blank" rel="noopener">Contacter <svg class="i"><use href="#icon-arrow"/></svg></a></article>
         <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-plus"/></svg></div><h3>Centre Hospitalier</h3><p>Prise en charge médicale et urgences hospitalières.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
         <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-building"/></svg></div><h3>Préfecture de Police</h3><p>Autorité administrative et coordination des forces de l'ordre.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
         <article class="unit-card"><div class="icon"><svg class="i"><use href="#icon-scale"/></svg></div><h3>Tribunal de Paris &amp; Cabinet d'avocat</h3><p>Procédures judiciaires et accompagnement juridique.</p><button class="contact" type="button">Contacter <svg class="i"><use href="#icon-arrow"/></svg></button></article>
@@ -180,5 +181,3 @@ document.getElementById("theme").onclick=()=>{const theme=document.documentEleme
 </script>
 </body>
 </html>
-
-
