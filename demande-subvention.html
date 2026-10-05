@@ -152,7 +152,7 @@ function summary(){
   for(const control of form.elements){
     if(!control.name||control.disabled||["submit","button","reset"].includes(control.type)||(["radio","checkbox"].includes(control.type)&&!control.checked))continue;
     const value=String(control.value||"").trim();if(!value)continue;
-    const field=control.closest(".field"),choice=control.closest("fieldset.choice"),label=field?.querySelector(":scope > label")?.textContent?.trim()||choice?.querySelector("legend")?.textContent?.trim()||control.closest("label")?.textContent?.trim()||control.name.replaceAll("_"," ");
+    const choice=control.closest("fieldset.choice"),option=control.closest("label")?.textContent?.trim(),label=choice?[choice.querySelector("legend")?.textContent?.trim(),option].filter(Boolean).join(" — "):control.labels?.[0]?.textContent?.trim()||control.getAttribute("aria-label")||control.name.replaceAll("_"," ");
     rows.push(label+": "+value);
   }
   return rows.join("\n");
