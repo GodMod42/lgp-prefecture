@@ -40,6 +40,8 @@ input[type=search]{margin-bottom:16px}
 .job .r{display:flex;gap:8px;margin-top:10px}
 .ticket{border:1px solid var(--ligne);border-radius:9px;background:var(--carte);margin:10px 0;overflow:hidden}.ticket>summary{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;list-style:none}.ticket>summary::-webkit-details-marker,.ticket-category>summary::-webkit-details-marker{display:none}.ticket-summary-main{flex:1;min-width:0}.ticket-summary-main strong{display:block;overflow-wrap:anywhere}.ticket-summary-meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;color:var(--gris);font-size:.82rem}.ticket-status{flex:none;border-radius:20px;padding:3px 10px;background:var(--lav);font-size:.78rem;font-weight:700}.ticket-status.closed{background:var(--fond);color:var(--gris)}.ticket-content{padding:4px 16px 16px;border-top:1px solid var(--ligne)}.ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.ticket-message{border-left:3px solid var(--ligne);background:var(--fond);border-radius:0 7px 7px 0;padding:10px 12px;margin:10px 0}.ticket-message.staff{border-color:var(--bleu)}.ticket-message-head{display:flex;justify-content:space-between;gap:10px;color:var(--gris);font-size:.8rem;font-weight:700}.ticket-message-text{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px}.ticket textarea{min-height:80px;margin:8px 0}.ticket small{color:var(--gris)}.ticket-tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.ticket-tools .b.danger{color:#b42318;border-color:#d94a4a}.ticket-tools .b.danger:hover{background:#fff1f0}.ticket-section-title{font-size:1.08rem;margin:22px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--ligne)}.ticket-category{border:1px solid var(--ligne);border-radius:9px;margin:12px 0;padding:0 12px 8px}.ticket-category>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 4px;font-weight:700;color:var(--bleu);cursor:pointer;list-style:none}.ticket-category[open]>summary{border-bottom:1px solid var(--ligne)}.ticket-category .ticket{margin:10px 0}.ticket-demo{border:1px dashed var(--bleu);background:var(--lav);border-radius:8px;padding:14px;margin-top:14px}.ticket-demo .ticket{border-style:dashed}.demo-badge{font-size:.75rem;font-weight:800;color:var(--bleu);text-transform:uppercase;letter-spacing:.04em}
 .bad{color:#c9191e;font-weight:600}
+.finance-company{border:1px solid var(--ligne);border-radius:10px;margin:12px 0;overflow:hidden}.finance-company>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;cursor:pointer;list-style:none;font-weight:700}.finance-company>summary::-webkit-details-marker{display:none}.finance-company[open]>summary{border-bottom:1px solid var(--ligne);background:var(--fond)}.finance-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:18px}.finance-field{min-width:0}.finance-field.full{grid-column:1/-1}.finance-field label{display:block;font-size:.82rem;font-weight:700;margin-bottom:5px}.finance-field input,.finance-field select,.finance-field textarea{width:100%;padding:9px 11px;border:1px solid var(--ligne);border-radius:6px;background:var(--carte);color:var(--texte);font:inherit}.finance-field textarea{min-height:100px;resize:vertical}.finance-meta{padding:0 18px 14px;color:var(--gris);font-size:.78rem}.finance-head-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}.finance-save{font-size:.8rem;color:var(--gris)}
+@media(max-width:600px){.finance-form{grid-template-columns:1fr}.finance-field.full{grid-column:auto}}
 @media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static}}
 </style>
 <script>window.LGP_ADMIN=true</script>
@@ -105,7 +107,7 @@ async function start(){
   const save=()=>{try{D.updated=new Date().toISOString();localStorage.setItem("lgp_admin_draft",JSON.stringify(D))}catch(e){}
     $("#st").innerHTML="Brouillon enregistré à "+new Date().toLocaleTimeString("fr-FR")+" — <b>pas encore publié</b> : télécharge content.json et remplace celui de ton site."};
   const nav=()=>{const n=$("#nav");n.textContent="";
-    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["presentationData","Gérer la présentation"],["tickets","Demandes de contact"],["procedures","Démarches en ligne"],["testForms","Tests des formulaires"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
+    const it=[["urgent","Bandeau Urgent"],["jobs","Liste des emplois"],["actualites","Gérer les actualités"],["presentationData","Gérer la présentation"],["tickets","Demandes de contact"],["procedures","Démarches en ligne"],["finances","Direction Générale des Finances Publiques"],["testForms","Tests des formulaires"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"],null].concat(PAGES.filter(p=>F[p[0]]).map(p=>[p[0],"Page : "+p[1]]));
     it.forEach(x=>{if(!x){n.append(E("div","sep"));return}
       const b=E("button","nv"+(x[0]===view?" on":""),x[1]);b.type="button";
       const c=(x[0]==="urgent"||x[0]==="jobs"||x[0]==="motifs"||x[0]==="actualites"||x[0]==="presentationData")?0:of(x[0]).filter(f=>D.texts[f.key]!=null).length;
@@ -359,6 +361,63 @@ async function start(){
     refreshHistory();
   };
 
+  const drawFinances=async p=>{
+    p.append(E("h2","","Direction Générale des Finances Publiques"),E("p","sub","Les déclarations de création d’entreprise reçues sont ajoutées automatiquement. Tu peux aussi créer une fiche manuellement. Statut fiscal, déclarations, contrôles et notes sont sauvegardés automatiquement dans la base du site, sans modifier content.json."));
+    const tools=E("div","finance-head-tools"),add=E("button","b p","Ajouter une entreprise"),status=E("span","finance-save","Chargement des dossiers…"),list=E("div");
+    add.type="button";tools.append(add,status);p.append(tools,list);
+    const api=async(method,body)=>{
+      const response=await fetch("/api/admin/finances",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data.error||String(response.status));
+      return data;
+    };
+    const showError=error=>status.textContent=error.message==="database_not_configured"?"Stockage de la base non configuré dans Vercel.":"Erreur de sauvegarde ou de chargement. Réessaie.";
+    const renderCompany=company=>{
+      const details=E("details","finance-company"),summary=E("summary"),summaryName=E("span","",company.company_name),summaryStatus=E("span","ticket-status",company.tax_status);
+      summary.append(summaryName,summaryStatus);details.append(summary);
+      const form=E("div","finance-form"),saveState=E("span","finance-save","Enregistré");
+      const makeField=(label,value,{kind="input",full=false,options=[]}={})=>{
+        const wrap=E("div","finance-field"+(full?" full":"")),caption=E("label","",label);let input;
+        if(kind==="select"){
+          input=E("select");options.forEach(option=>input.add(new Option(option,option)));input.value=value||options[0];
+        }else if(kind==="area"){
+          input=E("textarea");input.value=value||"";
+        }else{
+          input=E("input");input.type="text";input.value=value||"";
+        }
+        wrap.append(caption,input);form.append(wrap);return input;
+      };
+      const name=makeField("Entreprise",company.company_name),taxStatus=makeField("Statut des impôts",company.tax_status,{kind:"select",options:["Non renseigné","À jour","À régulariser","En attente","En contrôle"]}),period=makeField("Période fiscale suivie",company.tax_period),taxDetails=makeField("Déclarations, montants ou échéances",company.tax_details,{kind:"area",full:true}),investigation=makeField("Enquête ou contrôle potentiel",company.investigation,{kind:"area",full:true}),notes=makeField("Notes internes",company.notes,{kind:"area",full:true});
+      const meta=E("div","finance-meta");meta.append(saveState);if(company.source_reference)meta.append(E("span",""," · Déclaration initiale : "+company.source_reference));form.append(meta);
+      const remove=E("button","b","Supprimer cette fiche");remove.type="button";remove.style.margin="0 18px 18px";remove.onclick=async()=>{
+        if(!confirm("Supprimer la fiche de "+company.company_name+" ?"))return;
+        remove.disabled=true;try{await api("DELETE",{id:company.id});details.remove();if(!list.children.length)list.append(E("p","sub","Aucune entreprise enregistrée."));status.textContent="Fiche supprimée."}catch(error){showError(error);remove.disabled=false}
+      };
+      details.append(form,remove);
+      let timer;
+      let saving=Promise.resolve();
+      const scheduleSave=()=>{
+        clearTimeout(timer);saveState.textContent="Modification en attente…";status.textContent="Modifications en cours…";
+        timer=setTimeout(()=>{
+          const payload={id:company.id,company_name:name.value,tax_status:taxStatus.value,tax_period:period.value,tax_details:taxDetails.value,investigation:investigation.value,notes:notes.value};
+          saving=saving.then(()=>api("PATCH",payload)).then(updated=>{Object.assign(company,updated);summaryName.textContent=updated.company_name;summaryStatus.textContent=updated.tax_status;saveState.textContent="Enregistré automatiquement · "+new Date(updated.updated_at).toLocaleTimeString("fr-FR");status.textContent="Toutes les modifications sont enregistrées."}).catch(error=>{saveState.textContent="Échec — modification non enregistrée";showError(error)});
+        },650);
+      };
+      [name,taxStatus,period,taxDetails,investigation,notes].forEach(input=>{input.addEventListener("input",scheduleSave);input.addEventListener("change",scheduleSave)});
+      return details;
+    };
+    const load=async()=>{
+      status.textContent="Chargement des dossiers…";
+      try{const companies=await api("GET");list.textContent="";if(!companies.length)list.append(E("p","sub","Aucune entreprise enregistrée. Ajoute une fiche pour commencer."));companies.forEach(company=>list.append(renderCompany(company)));status.textContent=companies.length+" entreprise(s) · sauvegarde automatique activée."}
+      catch(error){list.textContent="";showError(error)}
+    };
+    add.onclick=async()=>{
+      const name=prompt("Nom de l'entreprise à ajouter :");if(!name?.trim())return;
+      add.disabled=true;try{const company=await api("POST",{company_name:name});if(list.querySelector("p"))list.textContent="";const card=renderCompany(company);card.open=true;list.prepend(card);status.textContent="Entreprise ajoutée et enregistrée."}catch(error){showError(error)}finally{add.disabled=false}
+    };
+    await load();
+  };
+
   const drawFields=(p,k)=>{
     p.append(E("h2","",k==="shared"?"Menu & pied de page":"Page : "+PAGES.find(x=>x[0]===k)[1]),
       E("p","sub",k==="shared"?"Ces textes sont communs à toutes les pages.":"Mise en forme : **gras**, [texte du lien](adresse). Un retour à la ligne reste un retour à la ligne."));
@@ -375,7 +434,7 @@ async function start(){
       if(!box.children.length)box.append(E("p","sub",fs.length?"Aucun résultat.":"Aucun texte trouvé sur cette page."))};
     q.oninput=dr;dr()};
 
-  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p,"contact"):view==="procedures"?drawTickets(p,"procedure"):view==="testForms"?drawFormTests(p):drawFields(p,view)};
+  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p,"contact"):view==="procedures"?drawTickets(p,"procedure"):view==="finances"?drawFinances(p):view==="testForms"?drawFormTests(p):drawFields(p,view)};
 
   $("#pv").onclick=()=>{save();window.open("index.html?preview=1","_blank")};
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
