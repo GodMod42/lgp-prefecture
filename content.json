@@ -4,16 +4,18 @@
     "emplois:1os50vb": "Être de nationalité française, majeur, jouir de ses droits civiques et remplir les conditions d'aptitude physique et de diplôme propres à chaque poste.",
     "emplois:1526hth": "Comptez en moyenne plusieurs semaines entre le dépôt du dossier, les épreuves de sélection et l'entretien final, selon le poste visé.",
     "emplois:f2h5ce": "Oui, chaque poste bénéficie d'une formation initiale adaptée, suivie d'un accompagnement et de formations continues tout au long de la carrière.",
-    "index:1o0nj1a": "Préfecture de LGP"
+    "index:1o0nj1a": "Préfecture de LGP",
+    "index:16vwhot": "La Préfecture de Paris (LGP) coordonne l'ensemble des forces de sécurité et des services publics de l'agglomération. Elle veille au maintien de l'ordre, à la protection des citoyens et à la qualité du service rendu au public.",
+    "presentation:o923qs": "La Préfecture"
   },
   "urgent": {
     "enabled": true,
-    "theme": "red",
+    "theme": "blue",
     "tag": "URGENT",
-    "text": "Ce site est une reproduction du site de la préfecture de l'IDF à usage uniquement immersif !",
+    "text": "C'est le début d'une nouvelle aventure !",
     "linkText": "→ Discord Préfecture",
     "linkUrl": "https://discord.gg/8RAFH7KfDj",
-    "closable": false
+    "closable": true
   },
   "jobs": [
     {
@@ -63,7 +65,7 @@
     }
   ],
   "salaryLabel": "Salaire moyen :",
-  "updated": "2026-10-05T19:22:52.488Z",
+  "updated": "2026-10-05T22:05:57.414Z",
   "ticketMotifs": [
     "Support technique",
     "Réclamation",
@@ -201,20 +203,20 @@
     "commandTitle": "Chaîne de commandement",
     "command": [
       {
-        "fonction": "Préfet",
-        "nom": "BLACKWOOD Raven"
-      },
-      {
-        "fonction": "Sous-Préfet",
+        "fonction": "Préfet de Police",
         "nom": "John SNOW"
       },
       {
-        "fonction": "Directeur de Cabinet",
-        "nom": "Thomas Park"
+        "fonction": "Sous-Préfet",
+        "nom": "Alexandre MARCHAND"
       },
       {
-        "fonction": "Secretaire Générale",
-        "nom": "Brechenmacher Wilfried"
+        "fonction": "Commissaire Général",
+        "nom": "MR X"
+      },
+      {
+        "fonction": "Commissaire Divisionnaire",
+        "nom": "MR X"
       }
     ]
   }
