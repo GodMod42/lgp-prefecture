@@ -1,7 +1,7 @@
 /* Session Discord partagée par toutes les pages.
    À inclure AVANT le script de la page :  <script src="assets/js/auth.js"></script> */
 const AUTH_KEY = "lgp_user";
-const SITE_ADMIN_ROLE_ID = "1554580932411789402";
+const SITE_ADMIN_ROLE_ID = "1556690350171754496";
 function isSiteAdmin(user){return !!user&&((Array.isArray(user.roles)&&user.roles.includes(SITE_ADMIN_ROLE_ID))||user.role==="Staff")}
 function getUser(){
   try{const u=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");if(u&&u.exp>Date.now())return u}catch(e){}
