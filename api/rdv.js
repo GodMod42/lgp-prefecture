@@ -82,6 +82,7 @@ async function handler(req, res) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: "Préfecture — Rendez-vous",
+        thread_name: clip(`${reference} · ${d.service} · ${d.prenom} ${d.nom}`, 100),
         allowed_mentions: { parse: [] }, // aucune mention n'est réellement notifiée
         embeds: [{
           title: "📅 Nouvelle demande de rendez-vous",
