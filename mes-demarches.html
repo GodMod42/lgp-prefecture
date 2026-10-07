@@ -186,6 +186,8 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .li .st{display:inline-block;background:#fbe9e9;color:#c9191e;font-weight:700;font-size:.75rem;padding:3px 10px}
 .li .st.off{background:var(--lav);color:var(--bleu)}
 @media(max-width:700px){.prof{flex-wrap:wrap;padding:22px}.pref{flex-direction:column;align-items:flex-start;padding:22px}}
+.del{color:#b42318;border-color:#b42318}.del:hover{background:#fff1f0}
+:root[data-theme=dark] .del{color:#ff8a8a;border-color:#ff8a8a}:root[data-theme=dark] .del:hover{background:#3a1f21}
 </style>
 <script src="assets/js/site.js"></script>
   <link rel="stylesheet" href="assets/css/site-refresh.css">
@@ -257,8 +259,6 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 </footer>
 <button class="aide" type="button">Besoin d'aide ?</button>
 
-<button class="aide" type="button">Besoin d'aide ?</button>
-
 <script src="assets/js/auth.js"></script>
 <script>
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
@@ -267,6 +267,18 @@ const user=getUser(),list=document.getElementById("tickets");
 const attachmentAccept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,image/webp,text/plain";
 function showAttachments(container,attachments){(attachments||[]).forEach(file=>{if(!file?.data||!file?.name)return;const link=document.createElement("a");link.href=file.data;link.download=file.name;link.target="_blank";link.rel="noopener noreferrer";link.textContent="📎 "+file.name;link.style.cssText="display:inline-block;margin:6px 10px 0 0;color:var(--bleu);text-decoration:underline;overflow-wrap:anywhere";container.append(link)})}
 function readAttachments(files){return Promise.all([...files].map(file=>{if(file.size>1024*1024)throw new Error("Chaque pièce jointe doit faire 1 Mo maximum.");if(file.type&&!new Set(["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","image/jpeg","image/png","image/webp","text/plain"]).has(file.type))throw new Error("Format de pièce jointe non accepté.");return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type||"application/octet-stream",size:file.size,data:reader.result});reader.onerror=()=>reject(new Error("Impossible de lire une pièce jointe."));reader.readAsDataURL(file)})})).then(items=>{if(items.reduce((sum,item)=>sum+item.size,0)>2.5*1024*1024)throw new Error("La taille totale des pièces jointes ne peut pas dépasser 2,5 Mo.");return items})}
+
+/* Suppression définitive : la demande disparaît aussi côté Préfecture (admin). */
+async function deleteTickets(body,message){
+  if(!confirm(message))return;
+  try{
+    const r=await fetch("/api/tickets",{method:"DELETE",headers:{Authorization:"Bearer "+user.token,"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(r.status===401){logout();return}
+    if(!r.ok){const error=await r.json().catch(()=>({}));throw new Error(error.error||"delete_failed")}
+    await loadTickets();
+  }catch(e){alert("La suppression a échoué. Réessayez plus tard.")}
+}
+
 if(!user||!user.token)logout();
 else loadTickets();
 async function loadTickets(){
@@ -277,6 +289,10 @@ async function loadTickets(){
     if(!response.ok||!Array.isArray(tickets))throw new Error(tickets?.error||"load_failed");
     list.textContent="";
     if(!tickets.length){list.textContent="Aucune demande pour le moment. Utilisez « Nouvelle demande » pour contacter un service.";return}
+    const tools=document.createElement("div");tools.style.cssText="display:flex;justify-content:flex-end";
+    const deleteAll=document.createElement("button");deleteAll.type="button";deleteAll.className="bo del";deleteAll.textContent="Supprimer toutes mes demandes";
+    deleteAll.onclick=()=>deleteTickets({all:true},"Supprimer définitivement TOUTES vos demandes ? Elles disparaîtront aussi côté Préfecture. Action irréversible.");
+    tools.append(deleteAll);list.append(tools);
     tickets.forEach(ticket=>{
       const card=document.createElement("article");card.className="ticket";card.style.cssText="border:1px solid var(--ligne);border-radius:8px;padding:16px;margin:14px 0";
       const title=document.createElement("h3");title.textContent=ticket.motif+" — "+ticket.subject+" · "+ticket.status;
@@ -292,6 +308,9 @@ async function loadTickets(){
         card.append(area,help,picker,send);
       }
       if(!ticket.discord_notified){const warning=document.createElement("p");warning.textContent="La notification Discord n’a pas été envoyée ; votre demande reste enregistrée sur le site.";warning.style.color="#b42318";card.append(warning)}
+      const del=document.createElement("button");del.type="button";del.className="bo del";del.textContent="Supprimer cette demande";del.style.cssText="display:block;margin-top:12px";
+      del.onclick=()=>deleteTickets({reference:ticket.reference},"Supprimer définitivement la demande "+ticket.reference+" ? Elle disparaîtra aussi côté Préfecture. Action irréversible.");
+      card.append(del);
       list.append(card);
     });
   }catch(e){list.textContent=e.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessayez dans un instant.":e.message==="database_not_configured"?"Le stockage des demandes n’est pas encore relié à Vercel.":"Impossible de charger les demandes. Réessayez plus tard."}
@@ -299,5 +318,3 @@ async function loadTickets(){
 </script>
 </body>
 </html>
-
-
