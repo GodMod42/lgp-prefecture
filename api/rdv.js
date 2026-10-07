@@ -26,7 +26,7 @@ async function handler(req, res) {
     return res.status(405).json({ error: "method_not_allowed" });
   }
 
-  const hook = process.env.DISCORD_WEBHOOK_RDV;
+  const hook = (process.env.DISCORD_WEBHOOK_RDV || "").trim().replace(/^["']|["']$/g, "");
   if (!hook) return res.status(500).json({ error: "webhook_not_configured" });
 
   // 1. Vérifier l'utilisateur côté serveur (on ne fait pas confiance au navigateur)
@@ -93,7 +93,8 @@ async function handler(req, res) {
       }),
     });
     if (!r.ok) throw new Error("webhook " + r.status);
-  } catch {
+  } catch (e) {
+    console.error("rdv webhook error:", e.message);
     return res.status(502).json({ error: "send_failed" });
   }
 
