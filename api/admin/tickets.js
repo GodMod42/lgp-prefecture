@@ -81,8 +81,32 @@ export default async function handler(req, res) {
       }
       return sendJson(res, 200, { ok: true, closed: closed.length });
     }
+
+    /* Suppression définitive de toutes les demandes d'un onglet (ouvertes et clôturées, tests inclus) */
+    if (req.method === "DELETE" && payload.all === true) {
+      const ticketType = String(payload.ticketType || "");
+      let deleted;
+      if (ticketType === "contact") {
+        deleted = await db()`DELETE FROM contact_tickets
+          WHERE motif <> 'Déclaration / démarche' RETURNING reference`;
+      } else if (ticketType === "procedure") {
+        deleted = await db()`DELETE FROM contact_tickets
+          WHERE motif = 'Déclaration / démarche' RETURNING reference`;
+      } else {
+        return sendJson(res, 400, { error: "ticket_type_invalid" });
+      }
+      return sendJson(res, 200, { ok: true, deleted: deleted.length });
+    }
+
     const reference = String(payload.reference || "").trim().slice(0, 32);
     if (!reference) return sendJson(res, 400, { error: "reference_required" });
+
+    /* Suppression définitive d'une seule demande */
+    if (req.method === "DELETE") {
+      const result = await db()`DELETE FROM contact_tickets WHERE reference = ${reference} RETURNING reference`;
+      if (!result.length) return sendJson(res, 404, { error: "not_found" });
+      return sendJson(res, 200, { ok: true, deleted: 1 });
+    }
 
     if (req.method === "PATCH") {
       const result = await db()`UPDATE contact_tickets SET status = 'Fermé', updated_at = NOW()
@@ -131,4 +155,3 @@ export default async function handler(req, res) {
     return sendJson(res, 500, { error: "admin_unavailable" });
   }
 }
-
