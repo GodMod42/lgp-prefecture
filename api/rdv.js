@@ -101,4 +101,4 @@ async function handler(req, res) {
   return res.status(200).json({ ok: true, reference });
 }
 
-module.exports = handler;
+export default handler;
