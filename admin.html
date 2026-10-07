@@ -323,6 +323,12 @@ async function start(){
       const close=E("button","b","Clôturer cette demande");close.type="button";close.onclick=async()=>{if(!confirm("Clôturer la demande "+ticket.reference+" ?"))return;close.disabled=true;try{await call("PATCH",{reference:ticket.reference});await reload()}catch(error){alert("Impossible de clôturer : "+error.message);close.disabled=false}};
       actions.append(send,close);body.append(area,hint,picker,actions);
     }
+    /* Suppression définitive d'une demande (disparaît aussi de « Mes démarches » chez le demandeur) */
+    if(!demo&&call){
+      const del=E("button","b danger","Supprimer cette demande");del.type="button";
+      del.onclick=async()=>{if(!confirm("Supprimer définitivement la demande "+ticket.reference+" ? Elle disparaîtra aussi de « Mes démarches » chez le demandeur. Action irréversible."))return;del.disabled=true;try{await call("DELETE",{reference:ticket.reference});await reload()}catch(error){alert("Impossible de supprimer : "+error.message);del.disabled=false}};
+      const wrap=E("div","ticket-tools");wrap.append(del);body.append(wrap);
+    }
     if(!demo&&!ticket.discord_notified)body.append(E("p","bad","Notification Discord non délivrée. La demande reste conservée sur le site."));
     if(demo)body.prepend(E("p","demo-badge","Simulation locale · rien n’est enregistré ni envoyé"));
     card.append(body);if(demo)card.open=true;return card;
@@ -330,11 +336,12 @@ async function start(){
   const drawTickets=async(p,ticketType="contact")=>{
     const procedures=ticketType==="procedure",title=procedures?"Démarches en ligne":"Demandes de contact";
     p.append(E("h2","",title),E("p","sub",procedures?"Les déclarations et formulaires de démarches sont regroupés ici par type.":"Les demandes générales sont séparées des démarches administratives. Ouvre une fiche pour lire la conversation et répondre."));
-    const controls=E("div","ticket-tools"),refresh=E("button","b","Actualiser"),expand=E("button","b","Tout développer"),collapse=E("button","b","Tout replier"),closeAll=E("button","b danger","Clôturer toutes les demandes ouvertes de cet onglet"),box=E("div");
-    refresh.type=expand.type=collapse.type=closeAll.type="button";refresh.onclick=()=>{p.textContent="";drawTickets(p,ticketType)};
+    const controls=E("div","ticket-tools"),refresh=E("button","b","Actualiser"),expand=E("button","b","Tout développer"),collapse=E("button","b","Tout replier"),closeAll=E("button","b danger","Clôturer toutes les demandes ouvertes de cet onglet"),deleteAll=E("button","b danger","Supprimer toutes les demandes de cet onglet"),box=E("div");
+    refresh.type=expand.type=collapse.type=closeAll.type=deleteAll.type="button";refresh.onclick=()=>{p.textContent="";drawTickets(p,ticketType)};
     expand.onclick=()=>box.querySelectorAll("details").forEach(item=>item.open=true);collapse.onclick=()=>box.querySelectorAll("details").forEach(item=>item.open=false);
     closeAll.onclick=async()=>{if(!confirm("Clôturer toutes les demandes ouvertes de l’onglet « "+title+" » ? Cette action concerne uniquement cette catégorie."))return;closeAll.disabled=true;try{const result=await call("PATCH",{closeAll:true,ticketType});alert(result.closed+" demande(s) clôturée(s).");await reload()}catch(error){alert("Impossible de clôturer les demandes : "+error.message);closeAll.disabled=false}};
-    controls.append(refresh,expand,collapse,closeAll);p.append(controls,box);
+    deleteAll.onclick=async()=>{if(!confirm("Supprimer DÉFINITIVEMENT toutes les demandes de l’onglet « "+title+" » (ouvertes et clôturées) ? Elles disparaîtront aussi de « Mes démarches » chez tous les demandeurs. Action irréversible."))return;if(prompt("Pour confirmer, tape SUPPRIMER")!=="SUPPRIMER")return;deleteAll.disabled=true;try{const result=await call("DELETE",{all:true,ticketType});alert(result.deleted+" demande(s) supprimée(s).");await reload()}catch(error){alert("Impossible de supprimer les demandes : "+error.message);deleteAll.disabled=false}};
+    controls.append(refresh,expand,collapse,closeAll,deleteAll);p.append(controls,box);
     const call=async(method,body)=>{
       const response=await fetch("/api/admin/tickets",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
       const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||String(response.status));return data;
@@ -454,5 +461,3 @@ async function start(){
 </script>
 </body>
 </html>
-
-
