@@ -14,7 +14,7 @@
 })();
 </script>
 <title>Préfecture de LGP — Prendre rendez-vous</title>
-<meta name="description" content="Planifiez un rendez-vous avec l'accueil des citoyens de la Préfecture de Police LGP.">
+<meta name="description" content="Planifiez un rendez-vous avec l'accueil des citoyens de la Préfecture de LGP.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" href="assets/img/favicon2.png">
 <link rel="stylesheet" href="assets/css/site-refresh.css">
@@ -48,7 +48,7 @@ footer{background:#1e1e1e;color:#ddd}.cols{display:grid;grid-template-columns:1.
 <main><div class="wrap">
   <a class="back" href="demarche.html">← Retour aux démarches en ligne</a>
   <div class="intro"><p class="eyebrow">Démarches en ligne · Accueil des citoyens</p><h1>Prendre rendez-vous</h1><p>Planifiez un rendez-vous avec l'accueil des citoyens.</p></div>
-  <div class="notice"><strong>Avant de commencer</strong>Votre demande est transmise à l'équipe d'accueil, qui vous confirmera le créneau sur Discord. Les créneaux proposés respectent les horaires d'ouverture : du lundi au vendredi de 8h30 à 22h00, le samedi de 9h00 à 22h00, fermé le dimanche. Le créneau n'est définitif qu'après confirmation d'un agent.</div>
+  <div class="notice"><strong>Avant de commencer</strong>Votre demande est transmise à l'équipe d'accueil et suivie dans votre espace « Mes démarches », où un agent vous confirmera le créneau. Les créneaux proposés respectent les horaires d'ouverture : du lundi au vendredi de 8h30 à 22h00, le samedi de 9h00 à 22h00, fermé le dimanche. Le créneau n'est définitif qu'après confirmation d'un agent.</div>
 
   <form id="rdv-form">
     <fieldset class="card"><legend>1. Objet du rendez-vous</legend><div class="grid">
@@ -152,25 +152,24 @@ form.addEventListener("submit",async event=>{
   if((f.date2.value&&!f.time2.value)||(!f.date2.value&&f.time2.value)){status.className="status err";status.textContent="Renseignez à la fois la date et l'heure du créneau alternatif, ou laissez les deux vides.";return}
   submit.disabled=true;status.className="status";status.textContent="Envoi de la demande…";
   try{
-    const response=await fetch("/api/rdv",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+user.token},body:JSON.stringify({
-      nom:f.lastname.value.trim(),prenom:f.firstname.value.trim(),tel:f.phone.value.trim(),
-      service:f.service.value,motif:f.motif.value,objet:f.objet.value.trim(),
-      date:f.date1.value,heure:f.time1.value,date2:f.date2.value,heure2:f.time2.value
+    const response=await fetch("/api/contact",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+user.token},body:JSON.stringify({
+      nom:(f.firstname.value.trim()+" "+f.lastname.value.trim()).trim(),tel:f.phone.value.trim(),
+      motif:"Déclaration / démarche",objet:"Démarche en ligne — Prise de rendez-vous",
+      rdv:{service:f.service.value,motif:f.motif.value,precisions:f.objet.value.trim(),date:f.date1.value,heure:f.time1.value,date2:f.date2.value,heure2:f.time2.value}
     })});
     const data=await response.json().catch(()=>({}));
     if(response.status===401){try{sessionStorage.setItem("lgp_after_login","rendez-vous.html")}catch{}logout();return}
     if(!response.ok)throw new Error(data.error||"send_failed");
-    status.className="status ok";status.textContent="Demande envoyée. Référence : "+data.reference+". Un agent vous confirmera le rendez-vous sur Discord.";
+    status.className="status ok";status.textContent="Demande envoyée. Référence : "+data.reference+". Un agent vous confirmera le rendez-vous.";const link=document.createElement("a");link.href="mes-demarches.html";link.textContent="Suivre ma demande dans « Mes démarches »";status.append(document.createElement("br"),link);
     form.reset();
     for(const id of ["time1","time2"]){const s=document.getElementById(id);s.disabled=true;s.innerHTML='<option value="">Choisissez d\'abord une date</option>'}
     submit.disabled=false;
   }catch(error){
     const messages={
-      webhook_not_configured:"Le service de rendez-vous n'est pas configuré sur le site.",
+      database_not_configured:"Le stockage des demandes n'est pas configuré sur le site.",
       discord_auth_unavailable:"Discord ne répond pas pour le moment. Réessayez dans un instant.",
-      rate_limited:"Vous avez déjà envoyé une demande à l'instant. Patientez quelques secondes.",
       invalid_slot:"Le créneau choisi n'est pas valide (date passée, dimanche ou hors horaires).",
-      invalid_request:"Certains champs sont invalides. Vérifiez le formulaire."
+      fields:"Certains champs obligatoires sont manquants. Vérifiez le formulaire."
     };
     status.className="status err";status.textContent=messages[error.message]||"L'envoi a échoué. Réessayez plus tard.";submit.disabled=false;
   }
