@@ -174,7 +174,8 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.2s}
 .sw[aria-checked=true]{background:var(--bleu)}.sw[aria-checked=true]::after{left:19px}
 :root[data-theme=dark] .sw[aria-checked=true]::after{background:#000}
-.esp{max-width:400px;padding:22px;display:flex;flex-direction:column;gap:8px}
+.esps{display:flex;flex-wrap:wrap;gap:16px}
+.esp{width:100%;max-width:400px;padding:22px;display:flex;flex-direction:column;gap:8px}
 .esp .ic{width:42px;height:42px;background:var(--lav);color:var(--bleu);display:grid;place-items:center;margin-bottom:8px}
 .esp h3{font-size:1rem}.esp p{font-size:.85rem;color:var(--gris);line-height:1.6}
 .esp a{font-weight:700;font-size:.85rem;color:var(--bleu);margin-top:10px}
@@ -241,7 +242,10 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
       </div>
       <p class="eyebrow">Accès rapides</p>
       <h2 style="margin-bottom:20px">Vos espaces</h2>
-      <div class="pc esp"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M10 12h5M10 15h5M10 9h2"/></svg></div><h3>Mes démarches</h3><p>Retrouvez vos demandes et les réponses des services, avec une notification sur Discord.</p><a href="mes-demarches.html">Découvrir la direction →</a></div>
+      <div class="esps">
+        <div class="pc esp"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M10 12h5M10 15h5M10 9h2"/></svg></div><h3>Mes démarches</h3><p>Retrouvez vos demandes et les réponses des services, avec une notification sur Discord.</p><a href="mes-demarches.html">Découvrir la direction →</a></div>
+        <div class="pc esp" id="adm" hidden><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Panel administrateur</h3><p>Gérez les demandes, les utilisateurs et le contenu du site.</p><a href="https://lgp-prefecture.vercel.app/admin.html">Ouvrir le panel →</a></div>
+      </div>
     </div>
   </section>
 </main>
@@ -266,8 +270,6 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 </footer>
 <button class="aide" type="button">Besoin d'aide ?</button>
 
-<button class="aide" type="button">Besoin d'aide ?</button>
-
 <script src="assets/js/auth.js"></script>
 <script>
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
@@ -278,6 +280,8 @@ if(!u){location.replace("connexion.html")}
 else{
   $("nm").textContent=u.name;$("did").textContent=u.id;
   if(u.role)$("rl").textContent=u.role;else $("rl").hidden=true;
+  /* Accès rapide « Panel administrateur » : réservé au staff (même règle que le menu de auth.js) */
+  $("adm").hidden=!isSiteAdmin(u);
   const av=$("av");
   if(u.avatar){av.src=u.avatar.replace("size=64","size=128");av.onerror=()=>{const s=document.createElement("span");s.className="pav";s.textContent=u.name.charAt(0).toUpperCase();av.replaceWith(s)}}
   else{const s=document.createElement("span");s.className="pav";s.textContent=u.name.charAt(0).toUpperCase();av.replaceWith(s)}
@@ -289,5 +293,3 @@ else{
 </script>
 </body>
 </html>
-
-
