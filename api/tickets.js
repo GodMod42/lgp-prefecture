@@ -13,6 +13,23 @@ export default async function handler(req, res) {
       return sendJson(res, 200, tickets);
     }
 
+    /* Suppression définitive : seulement les demandes du citoyen connecté (jamais celles d'un autre). */
+    if (req.method === "DELETE") {
+      const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
+      if (body.all === true) {
+        const deleted = await db()`DELETE FROM contact_tickets
+          WHERE discord_user_id = ${identity.user.id} AND is_test = FALSE RETURNING reference`;
+        return sendJson(res, 200, { ok: true, deleted: deleted.length });
+      }
+      const reference = String(body.reference || "").trim().slice(0, 32);
+      if (!reference) return sendJson(res, 400, { error: "fields" });
+      const deleted = await db()`DELETE FROM contact_tickets
+        WHERE reference = ${reference} AND discord_user_id = ${identity.user.id} AND is_test = FALSE
+        RETURNING reference`;
+      if (!deleted.length) return sendJson(res, 404, { error: "not_found" });
+      return sendJson(res, 200, { ok: true, deleted: 1 });
+    }
+
     if (req.method !== "POST") return sendJson(res, 405, { error: "method_not_allowed" });
     const payload = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
     const reference = String(payload.reference || "").trim().slice(0, 32);
@@ -50,4 +67,3 @@ export default async function handler(req, res) {
     return sendJson(res, 500, { error: "tickets_unavailable" });
   }
 }
-
