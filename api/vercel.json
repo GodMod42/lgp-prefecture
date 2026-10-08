@@ -1,0 +1,6 @@
+{
+  "crons": [{ "path": "/api/purge", "schedule": "0 3 * * *" }],
+  "headers": [
+    { "source": "/admin.html", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }] }
+  ]
+}

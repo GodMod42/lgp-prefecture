@@ -184,7 +184,7 @@ try{const theme=localStorage.getItem("theme");if(theme)document.documentElement.
 document.getElementById("theme").onclick=()=>{const theme=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=theme;try{localStorage.setItem("theme",theme)}catch(e){}};
 </script>
 <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script><script type="module" src="/botid.js"></script>
-</body>
+<script src="/tracker.js" defer></script>`r`n</body>
 </html>
 
 

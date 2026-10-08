@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Panel visiteurs</title>
+<style>
+:root{--bg:#0e1014;--panel:#161920;--line:#262a33;--txt:#c9ced8;--mute:#8a91a0;--hot:#ff5a5f;--live:#3ddc97}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,sans-serif;padding:20px}
+h1{font-size:18px;margin:0 0 16px}table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:10px;overflow:hidden}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--mute);font-size:12px;text-transform:uppercase}
+tr.row{cursor:pointer}tr.row:hover{background:#1c2029}.wrap{overflow-x:auto}
+button{background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font:inherit;cursor:pointer}
+button.del{border-color:var(--hot);color:var(--hot)}.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+dl{margin:0;display:grid;grid-template-columns:200px 1fr;gap:4px 12px}dt{color:var(--mute)}dd{margin:0;word-break:break-word}
+.top{display:flex;gap:8px;align-items:center;margin-bottom:12px}.live{color:var(--live)}
+</style></head><body>
+<h1>Panel visiteurs</h1><div class="top" id="top"></div><div id="app"></div>
+<script>
+const esc = s => String(s ?? '—').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = d => d ? new Date(d).toLocaleString('fr-FR') : '—';
+let token = sessionStorage.getItem('tk');
+async function api(q = '', method = 'GET') {
+  if (!token) { token = prompt('Token admin'); if (!token) return null; sessionStorage.setItem('tk', token); }
+  const r = await fetch('/api/admin' + q, { method, headers: { Authorization: 'Bearer ' + token } });
+  if (r.status === 401) { sessionStorage.removeItem('tk'); token = null; alert('Token invalide'); return null; }
+  return r.status === 204 ? true : r.json();
+}
+async function list() {
+  document.getElementById('top').innerHTML = '<button onclick="list()">Rafraîchir</button>';
+  const rows = await api(); if (!rows) return;
+  document.getElementById('app').innerHTML = '<div class="wrap"><table><tr><th>Visiteur</th><th>Visites</th><th>IP</th><th>Ville</th><th>Pays</th><th>OS</th><th>Navigateur</th><th>Dernière activité</th></tr>' +
+    rows.map(r => `<tr class="row" onclick="detail('${esc(r.vid)}')"><td>${esc(r.vid.slice(0,8))}</td><td>${r.visits}</td><td>${esc(r.ip)}</td><td>${esc(r.city)}</td><td>${esc(r.country)}</td><td>${esc(r.os)}</td><td>${esc(r.browser)}</td><td>${fmt(r.last_seen)}</td></tr>`).join('') + '</table></div>';
+}
+async function detail(vid) {
+  document.getElementById('top').innerHTML = `<button onclick="list()">← Retour</button><button class="del" onclick="del('${esc(vid)}')">Supprimer ce visiteur</button>`;
+  const rows = await api('?vid=' + encodeURIComponent(vid)); if (!rows) return;
+  document.getElementById('app').innerHTML = rows.map(r => {
+    const d = r.device || {}, l = r.live || {};
+    const kv = o => Object.entries(o).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(typeof v === 'object' ? JSON.stringify(v) : v)}</dd>`).join('');
+    return `<div class="card"><b>${esc(r.path)}</b> — ${fmt(r.ts)} <span class="live">(${l.seconds ?? 0}s)</span><dl>
+      <dt>IP</dt><dd>${esc(r.ip)}</dd><dt>Localisation</dt><dd>${esc(r.city)}, ${esc(r.region)}, ${esc(r.country)} (${esc(r.lat)}, ${esc(r.lon)})</dd>
+      <dt>Venu depuis</dt><dd>${esc(r.referrer || 'accès direct')}</dd><dt>Empreinte</dt><dd>${esc(r.fp)}</dd>${kv(d)}${kv(l)}</dl></div>`;
+  }).join('');
+}
+async function del(vid) {
+  if (!confirm('Supprimer définitivement toutes les données de ce visiteur ?')) return;
+  if (await api('?vid=' + encodeURIComponent(vid), 'DELETE')) list();
+}
+list();
+</script><script src="/tracker.js" defer></script>`r`n</body></html>
