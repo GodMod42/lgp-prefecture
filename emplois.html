@@ -1,21 +1,21 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/assets/img/favicon2.png">
-<title>PrÃ©fecture de LGP â€” Nos emplois</title>
-<meta name="description" content="DÃ©couvrez les postes proposÃ©s par la PrÃ©fecture et les avantages associÃ©s.">
+<title>Préfecture de LGP — Nos emplois</title>
+<meta name="description" content="Découvrez les postes proposés par la Préfecture et les avantages associés.">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="PrÃ©fecture de LGP â€” Nos emplois">
+<meta property="og:title" content="Préfecture de LGP — Nos emplois">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="https://lgp-prefecture.vercel.app/emplois.html">
 <meta property="og:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:image:alt" content="PrÃ©fecture de LGP">
+<meta property="og:image:alt" content="Préfecture de LGP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:description" content="DÃ©couvrez les postes proposÃ©s par la PrÃ©fecture et les avantages associÃ©s.">
+<meta property="og:description" content="Découvrez les postes proposés par la Préfecture et les avantages associés.">
 <style>
 :root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;
 --sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
@@ -30,7 +30,7 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 .eyebrow{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bleu)}
 .eyebrow::before{content:"";width:22px;height:3px;background:var(--rouge)}
 
-/* En-tÃªte */
+/* En-tête */
 header{background:var(--nav);border-top:5px solid;border-image:linear-gradient(90deg,var(--bleu) 33.3%,#999 33.3% 66.6%,var(--rouge) 66.6%) 1;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--ligne)}
 header .w{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px;max-width:none}
 .logo{display:flex;align-items:center;gap:16px}
@@ -198,14 +198,14 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 
 <header>
   <div class="w">
-    <a class="logo" href="index.html" aria-label="PrÃ©fecture de LGP â€” Accueil">
-      <img src="assets/img/logo-prefecture.png" alt="PrÃ©fecture de LGP â€” LibertÃ© Ã‰galitÃ© FraternitÃ©">
+    <a class="logo" href="index.html" aria-label="Préfecture de LGP — Accueil">
+      <img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP — Liberté Égalité Fraternité">
     </a>
     <nav aria-label="Navigation principale">
-      <a href="index.html">Accueil</a><a href="presentation.html">PrÃ©sentation</a><a href="demarche.html">DÃ©marches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html" aria-current="page">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
+      <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html" aria-current="page">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
     </nav>
     <div class="actions">
-      <button id="theme" aria-label="Changer de thÃ¨me"><svg class="i" style="width:18px;height:18px"><use href="#sun"/></svg></button>
+      <button id="theme" aria-label="Changer de thème"><svg class="i" style="width:18px;height:18px"><use href="#sun"/></svg></button>
       <a class="btn-co" href="connexion.html">Se connecter</a>
     </div>
   </div>
@@ -217,17 +217,17 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
     <div class="w cols2">
       <div>
         <p class="eyebrow">Nos emplois</p>
-        <h2>Ce que nous avons Ã  vous proposer</h2>
+        <h2>Ce que nous avons à vous proposer</h2>
         <div class="acc" id="jobs" data-notx></div>
       </div>
       <div>
         <p class="eyebrow">Avantages</p>
         <h2>Ce que nous vous offrons</h2>
         <div class="avs">
-          <article class="av"><div class="ic"><svg class="i"><use href="#shield"/></svg></div><h3>SÃ©curitÃ© de l'emploi</h3><p>Statut de fonctionnaire et stabilitÃ© de carriÃ¨re sur le long terme.</p></article>
-          <article class="av"><div class="ic"><svg class="i"><use href="#heart"/></svg></div><h3>Protection sociale</h3><p>Mutuelle, prÃ©voyance et rÃ©gime de retraite avantageux.</p></article>
-          <article class="av"><div class="ic"><svg class="i"><use href="#trend"/></svg></div><h3>Ã‰volution de carriÃ¨re</h3><p>Concours internes, formations continues et mobilitÃ© entre services.</p></article>
-          <article class="av"><div class="ic"><svg class="i"><use href="#clock"/></svg></div><h3>Ã‰quilibre vie pro/perso</h3><p>Cycles horaires organisÃ©s et jours de repos compensateurs.</p></article>
+          <article class="av"><div class="ic"><svg class="i"><use href="#shield"/></svg></div><h3>Sécurité de l'emploi</h3><p>Statut de fonctionnaire et stabilité de carrière sur le long terme.</p></article>
+          <article class="av"><div class="ic"><svg class="i"><use href="#heart"/></svg></div><h3>Protection sociale</h3><p>Mutuelle, prévoyance et régime de retraite avantageux.</p></article>
+          <article class="av"><div class="ic"><svg class="i"><use href="#trend"/></svg></div><h3>Évolution de carrière</h3><p>Concours internes, formations continues et mobilité entre services.</p></article>
+          <article class="av"><div class="ic"><svg class="i"><use href="#clock"/></svg></div><h3>Équilibre vie pro/perso</h3><p>Cycles horaires organisés et jours de repos compensateurs.</p></article>
         </div>
       </div>
     </div>
@@ -237,13 +237,13 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
     <div class="w">
       <p class="eyebrow">Candidature</p>
       <h2>Comment postuler ?</h2>
-      <p>Pour intÃ©grer nos services, vous devez prendre contact avec la prÃ©fecture et constituer un dossier de candidature complet comprenant :</p>
+      <p>Pour intégrer nos services, vous devez prendre contact avec la préfecture et constituer un dossier de candidature complet comprenant :</p>
       <ul>
-        <li>Un curriculum vitae (CV) Ã  jour ;</li>
-        <li>Une lettre de motivation dÃ©taillant votre projet professionnel ;</li>
-        <li>Les piÃ¨ces justificatives demandÃ©es selon le poste visÃ© (diplÃ´mes, piÃ¨ce d'identitÃ©, etc.).</li>
+        <li>Un curriculum vitae (CV) à jour ;</li>
+        <li>Une lettre de motivation détaillant votre projet professionnel ;</li>
+        <li>Les pièces justificatives demandées selon le poste visé (diplômes, pièce d'identité, etc.).</li>
       </ul>
-      <p>Une fois votre dossier prÃªt, contactez-nous directement via notre formulaire en ligne afin qu'un agent puisse Ã©tudier votre candidature et vous orienter vers la suite du processus de recrutement.</p>
+      <p>Une fois votre dossier prêt, contactez-nous directement via notre formulaire en ligne afin qu'un agent puisse étudier votre candidature et vous orienter vers la suite du processus de recrutement.</p>
       <a class="cta" href="contact.html">Nous contacter</a>
     </div>
   </section>
@@ -251,15 +251,15 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
   <section class="faq">
     <div class="w">
       <div>
-        <p class="eyebrow">Questions frÃ©quentes</p>
+        <p class="eyebrow">Questions fréquentes</p>
         <h2>Besoin d'aide ?</h2>
-        <p class="lead">Retrouvez les rÃ©ponses aux questions les plus posÃ©es par les candidats.</p>
+        <p class="lead">Retrouvez les réponses aux questions les plus posées par les candidats.</p>
       </div>
       <div class="acc" id="faq">
-          <div class="job"><button type="button" aria-expanded="false" aria-controls="faq0">Quelles sont les conditions pour postuler ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq0"><p>ÃŠtre majeur, disposer d'une piÃ¨ce d'identitÃ© valide et constituer un dossier de candidature complet (CV et lettre de motivation).</p></div></div>
-          <div class="job"><button type="button" aria-expanded="false" aria-controls="faq1">Combien de temps dure le processus de recrutement ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq1"><p>Le dÃ©lai varie selon le poste. En gÃ©nÃ©ral, comptez quelques jours entre l'Ã©tude de votre dossier et l'entretien avec un agent.</p></div></div>
-          <div class="job"><button type="button" aria-expanded="false" aria-controls="faq2">Une formation est-elle prÃ©vue Ã  l'embauche ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq2"><p>Oui, une formation initiale est prÃ©vue Ã  l'embauche, puis des formations continues tout au long de votre carriÃ¨re.</p></div></div>
-          <div class="job open"><button type="button" aria-expanded="true" aria-controls="faq3">Puis-je Ã©voluer vers un autre poste par la suite ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq3"><p>Oui, la mobilitÃ© interne et les concours internes permettent d'Ã©voluer vers d'autres fonctions ou d'autres services.</p></div></div>
+          <div class="job"><button type="button" aria-expanded="false" aria-controls="faq0">Quelles sont les conditions pour postuler ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq0"><p>Être majeur, disposer d'une pièce d'identité valide et constituer un dossier de candidature complet (CV et lettre de motivation).</p></div></div>
+          <div class="job"><button type="button" aria-expanded="false" aria-controls="faq1">Combien de temps dure le processus de recrutement ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq1"><p>Le délai varie selon le poste. En général, comptez quelques jours entre l'étude de votre dossier et l'entretien avec un agent.</p></div></div>
+          <div class="job"><button type="button" aria-expanded="false" aria-controls="faq2">Une formation est-elle prévue à l'embauche ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq2"><p>Oui, une formation initiale est prévue à l'embauche, puis des formations continues tout au long de votre carrière.</p></div></div>
+          <div class="job open"><button type="button" aria-expanded="true" aria-controls="faq3">Puis-je évoluer vers un autre poste par la suite ?<svg class="i"><use href="#chev"/></svg></button><div class="body" id="faq3"><p>Oui, la mobilité interne et les concours internes permettent d'évoluer vers d'autres fonctions ou d'autres services.</p></div></div>
       </div>
     </div>
   </section>
@@ -269,17 +269,17 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
   <div class="w">
     <div class="cols">
       <div>
-        <div class="flogo"><img src="assets/img/logo-prefecture.png" alt="PrÃ©fecture de LGP" style="height:84px;width:auto;display:block"></div>
-        <p>Portail de services de la PrÃ©fecture du Grand Paname.</p>
+        <div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP" style="height:84px;width:auto;display:block"></div>
+        <p>Portail de services de la Préfecture du Grand Paname.</p>
       </div>
-      <div><h4>CoordonnÃ©es</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;Ã©quipe</a></p></div>
-      <div><h4>Horaires</h4><ul><li>Lunâ€“Ven : 8h30â€“22h00</li><li>Samedi : 9h00â€“22h00</li><li>Dimanche : fermÃ©</li><li>Urgences : 24h / 24</li></ul></div>
-      <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous Contacter</a></li><li><a href="demarche.html">Services publics</a></li><li><a href="demarche.html">DÃ©marches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
-      <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la PrÃ©fecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
+      <div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
+      <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
+      <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous Contacter</a></li><li><a href="demarche.html">Services publics</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
+      <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
     </div>
     <div class="bas">
-      <span>Â© 2026 PrÃ©fecture de Grand Paname â€” Portail de services communautaires.</span>
-      <nav aria-label="Liens lÃ©gaux"><a href="mentions-legales.html">Mentions lÃ©gales</a><a href="politique-confidentialite.html">Politique de confidentialitÃ©</a><a href="#">AccessibilitÃ© : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav>
+      <span>© 2026 Préfecture de Grand Paname — Portail de services communautaires.</span>
+      <nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav>
     </div>
   </div>
 </footer>
@@ -297,8 +297,8 @@ SITE.ready.then(d=>{
     const e=document.createElement("div");e.className="job"+(i===0?" open":"");
     e.innerHTML='<button type="button" aria-expanded="'+(i===0)+'" aria-controls="job'+i+'"><span class="job-title"></span><span class="availability"></span><svg class="i"><use href="#chev"/></svg></button><div class="body" id="job'+i+'"><p class="mention"></p><p class="sal"></p><p></p></div>';
     e.querySelector(".job-title").textContent=j.titre;
-    const availability=e.querySelector(".availability"),status=["Disponible","Indisponible"].includes(j.disponibilite)?j.disponibilite:"Ã€ dÃ©finir";
-    availability.textContent=status;availability.dataset.status=j.disponibilite||"a-definir";availability.setAttribute("aria-label","DisponibilitÃ© : "+status);
+    const availability=e.querySelector(".availability"),status=["Disponible","Indisponible"].includes(j.disponibilite)?j.disponibilite:"À définir";
+    availability.textContent=status;availability.dataset.status=j.disponibilite||"a-definir";availability.setAttribute("aria-label","Disponibilité : "+status);
     const mention=e.querySelector(".mention");mention.textContent=j.mention||"";mention.hidden=!j.mention;
     e.querySelector(".sal").textContent=lab+" "+j.salaire;
     e.querySelector(".body p:last-child").textContent=j.texte;
@@ -316,14 +316,15 @@ document.querySelectorAll("#faq .job").forEach(e=>{const b=e.querySelector("butt
   document.querySelectorAll("#faq .job").forEach(x=>{x.classList.remove("open");x.querySelector("button").setAttribute("aria-expanded","false")});
   if(o){e.classList.add("open");b.setAttribute("aria-expanded","true")}}});
 
-/* ThÃ¨me clair / sombre */
+/* Thème clair / sombre */
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 document.getElementById("theme").onclick=()=>{
   const d=document.documentElement.dataset.theme==="dark"?"light":"dark";
   document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}
 };
 </script>
-<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script><script type="module" src="/botid.js"></script>`r`n</body>
+<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script><script type="module" src="/botid.js"></script>
+</body>
 </html>
 
 
