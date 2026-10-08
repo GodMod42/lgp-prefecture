@@ -320,5 +320,6 @@ async function loadTickets(){
   }catch(e){list.textContent=e.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessayez dans un instant.":e.message==="database_not_configured"?"Le stockage des demandes n’est pas encore relié à Vercel.":"Impossible de charger les demandes. Réessayez plus tard."}
 }
 </script>
-</body>
+<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script></body>
 </html>
+

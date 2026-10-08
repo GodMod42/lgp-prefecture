@@ -323,7 +323,8 @@ document.getElementById("theme").onclick=()=>{
   document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}
 };
 </script>
-</body>
+<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script></body>
 </html>
+
 
 
