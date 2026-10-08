@@ -15,8 +15,6 @@
 <title>Préfecture de LGP — Création d’entreprise</title>
 <meta name="description" content="Démarche de création ou d'immatriculation d'entreprise.">
 <link rel="icon" type="image/png" href="assets/img/favicon2.png">
-<link rel="stylesheet" href="assets/css/site-refresh.css">
-<script src="assets/js/site.js"></script>
 <style>
 :root{--ink:#161616;--paper:#fff;--muted:#666;--line:#ddd;--blue:#000091;--pale:#e8e8fb;--font:Marianne,"Public Sans","Segoe UI",system-ui,Arial,sans-serif}
 :root[data-theme=dark]{--ink:#f0f0f0;--paper:#1e1e1e;--muted:#b5b5b5;--line:#3a3a3a;--blue:#8b8bff;--pale:#202d4a}
@@ -46,12 +44,14 @@ footer{background:#1e1e1e;color:#ddd;font-size:.92rem}
 .bas nav a{padding:0 0 0 18px;color:#ddd;font-size:.85rem;font-weight:400}.bas nav a:hover{box-shadow:none;text-decoration:underline;color:#fff}
 @media(max-width:1000px){.cols{grid-template-columns:1fr 1fr}header .w{flex-wrap:wrap;padding-top:10px;padding-bottom:10px}}
 @media(max-width:650px){.cols{grid-template-columns:1fr}header nav{overflow-x:auto;flex-wrap:nowrap;white-space:nowrap}.form-actions{flex-direction:column-reverse;align-items:stretch}.form-actions .btn{text-align:center;justify-content:center}}</style>
-<script>
-  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-</script>
-<script defer src="/_vercel/speed-insights/script.js"></script>
+<script src="assets/js/site.js"></script>
+  <link rel="stylesheet" href="assets/css/site-refresh.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></symbol>
+</svg>
+
 <header>
   <div class="w">
     <a class="logo" href="index.html" aria-label="Préfecture de LGP — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP"></a>
@@ -112,6 +112,3 @@ form.addEventListener("submit",async e=>{e.preventDefault();if(!user||!user.toke
 </script>
 <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script><script type="module" src="/botid.js"></script>
 </body></html>
-
-
-
