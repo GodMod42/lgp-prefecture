@@ -135,9 +135,14 @@ async function sha(str){
   const n = navigator, s = screen;
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const lang = n.language || 'fr';
-  const os = osName(), br = browserName();
+  let isBrave = false;
+  try{ isBrave = !!(n.brave && await n.brave.isBrave()); }catch(e){}
+  const os = osName(), br = isBrave ? 'Brave' : browserName();
   const fl = fonts(FONTS);
-  const g = gpu();
+  const gRaw = gpu();
+  const g = (isBrave && (!gRaw || /^(brave|indisponible)$/i.test(gRaw)))
+    ? 'masquée par Brave (protection anti-pistage)'
+    : gRaw;
 
   /* haute entropie (Chrome/Edge) */
   let hi = {};
