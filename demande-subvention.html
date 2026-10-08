@@ -178,7 +178,7 @@ form.addEventListener("submit",async event=>{
   }catch(error){status.className="status err";status.textContent=error.message==="database_not_configured"?"Le stockage des demandes n'est pas configuré sur le site.":error.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessaie dans un instant.":"L'envoi a échoué. Réessaie plus tard.";submit.disabled=false}
 });
 </script>
-</body>
+<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script></body>
 </html>
 
 <!DOCTYPE html>
@@ -370,5 +370,6 @@ form.addEventListener("submit",async event=>{
   }catch(error){status.className="status err";status.textContent=error.message==="database_not_configured"?"Le stockage des demandes n'est pas configuré sur le site.":error.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessaie dans un instant.":"L'envoi a échoué. Réessaie plus tard.";submit.disabled=false}
 });
 </script>
-</body>
+<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script></body>
 </html>
+
