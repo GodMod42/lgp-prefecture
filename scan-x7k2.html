@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Ce que votre navigateur révèle</title>
+<style>
+  :root{--bg:#0e1014;--panel:#161920;--line:#262a33;--txt:#c9ced8;--mute:#8a91a0;--hot:#ff5a5f;--live:#3ddc97}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;padding:20px}
+  .banner{max-width:1280px;margin:0 auto 20px;padding:16px 20px;border:1px solid #5a2a2d;background:#2a1517;border-radius:10px;font-size:16px;line-height:1.6}
+  .banner b{color:var(--hot);font-weight:600}
+  .grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  h2{margin:0 0 10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between;align-items:center}
+  .tag{font-size:10px;border:1px solid var(--hot);color:var(--hot);border-radius:99px;padding:1px 9px;letter-spacing:.05em}
+  .tag.live{border-color:var(--live);color:var(--live)}
+  dl{margin:0}
+  dl>div{display:flex;justify-content:space-between;gap:16px;padding:7px 0;border-bottom:1px solid var(--line)}
+  dl>div:last-child{border:0}
+  dt{color:var(--mute);flex:none}
+  dd{margin:0;text-align:right;word-break:break-word;font-variant-numeric:tabular-nums}
+  dd.hot{color:var(--hot)}
+  .fonts{color:var(--txt);line-height:1.8}
+  iframe{width:100%;height:190px;border:0;border-radius:8px;margin-top:12px;filter:invert(.9) hue-rotate(180deg)}
+  .bar{max-width:1280px;margin:20px auto 0;display:flex;gap:12px;align-items:center;color:var(--mute);font-size:12px}
+  button{background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+  button:hover{border-color:var(--mute)}
+  button:focus-visible{outline:2px solid var(--live);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="banner" id="banner">Analyse en cours…</div>
+<main class="grid" id="grid"></main>
+<div class="bar">
+  <button id="copy">Copier le rapport (JSON)</button>
+  <span>Tout est calculé dans votre navigateur. Rien n'est enregistré par cette page.</span>
+</div>
+
+<div class="adsbox ad-banner" id="bait" style="position:absolute;left:-9999px;height:10px;width:10px"></div>
+
+<script>
+const grid = document.getElementById('grid');
+const report = {};
+
+/* ---------- petits utilitaires d'affichage ---------- */
+function section(id, title, tag, live){
+  const el = document.createElement('section');
+  el.className = 'panel';
+  el.innerHTML = `<h2>${title}<span class="tag ${live ? 'live' : ''}">${tag}</span></h2><dl id="${id}"></dl>`;
+  grid.appendChild(el);
+}
+function put(sec, key, label, val, hot){
+  let r = document.getElementById('r_' + key);
+  if (!r){
+    r = document.createElement('div');
+    r.id = 'r_' + key;
+    r.innerHTML = '<dt></dt><dd></dd>';
+    r.firstChild.textContent = label;
+    document.getElementById(sec).appendChild(r);
+  }
+  const dd = r.lastChild;
+  dd.textContent = val;
+  dd.classList.toggle('hot', !!hot);
+  report[key] = val;
+}
+const yesNo = v => v ? 'oui' : 'non';
+const mq = q => matchMedia(q).matches;
+
+section('net', 'Réseau & localisation', 'PASSIF');
+section('dev', 'Appareil', 'PASSIF');
+section('nav', 'Navigateur', 'PASSIF');
+section('pref', 'Préférences & habitudes', 'PASSIF');
+section('fon', 'Polices installées', 'PASSIF');
+section('live', 'Ce que vous faites, là, maintenant', 'EN DIRECT', true);
+
+/* ---------- appareil ---------- */
+function browserName(){
+  const u = navigator.userAgent;
+  if (/Edg\//.test(u)) return 'Edge';
+  if (/OPR\//.test(u)) return 'Opera';
+  if (/Firefox\//.test(u)) return 'Firefox';
+  if (/Chrome\//.test(u)) return 'Chrome / Chromium';
+  if (/Safari\//.test(u)) return 'Safari';
+  return 'Inconnu';
+}
+function osName(){
+  const p = navigator.userAgentData?.platform;
+  if (p) return p;
+  const u = navigator.userAgent;
+  if (/Windows/.test(u)) return 'Windows';
+  if (/Android/.test(u)) return 'Android';
+  if (/iPhone|iPad/.test(u)) return 'iOS';
+  if (/Mac OS X/.test(u)) return 'macOS';
+  if (/Linux/.test(u)) return 'Linux';
+  return 'Inconnu';
+}
+function gpu(){
+  try{
+    const g = document.createElement('canvas').getContext('webgl');
+    const e = g.getExtension('WEBGL_debug_renderer_info');
+    return e ? g.getParameter(e.UNMASKED_RENDERER_WEBGL) : g.getParameter(g.RENDERER);
+  }catch(e){ return 'indisponible'; }
+}
+function canvasPrint(){
+  try{
+    const c = document.createElement('canvas'); c.width = 240; c.height = 60;
+    const x = c.getContext('2d');
+    x.textBaseline = 'top'; x.font = '16px Arial'; x.fillStyle = '#f60'; x.fillRect(10, 5, 100, 30);
+    x.fillStyle = '#069'; x.fillText('Cwm fjordbank glyphs vext quiz 😃', 4, 20);
+    return c.toDataURL();
+  }catch(e){ return ''; }
+}
+const FONTS = ['Arial','Helvetica Neue','Times New Roman','Roboto','SF Pro Display','Menlo','Comic Sans MS','Impact','Futura','Gill Sans','Avenir','Myriad Pro','Minion Pro','Lato','Open Sans','Papyrus','Wingdings','Baskerville','Didot','Calibri','Cambria','Segoe UI','Consolas','Verdana','Georgia','Tahoma','Trebuchet MS','Courier New','Garamond','Century Gothic','Franklin Gothic','Ubuntu'];
+function fonts(list){
+  const base = ['monospace','serif','sans-serif'];
+  const s = document.createElement('span');
+  s.style.cssText = 'position:absolute;left:-9999px;font-size:72px;visibility:hidden';
+  s.textContent = 'mmmmmmmmmmlli';
+  document.body.appendChild(s);
+  const w = {};
+  base.forEach(b => { s.style.fontFamily = b; w[b] = s.offsetWidth; });
+  const found = list.filter(f => base.some(b => { s.style.fontFamily = `'${f}',${b}`; return s.offsetWidth !== w[b]; }));
+  s.remove();
+  return found;
+}
+async function sha(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
+}
+
+/* ---------- collecte ---------- */
+(async function main(){
+  const n = navigator, s = screen;
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const lang = n.language || 'fr';
+  const os = osName(), br = browserName();
+  const fl = fonts(FONTS);
+  const g = gpu();
+
+  /* haute entropie (Chrome/Edge) */
+  let hi = {};
+  try{ hi = await n.userAgentData.getHighEntropyValues(['architecture','platformVersion','model']); }catch(e){}
+
+  /* batterie */
+  let bat = 'non exposé par ce navigateur', batPct = null;
+  try{
+    const b = await n.getBattery();
+    batPct = Math.round(b.level * 100);
+    bat = batPct + ' %' + (b.charging ? ' — en charge' : ' — sur batterie');
+  }catch(e){}
+
+  /* adblock */
+  await new Promise(r => setTimeout(r, 150));
+  const bait = document.getElementById('bait');
+  const adblock = !bait || bait.offsetHeight === 0 || getComputedStyle(bait).display === 'none';
+
+  /* réseau : fonction Vercel (en-têtes d'edge) + enrichissement ipwho.is */
+  let srv = {}, ext = {};
+  try{ srv = await (await fetch('/api/info', {cache:'no-store'})).json(); }catch(e){}
+  try{ ext = await (await fetch('https://ipwho.is/' + (srv.ip || ''))).json(); }catch(e){}
+  const ip = srv.ip || ext.ip || 'inconnue';
+  const city = srv.city || ext.city || 'inconnue';
+  const region = ext.region || srv.region || 'inconnue';
+  const country = ext.country || srv.country || 'inconnu';
+  const isp = ext.connection?.isp || ext.connection?.org || 'inconnu';
+  const lat = parseFloat(srv.lat || ext.latitude), lon = parseFloat(srv.lon || ext.longitude);
+  const ipTz = srv.tz || ext.timezone?.id || '';
+
+  put('net','ip','Adresse IP', ip, true);
+  put('net','city','Ville', city, true);
+  put('net','region','Région', region);
+  put('net','country','Pays', country);
+  put('net','postal','Code postal', ext.postal || 'inconnu');
+  put('net','isp','Fournisseur d\'accès', isp, true);
+  if (!isNaN(lat)) put('net','coords','Coordonnées approx.', lat.toFixed(3) + ', ' + lon.toFixed(3));
+  const vpn = ipTz && ipTz !== tz;
+  put('net','vpn','VPN probable ?', vpn ? `oui — l'IP dit ${ipTz}, votre horloge dit ${tz}` : 'non détecté', vpn);
+  if (!isNaN(lat)){
+    const f = document.createElement('iframe');
+    f.loading = 'lazy'; f.title = 'Carte';
+    f.src = `https://www.openstreetmap.org/export/embed.html?bbox=${lon-.04},${lat-.025},${lon+.04},${lat+.025}&layer=mapnik&marker=${lat},${lon}`;
+    document.getElementById('net').parentElement.appendChild(f);
+  }
+
+  put('dev','os','Système', os + (hi.platformVersion ? ' ' + hi.platformVersion : ''));
+  put('dev','arch','Architecture', hi.architecture || 'non exposée');
+  put('dev','gpu','Carte graphique', g, true);
+  put('dev','cpu','Cœurs CPU', n.hardwareConcurrency || 'inconnu');
+  put('dev','ram','Mémoire vive (approx.)', n.deviceMemory ? '≥ ' + n.deviceMemory + ' Go' : 'non exposée');
+  put('dev','screen','Écran', s.width + ' × ' + s.height + ' px');
+  put('dev','avail','Zone utile (sans Dock/barre)', s.availWidth + ' × ' + s.availHeight + ' px');
+  put('dev','dpr','Densité de pixels', '×' + devicePixelRatio + (devicePixelRatio > 1 ? ' (écran Retina / HiDPI)' : ''));
+  put('dev','depth','Profondeur de couleur', s.colorDepth + ' bits');
+  put('dev','touch','Écran tactile', yesNo(n.maxTouchPoints > 0) + (n.maxTouchPoints ? ' (' + n.maxTouchPoints + ' points)' : ''));
+  put('dev','win','Taille de la fenêtre', innerWidth + ' × ' + innerHeight + ' px');
+  put('dev','bat','Batterie', bat, batPct !== null);
+
+  put('nav','br','Navigateur', br, true);
+  put('nav','ua','User-Agent', n.userAgent);
+  put('nav','cookies','Cookies activés', yesNo(n.cookieEnabled));
+  put('nav','dnt','Do Not Track', n.doNotTrack === '1' ? 'activé' : 'désactivé');
+  put('nav','adb','Bloqueur de pub', adblock ? 'détecté' : 'non détecté', !adblock);
+  put('nav','hist','Pages visitées dans cet onglet', history.length);
+  put('nav','ref','Venu depuis', document.referrer || 'accès direct');
+  const c = n.connection;
+  put('nav','conn','Type de connexion', c ? `${c.effectiveType || '?'} · ~${c.downlink ?? '?'} Mb/s · ${c.rtt ?? '?'} ms` : 'non exposé');
+  put('nav','bot','Contrôlé par un robot', yesNo(n.webdriver));
+
+  put('pref','langs','Langues', (n.languages || [lang]).join(', '), true);
+  put('pref','tz','Fuseau horaire', tz, true);
+  put('pref','time','Heure locale', new Date().toLocaleTimeString('fr-FR'));
+  put('pref','dark','Mode sombre', yesNo(mq('(prefers-color-scheme: dark)')));
+  put('pref','motion','Animations réduites', yesNo(mq('(prefers-reduced-motion: reduce)')));
+  put('pref','contrast','Contraste élevé', yesNo(mq('(prefers-contrast: more)')));
+  put('pref','pointer','Pointeur', mq('(pointer: fine)') ? 'souris / trackpad' : 'tactile');
+
+  const fe = document.createElement('div');
+  fe.className = 'fonts';
+  fe.textContent = fl.join(' · ') + `\n${fl.length} polices reconnues sur ${FONTS.length} testées.`;
+  fe.style.whiteSpace = 'pre-line';
+  document.getElementById('fon').appendChild(fe);
+  report.polices = fl;
+
+  /* identifiant unique (empreinte) */
+  const id = await sha(JSON.stringify([n.userAgent, n.languages, tz, s.width, s.height, devicePixelRatio, g, n.hardwareConcurrency, fl, canvasPrint()]));
+  report.empreinte = id;
+
+  const heure = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('banner').innerHTML =
+    `Vous êtes probablement à <b>${city}</b>, chez <b>${isp}</b>, sur <b>${os}</b> avec <b>${br}</b>, ` +
+    `un écran <b>${s.width}×${s.height}</b>${batPct !== null ? `, batterie à <b>${batPct} %</b>` : ''}. ` +
+    `Il est <b>${heure}</b> chez vous et vous lisez en <b>${lang}</b>. Votre identifiant unique : <b>${id}</b>.`;
+})();
+
+/* ---------- en direct ---------- */
+const t0 = Date.now();
+let moves = 0, clicks = 0, keys = 0, maxScroll = 0, hidden = 0, mx = 0, my = 0;
+function refreshLive(){
+  const sec = Math.floor((Date.now() - t0) / 1000);
+  put('live','tps','Temps passé sur la page', Math.floor(sec / 60) + ' min ' + (sec % 60) + ' s');
+  put('live','pos','Position de la souris', mx + ', ' + my, true);
+  put('live','moves','Mouvements de souris', moves);
+  put('live','clicks','Clics', clicks);
+  put('live','keys','Touches pressées', keys + ' (seul le nombre est compté)');
+  put('live','scroll','Défilement max', maxScroll + ' %');
+  put('live','tab','Changements d\'onglet', hidden);
+}
+addEventListener('mousemove', e => { moves++; mx = e.clientX; my = e.clientY; });
+addEventListener('click', () => clicks++);
+addEventListener('keydown', () => keys++);
+addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - innerHeight;
+  maxScroll = Math.max(maxScroll, h > 0 ? Math.round(scrollY / h * 100) : 100);
+});
+document.addEventListener('visibilitychange', () => { if (document.hidden) hidden++; });
+addEventListener('resize', () => put('dev','win','Taille de la fenêtre', innerWidth + ' × ' + innerHeight + ' px'));
+refreshLive();
+setInterval(refreshLive, 250);
+
+document.getElementById('copy').onclick = async e => {
+  try{
+    await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
+    e.target.textContent = 'Copié';
+  }catch(err){ e.target.textContent = 'Copie impossible'; }
+  setTimeout(() => e.target.textContent = 'Copier le rapport (JSON)', 1800);
+};
+</script>
+</body>
+</html>
