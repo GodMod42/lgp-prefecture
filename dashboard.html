@@ -1,21 +1,21 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/assets/img/favicon2.png">
-<title>Mon espace — Préfecture de LGP</title>
-<meta name="description" content="Votre espace personnel : profil, préférences et accès rapides.">
+<title>Mon espace â€” PrÃ©fecture de LGP</title>
+<meta name="description" content="Votre espace personnel : profil, prÃ©fÃ©rences et accÃ¨s rapides.">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Mon espace — Préfecture de LGP">
+<meta property="og:title" content="Mon espace â€” PrÃ©fecture de LGP">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="https://lgp-prefecture.vercel.app/dashboard.html">
 <meta property="og:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:image:alt" content="Préfecture de LGP">
+<meta property="og:image:alt" content="PrÃ©fecture de LGP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:description" content="Votre espace personnel : profil, préférences et accès rapides.">
+<meta property="og:description" content="Votre espace personnel : profil, prÃ©fÃ©rences et accÃ¨s rapides.">
 <style>
 :root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;
 --sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
@@ -30,7 +30,7 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 .eyebrow{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bleu)}
 .eyebrow::before{content:"";width:22px;height:3px;background:var(--rouge)}
 
-/* En-tête */
+/* En-tÃªte */
 header{background:var(--nav);border-top:5px solid;border-image:linear-gradient(90deg,var(--bleu) 33.3%,#999 33.3% 66.6%,var(--rouge) 66.6%) 1;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--ligne)}
 header .w{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px;max-width:none}
 .logo{display:flex;align-items:center;gap:16px}
@@ -218,14 +218,14 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 
 <header>
   <div class="w">
-    <a class="logo" href="index.html" aria-label="Préfecture de LGP — Accueil">
-      <img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP — Liberté Égalité Fraternité">
+    <a class="logo" href="index.html" aria-label="PrÃ©fecture de LGP â€” Accueil">
+      <img src="assets/img/logo-prefecture.png" alt="PrÃ©fecture de LGP â€” LibertÃ© Ã‰galitÃ© FraternitÃ©">
     </a>
     <nav aria-label="Navigation principale">
-      <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
+      <a href="index.html">Accueil</a><a href="presentation.html">PrÃ©sentation</a><a href="demarche.html">DÃ©marches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
     </nav>
     <div class="actions">
-      <button id="theme" aria-label="Changer de thème"><svg class="i" style="width:18px;height:18px"><use href="#sun"/></svg></button>
+      <button id="theme" aria-label="Changer de thÃ¨me"><svg class="i" style="width:18px;height:18px"><use href="#sun"/></svg></button>
       <a class="btn-co" href="connexion.html">Se connecter</a>
     </div>
   </div>
@@ -234,21 +234,21 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 <main>
   <section class="pg">
     <div class="w">
-      <div class="alert-b" role="status"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.500-7-10V6z"/><path d="M12 8v4M12 15.500v.01"/></svg><div><b>Plan Vigipirate — Vigilance</b>Niveau d'alerte actuellement en vigueur sur l'ensemble du territoire.</div></div>
+      <div class="alert-b" role="status"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.500-7-10V6z"/><path d="M12 8v4M12 15.500v.01"/></svg><div><b>Plan Vigipirate â€” Vigilance</b>Niveau d'alerte actuellement en vigueur sur l'ensemble du territoire.</div></div>
       <div class="pc prof">
         <img class="pav" id="av" alt="">
         <div class="main"><h1 id="nm" data-notx></h1><span class="rb" id="rl" data-notx></span><p class="id">ID Discord : <span id="did" data-notx></span></p></div>
-        <button class="bo" id="lo" type="button">Se déconnecter</button>
+        <button class="bo" id="lo" type="button">Se dÃ©connecter</button>
       </div>
       <div class="pc pref">
-        <div><b>Préférences d'affichage</b><p>Choisissez l'apparence du site. Ce réglage est sauvegardé sur cet appareil et appliqué à toutes les pages.</p></div>
+        <div><b>PrÃ©fÃ©rences d'affichage</b><p>Choisissez l'apparence du site. Ce rÃ©glage est sauvegardÃ© sur cet appareil et appliquÃ© Ã  toutes les pages.</p></div>
         <div class="swr"><button class="sw" id="sw" type="button" role="switch" aria-checked="true" aria-labelledby="swl"></button><span id="swl">Mode clair</span></div>
       </div>
-      <p class="eyebrow">Accès rapides</p>
+      <p class="eyebrow">AccÃ¨s rapides</p>
       <h2 style="margin-bottom:20px">Vos espaces</h2>
       <div class="esps">
-        <div class="pc esp"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M10 12h5M10 15h5M10 9h2"/></svg></div><h3>Mes démarches</h3><p>Retrouvez vos demandes et les réponses des services, avec une notification sur Discord.</p><a href="mes-demarches.html">Découvrir la direction →</a></div>
-        <div class="pc esp" id="adm" hidden><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Panel administrateur</h3><p>Gérez les demandes, les utilisateurs et le contenu du site.</p><a href="https://lgp-prefecture.vercel.app/admin.html">Ouvrir le panel →</a></div>
+        <div class="pc esp"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M10 12h5M10 15h5M10 9h2"/></svg></div><h3>Mes dÃ©marches</h3><p>Retrouvez vos demandes et les rÃ©ponses des services, avec une notification sur Discord.</p><a href="mes-demarches.html">DÃ©couvrir la direction â†’</a></div>
+        <div class="pc esp" id="adm" hidden><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Panel administrateur</h3><p>GÃ©rez les demandes, les utilisateurs et le contenu du site.</p><a href="https://lgp-prefecture.vercel.app/admin.html">Ouvrir le panel â†’</a></div>
       </div>
     </div>
   </section>
@@ -258,17 +258,17 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
   <div class="w">
     <div class="cols">
       <div>
-        <div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP" style="height:84px;width:auto;display:block"></div>
-        <p>Portail de services de la Préfecture du Grand Paname.</p>
+        <div class="flogo"><img src="assets/img/logo-prefecture.png" alt="PrÃ©fecture de LGP" style="height:84px;width:auto;display:block"></div>
+        <p>Portail de services de la PrÃ©fecture du Grand Paname.</p>
       </div>
-      <div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
-      <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
-      <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous Contacter</a></li><li><a href="demarche.html">Services publics</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
-      <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
+      <div><h4>CoordonnÃ©es</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;Ã©quipe</a></p></div>
+      <div><h4>Horaires</h4><ul><li>Lunâ€“Ven : 8h30â€“22h00</li><li>Samedi : 9h00â€“22h00</li><li>Dimanche : fermÃ©</li><li>Urgences : 24h / 24</li></ul></div>
+      <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous Contacter</a></li><li><a href="demarche.html">Services publics</a></li><li><a href="demarche.html">DÃ©marches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
+      <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la PrÃ©fecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
     </div>
     <div class="bas">
-      <span>© 2026 Préfecture de Grand Paname — Portail de services communautaires.</span>
-      <nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav>
+      <span>Â© 2026 PrÃ©fecture de Grand Paname â€” Portail de services communautaires.</span>
+      <nav aria-label="Liens lÃ©gaux"><a href="mentions-legales.html">Mentions lÃ©gales</a><a href="politique-confidentialite.html">Politique de confidentialitÃ©</a><a href="#">AccessibilitÃ© : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav>
     </div>
   </div>
 </footer>
@@ -284,7 +284,7 @@ if(!u){location.replace("connexion.html")}
 else{
   $("nm").textContent=u.name;$("did").textContent=u.id;
   if(u.role)$("rl").textContent=u.role;else $("rl").hidden=true;
-  /* Accès rapide « Panel administrateur » : réservé au staff (même règle que le menu de auth.js) */
+  /* AccÃ¨s rapide Â« Panel administrateur Â» : rÃ©servÃ© au staff (mÃªme rÃ¨gle que le menu de auth.js) */
   $("adm").hidden=!isSiteAdmin(u);
   const av=$("av");
   if(u.avatar){av.src=u.avatar.replace("size=64","size=128");av.onerror=()=>{const s=document.createElement("span");s.className="pav";s.textContent=u.name.charAt(0).toUpperCase();av.replaceWith(s)}}
@@ -295,6 +295,7 @@ else{
   $("theme").addEventListener("click",()=>setTimeout(sync,0));sync();
 }
 </script>
-<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script></body>
+<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script><script type="module" src="/botid.js"></script>`r`n</body>
 </html>
+
 
