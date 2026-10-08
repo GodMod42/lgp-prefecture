@@ -3,6 +3,30 @@ import {
 } from "../../lib/contact-data.js";
 import { randomUUID } from "node:crypto";
 
+/* Même envoi que dans api/contact.js : le test « Prise de rendez-vous » part sur DISCORD_WEBHOOK_RDV (salon forum). */
+async function notifyRdv(embed, threadName) {
+  const hook = (process.env.DISCORD_WEBHOOK_RDV || "").trim().replace(/^["']|["']$/g, "");
+  if (!hook) return { ok: false };
+  try {
+    const response = await fetch(hook + (hook.includes("?") ? "&" : "?") + "wait=true", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: "Préfecture — Rendez-vous",
+        thread_name: threadName.slice(0, 100),
+        allowed_mentions: { parse: [] },
+        embeds: [embed],
+      }),
+    });
+    if (!response.ok) throw new Error("webhook " + response.status);
+    const message = await response.json().catch(() => ({}));
+    return { ok: true, threadId: message.channel_id || null };
+  } catch (error) {
+    console.error("RDV webhook failed:", error?.message || error);
+    return { ok: false };
+  }
+}
+
 export default async function handler(req, res) {
   const identity = await discordUser(req, true).catch(() => ({ error: "discord_auth_unavailable", status: 502 }));
   if (identity.error) return sendJson(res, identity.status, { error: identity.error });
@@ -19,7 +43,7 @@ export default async function handler(req, res) {
     const payload = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
     if (req.method === "POST" && payload.testForm) {
       const testForm = String(payload.testForm);
-      let motif, subject, formLabel;
+      let motif, subject, formLabel, useRdv = false;
       if (testForm === "contact") {
         motif = String(payload.motif || "Support technique").trim();
         if (!isKnownMotif(motif) || motif === "Déclaration / démarche")
@@ -31,9 +55,12 @@ export default async function handler(req, res) {
         subject = "Démarche en ligne — Création d'entreprise [TEST]";
         formLabel = "formulaire de création d’entreprise";
       } else if (testForm === "procedure") {
+        const name = String(payload.procedureName || "").replace(/\s+/g, " ").trim().slice(0, 80);
+        if (!name) return sendJson(res, 400, { error: "procedure_invalid" });
         motif = "Déclaration / démarche";
-        subject = "Démarche en ligne — Demande de subvention [TEST]";
-        formLabel = "formulaire d’une autre démarche";
+        subject = `Démarche en ligne — ${name} [TEST]`;
+        formLabel = `formulaire « ${name} »`;
+        useRdv = name === "Prise de rendez-vous";
       } else {
         return sendJson(res, 400, { error: "test_form_invalid" });
       }
@@ -50,7 +77,7 @@ export default async function handler(req, res) {
         (reference, discord_user_id, discord_username, requester_name, phone, motif, subject, messages, is_test)
         VALUES (${reference}, ${identity.user.id}, ${username}, ${requester}, ${phone}, ${motif}, ${subject}, ${JSON.stringify(messages)}::jsonb, TRUE)`;
 
-      const notification = await notifyDiscord(motif, {
+      const testEmbed = {
         title: `${motif} — ${subject}`.slice(0, 256),
         description: text,
         color: 0xff8a00,
@@ -61,7 +88,10 @@ export default async function handler(req, res) {
         ],
         footer: { text: `TEST · webhook du motif ${motif}` },
         timestamp: createdAt,
-      }, { subject, reference, test: true });
+      };
+      const notification = useRdv
+        ? await notifyRdv(testEmbed, `${reference} · ${subject}`)
+        : await notifyDiscord(motif, testEmbed, { subject, reference, test: true });
       if (notification.ok) await db()`UPDATE contact_tickets
         SET discord_notified = TRUE, discord_thread_id = ${notification.threadId || null}
         WHERE reference = ${reference}`;
