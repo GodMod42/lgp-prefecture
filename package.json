@@ -12,7 +12,8 @@
     "node": ">=18.14.0"
   },
   "dependencies": {
-    "@neondatabase/serverless": "latest"
+    "@neondatabase/serverless": "latest",
+    "@vercel/speed-insights": "^2.0.0"
   },
   "devDependencies": {
     "vercel": "latest"
