@@ -69,6 +69,9 @@ input[type=search]{margin-bottom:16px}
 <script>
 /* ===== À CONFIGURER ===== */
 const PAGES = [["index","Accueil"],["presentation","Présentation"],["demarche","Démarches en ligne"],["wiki","Wiki"],["emplois","Nos emplois"],["actus","Suivre l'actu"],["contact","Nous contacter"],["connexion","Connexion"]];
+/* Démarches proposées dans « Tests des formulaires » (menu déroulant).
+   Quand tu crées une nouvelle démarche, ajoute simplement une ligne ici. Le nom sert de catégorie dans Demandes → Démarches en ligne. */
+const TEST_PROCEDURES = ["Création d'entreprise","Demande de subvention(s)","Création d'association","Demande de changement de nom","Déclarer une manifestation","Prise de rendez-vous","Donation service public","Mise au point entreprise"];
 
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 const S=SITE,$=s=>document.querySelector(s);
@@ -363,16 +366,19 @@ async function start(){
   };
   const drawFormTests=p=>{
     p.append(E("h2","","Tests des formulaires"),E("p","sub","Chaque bouton crée un vrai ticket marqué TEST et l’envoie au webhook du motif. Le demandeur, le sujet, le message Discord et le fil de création d’entreprise portent tous cette mention."));
-    const controls=E("div","ticket-tools"),motif=E("select"),sendContact=E("button","b p","Envoyer le test de contact"),sendCreation=E("button","b p","Envoyer le test de création d’entreprise"),sendProcedure=E("button","b","Envoyer le test d’une autre démarche"),status=E("p","sub"),history=E("div");
+    const controls=E("div","ticket-tools"),motif=E("select"),sendContact=E("button","b p","Envoyer le test de contact"),procControls=E("div","ticket-tools"),procedure=E("select"),sendProcedure=E("button","b p","Envoyer le test de la démarche"),status=E("p","sub"),history=E("div");
     (D.ticketMotifs||[]).filter(item=>item!=="Déclaration / démarche").forEach(item=>motif.add(new Option(item,item)));
-    sendContact.type=sendCreation.type=sendProcedure.type="button";
-    controls.append(motif,sendContact,sendCreation,sendProcedure);p.append(controls,status,E("h3","ticket-section-title","Demandes de test récentes"),history);
+    TEST_PROCEDURES.forEach(name=>procedure.add(new Option(name,name)));
+    motif.setAttribute("aria-label","Motif du test de contact");procedure.setAttribute("aria-label","Démarche à tester");
+    motif.style.maxWidth=procedure.style.maxWidth="340px";
+    sendContact.type=sendProcedure.type="button";
+    controls.append(motif,sendContact);procControls.append(procedure,sendProcedure);
+    p.append(E("h3","ticket-section-title","Formulaire de contact"),controls,E("h3","ticket-section-title","Démarches en ligne"),procControls,status,E("h3","ticket-section-title","Demandes de test récentes"),history);
     const api=async(method,body)=>{const response=await fetch("/api/admin/tickets",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||String(response.status));return data};
     const refreshHistory=async()=>{history.textContent="Chargement…";try{const tickets=await api("GET"),tests=tickets.filter(item=>item.is_test).slice(0,20);history.textContent="";if(!tests.length){history.append(E("p","sub","Aucun test envoyé pour le moment."));return}tests.forEach(ticket=>history.append(ticketCard(ticket,{call:api,reload:refreshHistory})))}catch(error){history.textContent="Impossible de charger l’historique des tests : "+error.message}};
-    const sendTest=async(button,testForm,selectedMotif)=>{button.disabled=true;status.className="sub";status.textContent="Envoi du test au webhook…";try{const result=await api("POST",{testForm,motif:selectedMotif});status.className=result.discordNotified?"sub":"bad";status.textContent=result.discordNotified?"Test envoyé au webhook · Référence : "+result.reference:"Ticket de test créé ("+result.reference+") mais Discord n’a pas reçu l’envoi. Vérifie le webhook Vercel du motif.";await refreshHistory()}catch(error){status.className="bad";status.textContent="Échec du test : "+error.message}finally{button.disabled=false}};
+    const sendTest=async(button,testForm,selectedMotif,procedureName)=>{button.disabled=true;status.className="sub";status.textContent="Envoi du test au webhook…";try{const result=await api("POST",{testForm,motif:selectedMotif,procedureName});status.className=result.discordNotified?"sub":"bad";status.textContent=result.discordNotified?"Test envoyé au webhook · Référence : "+result.reference:"Ticket de test créé ("+result.reference+") mais Discord n’a pas reçu l’envoi. Vérifie le webhook Vercel du motif.";await refreshHistory()}catch(error){status.className="bad";status.textContent="Échec du test : "+error.message}finally{button.disabled=false}};
     sendContact.onclick=()=>sendTest(sendContact,"contact",motif.value||"Support technique");
-    sendCreation.onclick=()=>sendTest(sendCreation,"creation");
-    sendProcedure.onclick=()=>sendTest(sendProcedure,"procedure");
+    sendProcedure.onclick=()=>sendTest(sendProcedure,"procedure",undefined,procedure.value);
     refreshHistory();
   };
 
