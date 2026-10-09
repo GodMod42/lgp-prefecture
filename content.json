@@ -43,6 +43,12 @@
       "disponibilite": "Disponible"
     },
     {
+      "titre": "Instance Judiciaire de la Préfecture",
+      "salaire": "3 000 à 4 000 € ",
+      "texte": "L’Instance Judiciaire de la Préfecture est chargée d’assurer le suivi des affaires à caractère juridique concernant la Préfecture. Elle veille au respect des lois et des procédures administratives et judiciaires, tout en assurant le lien entre la Préfecture et les différentes institutions judiciaires.",
+      "disponibilite": "Disponible"
+    },
+    {
       "titre": "Inspecteur IGPN",
       "salaire": "3 000 – 5 000 €+",
       "texte": "Agent détaché à l'Inspection Générale de la Police Nationale (police des polices). Il conduit des enquêtes internes, audits, inspections déontologiques et investigations sur les manquements des policiers (délégation Paris au sein de l'IGPN).",
@@ -50,17 +56,21 @@
       "disponibilite": "Disponible"
     },
     {
-      "titre": "Huissier de Justice (à la PP)",
-      "salaire": "2 300 – 3 500 €",
-      "texte": "Agent chargé des significations, constats, audiences administratives et actes officiels (ex. : notifications, expulsions, procédures judiciaires internes).",
-      "mention": "Sous l'autorité de la Préfecture de Paris",
+      "titre": "Inspecteur à la Direction Générale Des Finances Publiques",
+      "salaire": "2 500 €",
+      "texte": "L’Inspecteur des Finances publiques est un cadre de la DGFP chargé de contrôler, analyser et assurer le suivi des dossiers fiscaux et financiers. Il participe à la bonne application de la réglementation fiscale et contribue à la lutte contre la fraude.",
       "disponibilite": "Disponible"
     },
     {
-      "titre": "Inspecteur",
-      "salaire": "2 900 – 4 800 €",
-      "texte": "L'Inspecteur du travail est un cadre de la fonction publique (catégorie A) chargé de contrôler l'application du droit du travail sur son secteur (entreprises, salariés, conventions collectives).",
-      "mention": "Sous l'autorité de la Préfecture De Police de Paris",
+      "titre": "Responsable Section APR ",
+      "salaire": "3 500 à 5 500 €",
+      "texte": "Le responsable de section assure le commandement, la coordination et la supervision des agents chargés de la protection rapprochée.",
+      "disponibilite": "Disponible"
+    },
+    {
+      "titre": "Agent de Protection Rapproché",
+      "salaire": "2 300 à 4 000 €",
+      "texte": "L’agent de protection rapprochée (APR) est chargé d’assurer la sécurité directe d’une personne protégée, notamment un préfet, une haute autorité ou une personnalité faisant l’objet d’un dispositif de protection.",
       "disponibilite": "Disponible"
     }
   ],
