@@ -1,10 +1,10 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>Ce que votre navigateur rÃ©vÃ¨le</title>
+<title>Ce que votre navigateur révèle</title>
 <style>
   :root{--bg:#0e1014;--panel:#161920;--line:#262a33;--txt:#c9ced8;--mute:#8a91a0;--hot:#ff5a5f;--live:#3ddc97}
   *{box-sizing:border-box}
@@ -31,11 +31,11 @@
 </style>
 </head>
 <body>
-<div class="banner" id="banner">Analyse en coursâ€¦</div>
+<div class="banner" id="banner">Analyse en cours…</div>
 <main class="grid" id="grid"></main>
 <div class="bar">
   <button id="copy">Copier le rapport (JSON)</button>
-  <span>Tout est calculÃ© dans votre navigateur. Rien n'est enregistrÃ© par cette page.</span>
+  <span>Tout est calculé dans votre navigateur. Rien n'est enregistré par cette page.</span>
 </div>
 
 <div class="adsbox ad-banner" id="bait" style="position:absolute;left:-9999px;height:10px;width:10px"></div>
@@ -68,12 +68,12 @@ function put(sec, key, label, val, hot){
 const yesNo = v => v ? 'oui' : 'non';
 const mq = q => matchMedia(q).matches;
 
-section('net', 'RÃ©seau & localisation', 'PASSIF');
+section('net', 'Réseau & localisation', 'PASSIF');
 section('dev', 'Appareil', 'PASSIF');
 section('nav', 'Navigateur', 'PASSIF');
-section('pref', 'PrÃ©fÃ©rences & habitudes', 'PASSIF');
-section('fon', 'Polices installÃ©es', 'PASSIF');
-section('live', 'Ce que vous faites, lÃ , maintenant', 'EN DIRECT', true);
+section('pref', 'Préférences & habitudes', 'PASSIF');
+section('fon', 'Polices installées', 'PASSIF');
+section('live', 'Ce que vous faites, là, maintenant', 'EN DIRECT', true);
 
 /* ---------- appareil ---------- */
 function browserName(){
@@ -108,7 +108,7 @@ function canvasPrint(){
     const c = document.createElement('canvas'); c.width = 240; c.height = 60;
     const x = c.getContext('2d');
     x.textBaseline = 'top'; x.font = '16px Arial'; x.fillStyle = '#f60'; x.fillRect(10, 5, 100, 30);
-    x.fillStyle = '#069'; x.fillText('Cwm fjordbank glyphs vext quiz ðŸ˜ƒ', 4, 20);
+    x.fillStyle = '#069'; x.fillText('Cwm fjordbank glyphs vext quiz 😃', 4, 20);
     return c.toDataURL();
   }catch(e){ return ''; }
 }
@@ -141,7 +141,7 @@ async function sha(str){
   const fl = fonts(FONTS);
   const gRaw = gpu();
   const g = (isBrave && (!gRaw || /^(brave|indisponible)$/i.test(gRaw)))
-    ? 'masquÃ©e par Brave (protection anti-pistage)'
+    ? 'masquée par Brave (protection anti-pistage)'
     : gRaw;
 
   /* haute entropie (Chrome/Edge) */
@@ -149,11 +149,11 @@ async function sha(str){
   try{ hi = await n.userAgentData.getHighEntropyValues(['architecture','platformVersion','model']); }catch(e){}
 
   /* batterie */
-  let bat = 'non exposÃ© par ce navigateur', batPct = null;
+  let bat = 'non exposé par ce navigateur', batPct = null;
   try{
     const b = await n.getBattery();
     batPct = Math.round(b.level * 100);
-    bat = batPct + ' %' + (b.charging ? ' â€” en charge' : ' â€” sur batterie');
+    bat = batPct + ' %' + (b.charging ? ' — en charge' : ' — sur batterie');
   }catch(e){}
 
   /* adblock */
@@ -161,7 +161,7 @@ async function sha(str){
   const bait = document.getElementById('bait');
   const adblock = !bait || bait.offsetHeight === 0 || getComputedStyle(bait).display === 'none';
 
-  /* rÃ©seau : fonction Vercel (en-tÃªtes d'edge) + enrichissement ipwho.is */
+  /* réseau : fonction Vercel (en-têtes d'edge) + enrichissement ipwho.is */
   let srv = {}, ext = {};
   try{ srv = await (await fetch('/api/info', {cache:'no-store'})).json(); }catch(e){}
   try{ ext = await (await fetch('https://ipwho.is/' + (srv.ip || ''))).json(); }catch(e){}
@@ -175,13 +175,13 @@ async function sha(str){
 
   put('net','ip','Adresse IP', ip, true);
   put('net','city','Ville', city, true);
-  put('net','region','RÃ©gion', region);
+  put('net','region','Région', region);
   put('net','country','Pays', country);
   put('net','postal','Code postal', ext.postal || 'inconnu');
-  put('net','isp','Fournisseur d\'accÃ¨s', isp, true);
-  if (!isNaN(lat)) put('net','coords','CoordonnÃ©es approx.', lat.toFixed(3) + ', ' + lon.toFixed(3));
+  put('net','isp','Fournisseur d\'accès', isp, true);
+  if (!isNaN(lat)) put('net','coords','Coordonnées approx.', lat.toFixed(3) + ', ' + lon.toFixed(3));
   const vpn = ipTz && ipTz !== tz;
-  put('net','vpn','VPN probable ?', vpn ? `oui â€” l'IP dit ${ipTz}, votre horloge dit ${tz}` : 'non dÃ©tectÃ©', vpn);
+  put('net','vpn','VPN probable ?', vpn ? `oui — l'IP dit ${ipTz}, votre horloge dit ${tz}` : 'non détecté', vpn);
   if (!isNaN(lat)){
     const f = document.createElement('iframe');
     f.loading = 'lazy'; f.title = 'Carte';
@@ -189,41 +189,41 @@ async function sha(str){
     document.getElementById('net').parentElement.appendChild(f);
   }
 
-  put('dev','os','SystÃ¨me', os + (hi.platformVersion ? ' ' + hi.platformVersion : ''));
-  put('dev','arch','Architecture', hi.architecture || 'non exposÃ©e');
+  put('dev','os','Système', os + (hi.platformVersion ? ' ' + hi.platformVersion : ''));
+  put('dev','arch','Architecture', hi.architecture || 'non exposée');
   put('dev','gpu','Carte graphique', g, true);
-  put('dev','cpu','CÅ“urs CPU', n.hardwareConcurrency || 'inconnu');
-  put('dev','ram','MÃ©moire vive (approx.)', n.deviceMemory ? 'â‰¥ ' + n.deviceMemory + ' Go' : 'non exposÃ©e');
-  put('dev','screen','Ã‰cran', s.width + ' Ã— ' + s.height + ' px');
-  put('dev','avail','Zone utile (sans Dock/barre)', s.availWidth + ' Ã— ' + s.availHeight + ' px');
-  put('dev','dpr','DensitÃ© de pixels', 'Ã—' + devicePixelRatio + (devicePixelRatio > 1 ? ' (Ã©cran Retina / HiDPI)' : ''));
+  put('dev','cpu','Cœurs CPU', n.hardwareConcurrency || 'inconnu');
+  put('dev','ram','Mémoire vive (approx.)', n.deviceMemory ? '≥ ' + n.deviceMemory + ' Go' : 'non exposée');
+  put('dev','screen','Écran', s.width + ' × ' + s.height + ' px');
+  put('dev','avail','Zone utile (sans Dock/barre)', s.availWidth + ' × ' + s.availHeight + ' px');
+  put('dev','dpr','Densité de pixels', '×' + devicePixelRatio + (devicePixelRatio > 1 ? ' (écran Retina / HiDPI)' : ''));
   put('dev','depth','Profondeur de couleur', s.colorDepth + ' bits');
-  put('dev','touch','Ã‰cran tactile', yesNo(n.maxTouchPoints > 0) + (n.maxTouchPoints ? ' (' + n.maxTouchPoints + ' points)' : ''));
-  put('dev','win','Taille de la fenÃªtre', innerWidth + ' Ã— ' + innerHeight + ' px');
+  put('dev','touch','Écran tactile', yesNo(n.maxTouchPoints > 0) + (n.maxTouchPoints ? ' (' + n.maxTouchPoints + ' points)' : ''));
+  put('dev','win','Taille de la fenêtre', innerWidth + ' × ' + innerHeight + ' px');
   put('dev','bat','Batterie', bat, batPct !== null);
 
   put('nav','br','Navigateur', br, true);
   put('nav','ua','User-Agent', n.userAgent);
-  put('nav','cookies','Cookies activÃ©s', yesNo(n.cookieEnabled));
-  put('nav','dnt','Do Not Track', n.doNotTrack === '1' ? 'activÃ©' : 'dÃ©sactivÃ©');
-  put('nav','adb','Bloqueur de pub', adblock ? 'dÃ©tectÃ©' : 'non dÃ©tectÃ©', !adblock);
-  put('nav','hist','Pages visitÃ©es dans cet onglet', history.length);
-  put('nav','ref','Venu depuis', document.referrer || 'accÃ¨s direct');
+  put('nav','cookies','Cookies activés', yesNo(n.cookieEnabled));
+  put('nav','dnt','Do Not Track', n.doNotTrack === '1' ? 'activé' : 'désactivé');
+  put('nav','adb','Bloqueur de pub', adblock ? 'détecté' : 'non détecté', !adblock);
+  put('nav','hist','Pages visitées dans cet onglet', history.length);
+  put('nav','ref','Venu depuis', document.referrer || 'accès direct');
   const c = n.connection;
-  put('nav','conn','Type de connexion', c ? `${c.effectiveType || '?'} Â· ~${c.downlink ?? '?'} Mb/s Â· ${c.rtt ?? '?'} ms` : 'non exposÃ©');
-  put('nav','bot','ContrÃ´lÃ© par un robot', yesNo(n.webdriver));
+  put('nav','conn','Type de connexion', c ? `${c.effectiveType || '?'} · ~${c.downlink ?? '?'} Mb/s · ${c.rtt ?? '?'} ms` : 'non exposé');
+  put('nav','bot','Contrôlé par un robot', yesNo(n.webdriver));
 
   put('pref','langs','Langues', (n.languages || [lang]).join(', '), true);
   put('pref','tz','Fuseau horaire', tz, true);
   put('pref','time','Heure locale', new Date().toLocaleTimeString('fr-FR'));
   put('pref','dark','Mode sombre', yesNo(mq('(prefers-color-scheme: dark)')));
-  put('pref','motion','Animations rÃ©duites', yesNo(mq('(prefers-reduced-motion: reduce)')));
-  put('pref','contrast','Contraste Ã©levÃ©', yesNo(mq('(prefers-contrast: more)')));
+  put('pref','motion','Animations réduites', yesNo(mq('(prefers-reduced-motion: reduce)')));
+  put('pref','contrast','Contraste élevé', yesNo(mq('(prefers-contrast: more)')));
   put('pref','pointer','Pointeur', mq('(pointer: fine)') ? 'souris / trackpad' : 'tactile');
 
   const fe = document.createElement('div');
   fe.className = 'fonts';
-  fe.textContent = fl.join(' Â· ') + `\n${fl.length} polices reconnues sur ${FONTS.length} testÃ©es.`;
+  fe.textContent = fl.join(' · ') + `\n${fl.length} polices reconnues sur ${FONTS.length} testées.`;
   fe.style.whiteSpace = 'pre-line';
   document.getElementById('fon').appendChild(fe);
   report.polices = fl;
@@ -234,8 +234,8 @@ async function sha(str){
 
   const heure = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
   document.getElementById('banner').innerHTML =
-    `Vous Ãªtes probablement Ã  <b>${city}</b>, chez <b>${isp}</b>, sur <b>${os}</b> avec <b>${br}</b>, ` +
-    `un Ã©cran <b>${s.width}Ã—${s.height}</b>${batPct !== null ? `, batterie Ã  <b>${batPct} %</b>` : ''}. ` +
+    `Vous êtes probablement à <b>${city}</b>, chez <b>${isp}</b>, sur <b>${os}</b> avec <b>${br}</b>, ` +
+    `un écran <b>${s.width}×${s.height}</b>${batPct !== null ? `, batterie à <b>${batPct} %</b>` : ''}. ` +
     `Il est <b>${heure}</b> chez vous et vous lisez en <b>${lang}</b>. Votre identifiant unique : <b>${id}</b>.`;
 })();
 
@@ -244,12 +244,12 @@ const t0 = Date.now();
 let moves = 0, clicks = 0, keys = 0, maxScroll = 0, hidden = 0, mx = 0, my = 0;
 function refreshLive(){
   const sec = Math.floor((Date.now() - t0) / 1000);
-  put('live','tps','Temps passÃ© sur la page', Math.floor(sec / 60) + ' min ' + (sec % 60) + ' s');
+  put('live','tps','Temps passé sur la page', Math.floor(sec / 60) + ' min ' + (sec % 60) + ' s');
   put('live','pos','Position de la souris', mx + ', ' + my, true);
   put('live','moves','Mouvements de souris', moves);
   put('live','clicks','Clics', clicks);
-  put('live','keys','Touches pressÃ©es', keys + ' (seul le nombre est comptÃ©)');
-  put('live','scroll','DÃ©filement max', maxScroll + ' %');
+  put('live','keys','Touches pressées', keys + ' (seul le nombre est compté)');
+  put('live','scroll','Défilement max', maxScroll + ' %');
   put('live','tab','Changements d\'onglet', hidden);
 }
 addEventListener('mousemove', e => { moves++; mx = e.clientX; my = e.clientY; });
@@ -260,14 +260,14 @@ addEventListener('scroll', () => {
   maxScroll = Math.max(maxScroll, h > 0 ? Math.round(scrollY / h * 100) : 100);
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden) hidden++; });
-addEventListener('resize', () => put('dev','win','Taille de la fenÃªtre', innerWidth + ' Ã— ' + innerHeight + ' px'));
+addEventListener('resize', () => put('dev','win','Taille de la fenêtre', innerWidth + ' × ' + innerHeight + ' px'));
 refreshLive();
 setInterval(refreshLive, 250);
 
 document.getElementById('copy').onclick = async e => {
   try{
     await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
-    e.target.textContent = 'CopiÃ©';
+    e.target.textContent = 'Copié';
   }catch(err){ e.target.textContent = 'Copie impossible'; }
   setTimeout(() => e.target.textContent = 'Copier le rapport (JSON)', 1800);
 };

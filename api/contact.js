@@ -1,4 +1,4 @@
-﻿import { randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import {
   db, discordUser, ensureSchema, isKnownMotif, notifyDiscord, sendJson,
 } from "../lib/contact-data.js";
@@ -7,17 +7,17 @@ import { checkBotId } from "botid/server";
 const MAX_MESSAGE = 3800;
 
 /* ===== Prise de rendez-vous =====
-   Un rendez-vous est enregistrÃ© comme une dÃ©marche en ligne (mÃªme motif que les autres dÃ©marches),
-   donc il apparaÃ®t dans Â« Mes dÃ©marches Â» et dans l'admin : Demandes â†’ DÃ©marches en ligne â†’ Â« Prise de rendez-vous Â».
+   Un rendez-vous est enregistré comme une démarche en ligne (même motif que les autres démarches),
+   donc il apparaît dans « Mes démarches » et dans l'admin : Demandes → Démarches en ligne → « Prise de rendez-vous ».
    La notification part sur le webhook forum DISCORD_WEBHOOK_RDV. */
-const RDV_MOTIF = "DÃ©claration / dÃ©marche";
-const RDV_SUBJECT = "DÃ©marche en ligne â€” Prise de rendez-vous";
+const RDV_MOTIF = "Déclaration / démarche";
+const RDV_SUBJECT = "Démarche en ligne — Prise de rendez-vous";
 
 const clip = (value, max) => String(value ?? "").trim().slice(0, max);
 const parisToday = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Paris" }); // AAAA-MM-JJ
 const frDate = (date) => date.split("-").reverse().join("/");
 
-// MÃªmes horaires que le formulaire : lun-ven 8h30-22h, samedi 9h-22h, dimanche fermÃ©.
+// Mêmes horaires que le formulaire : lun-ven 8h30-22h, samedi 9h-22h, dimanche fermé.
 function validSlot(date, time) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) return false;
   if (date < parisToday()) return false;
@@ -40,12 +40,12 @@ function buildRdv(raw) {
   if (hasAlt && !validSlot(rdv.date2, rdv.heure2)) return { error: "invalid_slot" };
   const lines = [
     "Prise de rendez-vous",
-    `Service concernÃ© : ${rdv.service}`,
+    `Service concerné : ${rdv.service}`,
     `Motif : ${rdv.motif}`,
-    `CrÃ©neau souhaitÃ© : ${frDate(rdv.date)} Ã  ${rdv.heure}`,
+    `Créneau souhaité : ${frDate(rdv.date)} à ${rdv.heure}`,
   ];
-  if (hasAlt) lines.push(`CrÃ©neau alternatif : ${frDate(rdv.date2)} Ã  ${rdv.heure2}`);
-  lines.push(`PrÃ©cisions : ${rdv.precisions}`);
+  if (hasAlt) lines.push(`Créneau alternatif : ${frDate(rdv.date2)} à ${rdv.heure2}`);
+  lines.push(`Précisions : ${rdv.precisions}`);
   return { rdv, text: lines.join("\n") };
 }
 
@@ -58,7 +58,7 @@ async function notifyRdv(embed, threadName) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: "PrÃ©fecture â€” Rendez-vous",
+        username: "Préfecture — Rendez-vous",
         thread_name: threadName.slice(0, 100),
         allowed_mentions: { parse: [] },
         embeds: [embed],
@@ -120,19 +120,19 @@ export default async function handler(req, res) {
       VALUES (${reference}, ${identity.user.id}, ${identity.user.username}, ${name}, ${phone}, ${motif}, ${subject}, ${JSON.stringify(messages)}::jsonb)`;
 
     const embed = {
-      title: (rdv ? "ðŸ“… Prise de rendez-vous" : `${motif} â€” ${subject}`).slice(0, 256),
+      title: (rdv ? "📅 Prise de rendez-vous" : `${motif} — ${subject}`).slice(0, 256),
       description: text,
       color: 0x000091,
       fields: [
-        { name: "Demandeur", value: `${name} Â· ${identity.user.username}`.slice(0, 1024), inline: true },
-        { name: "TÃ©lÃ©phone", value: phone || "Non renseignÃ©", inline: true },
-        { name: "RÃ©fÃ©rence", value: reference, inline: true },
+        { name: "Demandeur", value: `${name} · ${identity.user.username}`.slice(0, 1024), inline: true },
+        { name: "Téléphone", value: phone || "Non renseigné", inline: true },
+        { name: "Référence", value: reference, inline: true },
       ],
       footer: { text: `Compte Discord : ${identity.user.id}` },
       timestamp: createdAt,
     };
     const notification = rdv
-      ? await notifyRdv(embed, `${reference} Â· ${rdv.service} Â· ${name}`)
+      ? await notifyRdv(embed, `${reference} · ${rdv.service} · ${name}`)
       : await notifyDiscord(motif, embed, { subject, reference });
     if (notification.ok) await db()`UPDATE contact_tickets
       SET discord_notified = TRUE, discord_thread_id = ${notification.threadId || null}

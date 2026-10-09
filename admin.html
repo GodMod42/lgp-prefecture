@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/assets/img/favicon2.png">
 <meta name="robots" content="noindex, nofollow">
-<title>PrÃ©fecture de LGP â€” Panel Administrateur</title>
+<title>Préfecture de LGP — Panel Administrateur</title>
 <style>
 :root{--bleu:#000091;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--sans:Marianne,"Public Sans","Segoe UI",system-ui,sans-serif}
 :root[data-theme=dark]{--bleu:#8b8bff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a}
@@ -58,24 +58,24 @@ input[type=search]{margin-bottom:16px}
 <div id="app" hidden>
   <div class="top"><div class="in">
     <h1>Panneau d'administration</h1>
-    <a class="b" href="index.html" style="text-decoration:none">â† Retour au site</a>
-    <button class="b" id="pv">AperÃ§u du brouillon</button>
+    <a class="b" href="index.html" style="text-decoration:none">← Retour au site</a>
+    <button class="b" id="pv">Aperçu du brouillon</button>
     <button class="b" id="im">Importer</button>
     <button class="b" id="rs">Abandonner le brouillon</button>
-    <button class="b p" id="ex">TÃ©lÃ©charger content.json</button>
+    <button class="b p" id="ex">Télécharger content.json</button>
     <input type="file" id="fi" accept=".json,application/json" hidden>
   </div>
-  <div class="note" id="st">Tes modifications sont enregistrÃ©es en brouillon dans ce navigateur. Pour les publier : tÃ©lÃ©charge <b>content.json</b> et remplace celui de ton site (mÃªme dossier que index.html).</div></div>
+  <div class="note" id="st">Tes modifications sont enregistrées en brouillon dans ce navigateur. Pour les publier : télécharge <b>content.json</b> et remplace celui de ton site (même dossier que index.html).</div></div>
   <div class="lay"><aside id="nav"></aside><main id="pane"></main></div>
 </div>
 
 <script src="assets/js/auth.js"></script>
 <script>
-/* ===== Ã€ CONFIGURER ===== */
-const PAGES = [["index","Accueil"],["presentation","PrÃ©sentation"],["demarche","DÃ©marches en ligne"],["wiki","Wiki"],["emplois","Nos emplois"],["actus","Suivre l'actu"],["contact","Nous contacter"],["connexion","Connexion"]];
-/* DÃ©marches proposÃ©es dans Â« Tests des formulaires Â» (menu dÃ©roulant).
-   Quand tu crÃ©es une nouvelle dÃ©marche, ajoute simplement une ligne ici. Le nom sert de catÃ©gorie dans Demandes â†’ DÃ©marches en ligne. */
-const TEST_PROCEDURES = ["CrÃ©ation d'entreprise","Demande de subvention(s)","CrÃ©ation d'association","Demande de changement de nom","DÃ©clarer une manifestation","Prise de rendez-vous","Donation service public","Mise au point entreprise"];
+/* ===== À CONFIGURER ===== */
+const PAGES = [["index","Accueil"],["presentation","Présentation"],["demarche","Démarches en ligne"],["wiki","Wiki"],["emplois","Nos emplois"],["actus","Suivre l'actu"],["contact","Nous contacter"],["connexion","Connexion"]];
+/* Démarches proposées dans « Tests des formulaires » (menu déroulant).
+   Quand tu crées une nouvelle démarche, ajoute simplement une ligne ici. Le nom sert de catégorie dans Demandes → Démarches en ligne. */
+const TEST_PROCEDURES = ["Création d'entreprise","Demande de subvention(s)","Création d'association","Demande de changement de nom","Déclarer une manifestation","Prise de rendez-vous","Donation service public","Mise au point entreprise"];
 
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 const S=SITE,$=s=>document.querySelector(s);
@@ -84,7 +84,7 @@ const gate=(h)=>{const g=$("#gate");g.hidden=false;g.innerHTML=h};
 const u=getUser();
 if(!u) location.replace("connexion.html");
 else if(!isSiteAdmin(u)){
-  gate('<h2>AccÃ¨s rÃ©servÃ©</h2><p style="margin:12px 0">Lâ€™accÃ¨s Ã  lâ€™administration est rÃ©servÃ© aux membres portant le rÃ´le Discord Staff. VÃ©rifie que tu es connectÃ© avec le bon compte.</p><p style="margin-top:16px"><a href="index.html" style="text-decoration:underline">Retour au site</a></p>');
+  gate('<h2>Accès réservé</h2><p style="margin:12px 0">L’accès à l’administration est réservé aux membres portant le rôle Discord Staff. Vérifie que tu es connecté avec le bon compte.</p><p style="margin-top:16px"><a href="index.html" style="text-decoration:underline">Retour au site</a></p>');
 }else start();
 
 async function start(){
@@ -113,13 +113,13 @@ async function start(){
   let view="urgent";
 
   const save=()=>{try{D.updated=new Date().toISOString();localStorage.setItem("lgp_admin_draft",JSON.stringify(D))}catch(e){}
-    $("#st").innerHTML="Brouillon enregistrÃ© Ã  "+new Date().toLocaleTimeString("fr-FR")+" â€” <b>pas encore publiÃ©</b> : tÃ©lÃ©charge content.json et remplace celui de ton site."};
+    $("#st").innerHTML="Brouillon enregistré à "+new Date().toLocaleTimeString("fr-FR")+" — <b>pas encore publié</b> : télécharge content.json et remplace celui de ton site."};
   const nav=()=>{const n=$("#nav");n.textContent="";
     const groups=[
-      ["Vue d'ensemble",[["urgent","Bandeau urgent"],["jobs","Liste des emplois"],["actualites","ActualitÃ©s"],["presentationData","PrÃ©sentation"]]],
-      ["Demandes",[["tickets","Demandes de contact"],["procedures","DÃ©marches en ligne"]]],
-      ["Finances publiques",[["finances","Direction GÃ©nÃ©rale des Finances Publiques"]]],
-      ["Outils et rÃ©glages",[["testForms","Tests des formulaires"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"]]],
+      ["Vue d'ensemble",[["urgent","Bandeau urgent"],["jobs","Liste des emplois"],["actualites","Actualités"],["presentationData","Présentation"]]],
+      ["Demandes",[["tickets","Demandes de contact"],["procedures","Démarches en ligne"]]],
+      ["Finances publiques",[["finances","Direction Générale des Finances Publiques"]]],
+      ["Outils et réglages",[["testForms","Tests des formulaires"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"]]],
       ["Pages du site",PAGES.filter(p=>F[p[0]]).map(p=>[p[0],p[1]])],
     ];
     groups.forEach(([title,items])=>{if(!items.length)return;const group=E("section","nav-group"),heading=E("h2","nav-group-title",title),links=E("div","nav-group-items");
@@ -130,7 +130,7 @@ async function start(){
     if(missing.length){const m=E("p","bad","Pages introuvables : "+missing.join(", "));m.style.cssText="font-size:.78rem;margin-top:12px;padding:0 14px";n.append(m)}};
 
   const field=(g,lab,obj,key,type)=>{const w=E("div","g"+(type==="checkbox"?" c":"")),l=E("label","",lab);let i;
-    if(type==="select"||type==="availability"){i=E("select");const options=type==="availability"?[["","Ã€ dÃ©finir"],["Disponible","Disponible"],["Indisponible","Indisponible"]]:[["red","Urgent (rouge)"],["blue","Information (bleu)"],["yellow","Attention (jaune)"]];options.forEach(o=>{const op=E("option","",o[1]);op.value=o[0];i.append(op)});i.value=obj[key]||""}
+    if(type==="select"||type==="availability"){i=E("select");const options=type==="availability"?[["","À définir"],["Disponible","Disponible"],["Indisponible","Indisponible"]]:[["red","Urgent (rouge)"],["blue","Information (bleu)"],["yellow","Attention (jaune)"]];options.forEach(o=>{const op=E("option","",o[1]);op.value=o[0];i.append(op)});i.value=obj[key]||""}
     else if(type==="area"){i=E("textarea");i.rows=3;i.value=obj[key]||""}
     else if(type==="checkbox"){i=E("input");i.type="checkbox";i.checked=!!obj[key];l.prepend(i)}
     else{i=E("input");i.type=type==="date"?"date":"text";i.value=obj[key]||""}
@@ -138,30 +138,30 @@ async function start(){
     w.append(l);if(type!=="checkbox")w.append(i);g.append(w)};
 
   const drawUrgent=p=>{
-    p.append(E("h2","","Bandeau Urgent"),E("p","sub","AffichÃ© sous l'en-tÃªte, sur toutes les pages qui chargent site.js."));
+    p.append(E("h2","","Bandeau Urgent"),E("p","sub","Affiché sous l'en-tête, sur toutes les pages qui chargent site.js."));
     const pv=E("div","pv"),c=D.urgent,g=E("div");
     g.upd=()=>{pv.textContent="";pv.append(S.urgentEl(Object.assign({},c,{closable:false})))};
     field(g,"Afficher le bandeau",c,"enabled","checkbox");field(g,"Style",c,"theme","select");
-    field(g,"Ã‰tiquette (laisser vide pour aucune)",c,"tag");field(g,"Message",c,"text","area");
-    field(g,"Texte du lien",c,"linkText");field(g,"Adresse du lien (https://â€¦)",c,"linkUrl");
+    field(g,"Étiquette (laisser vide pour aucune)",c,"tag");field(g,"Message",c,"text","area");
+    field(g,"Texte du lien",c,"linkText");field(g,"Adresse du lien (https://…)",c,"linkUrl");
     field(g,"Le visiteur peut fermer le bandeau",c,"closable","checkbox");
-    p.append(E("label","","AperÃ§u"),pv,g);g.upd()};
+    p.append(E("label","","Aperçu"),pv,g);g.upd()};
 
   const drawJobs=p=>{
-    p.append(E("h2","","Liste des emplois"),E("p","sub","Postes affichÃ©s sur la page Nos emplois."));
-    const g=E("div");field(g,"LibellÃ© du salaire",D,"salaryLabel");p.append(g);
+    p.append(E("h2","","Liste des emplois"),E("p","sub","Postes affichés sur la page Nos emplois."));
+    const g=E("div");field(g,"Libellé du salaire",D,"salaryLabel");p.append(g);
     const box=E("div");p.append(box);
     const mv=(i,d)=>{const j=i+d;if(j<0||j>=D.jobs.length)return;[D.jobs[i],D.jobs[j]]=[D.jobs[j],D.jobs[i]];save();dj()};
     const dj=()=>{box.textContent="";D.jobs.forEach((j,i)=>{const c=E("div","job");
-      field(c,"Titre du poste",j,"titre");field(c,"DisponibilitÃ© du poste",j,"disponibilite","availability");field(c,"Mention au-dessus du salaire (facultative)",j,"mention");field(c,"Salaire",j,"salaire");field(c,"Description",j,"texte","area");
+      field(c,"Titre du poste",j,"titre");field(c,"Disponibilité du poste",j,"disponibilite","availability");field(c,"Mention au-dessus du salaire (facultative)",j,"mention");field(c,"Salaire",j,"salaire");field(c,"Description",j,"texte","area");
       const r=E("div","r");
-      [["â†‘",()=>mv(i,-1)],["â†“",()=>mv(i,1)],["Supprimer",()=>{if(confirm("Supprimer Â« "+j.titre+" Â» ?")){D.jobs.splice(i,1);save();dj()}}]].forEach(([t,f])=>{const b=E("button","b",t);b.type="button";b.onclick=f;r.append(b)});
+      [["↑",()=>mv(i,-1)],["↓",()=>mv(i,1)],["Supprimer",()=>{if(confirm("Supprimer « "+j.titre+" » ?")){D.jobs.splice(i,1);save();dj()}}]].forEach(([t,f])=>{const b=E("button","b",t);b.type="button";b.onclick=f;r.append(b)});
       c.append(r);box.append(c)});
       const a=E("button","b p","Ajouter un poste");a.type="button";a.onclick=()=>{D.jobs.push({titre:"Nouveau poste",salaire:"",texte:""});save();dj()};box.append(a)};
     dj()};
 
   const drawMotifs=p=>{
-    p.append(E("h2","","Motifs de la demande"),E("p","sub","Ces choix apparaissent dans le formulaire Â« Nous contacter Â»."));
+    p.append(E("h2","","Motifs de la demande"),E("p","sub","Ces choix apparaissent dans le formulaire « Nous contacter »."));
     const box=E("div");p.append(box);
     const render=()=>{
       box.textContent="";
@@ -178,7 +178,7 @@ async function start(){
   };
 
   const drawActus=p=>{
-    p.append(E("h2","","ActualitÃ©s"),E("p","sub","Ces publications apparaissent sur la page Â« Suivre l'actu Â» et les trois plus rÃ©centes sur l'accueil."));
+    p.append(E("h2","","Actualités"),E("p","sub","Ces publications apparaissent sur la page « Suivre l'actu » et les trois plus récentes sur l'accueil."));
     const box=E("div");p.append(box);
     const move=(i,d)=>{const j=i+d;if(j<0||j>=D.actus.length)return;[D.actus[i],D.actus[j]]=[D.actus[j],D.actus[i]];save();render()};
     const render=()=>{
@@ -189,20 +189,20 @@ async function start(){
         item.photos=Array.isArray(item.photos)?item.photos:[];
         field(card,"Date de publication",item,"date","date");
         field(card,"Titre",item,"titre");
-        field(card,"RÃ©sumÃ© (affichÃ© sur l'accueil)",item,"resume","area");
-        field(card,"Contenu de l'actualitÃ©",item,"texte","area");
-        const docs=E("div"),docsTitle=E("label","","Documents joints"),docsHelp=E("small","sub","PDF, Word, OpenDocument ou texte â€” 1 Mo maximum par fichier, 2 Mo au total avec les photos. Les fichiers seront inclus dans content.json.");
+        field(card,"Résumé (affiché sur l'accueil)",item,"resume","area");
+        field(card,"Contenu de l'actualité",item,"texte","area");
+        const docs=E("div"),docsTitle=E("label","","Documents joints"),docsHelp=E("small","sub","PDF, Word, OpenDocument ou texte — 1 Mo maximum par fichier, 2 Mo au total avec les photos. Les fichiers seront inclus dans content.json.");
         const picker=E("input");picker.type="file";picker.multiple=true;picker.accept=".pdf,.doc,.docx,.odt,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.oasis.opendocument.text,text/plain";
         docs.append(docsTitle,docsHelp,picker);
         item.documents.forEach((doc,docIndex)=>{
           const line=E("div","r"),name=E("span","",doc.name||"Document");name.style.cssText="align-self:center;overflow-wrap:anywhere";
           const preview=E("div");preview.hidden=true;preview.style.cssText="margin-top:10px;border:1px solid var(--ligne);padding:8px;max-width:100%";
           const show=E("button","b","Visualiser");show.type="button";show.setAttribute("aria-expanded","false");show.onclick=()=>{
-            preview.hidden=!preview.hidden;show.textContent=preview.hidden?"Visualiser":"Masquer l'aperÃ§u";show.setAttribute("aria-expanded",String(!preview.hidden));
+            preview.hidden=!preview.hidden;show.textContent=preview.hidden?"Visualiser":"Masquer l'aperçu";show.setAttribute("aria-expanded",String(!preview.hidden));
             if(!preview.hidden&&!preview.childElementCount){
               if(doc.type==="application/pdf"||doc.type==="text/plain"){
-                const frame=E("iframe");frame.src=doc.data;frame.title="AperÃ§u de "+(doc.name||"document");frame.style.cssText="display:block;width:min(100%,760px);height:480px;border:0";preview.append(frame);
-              }else preview.append(E("p","sub","L'aperÃ§u intÃ©grÃ© n'est pas disponible pour ce format. TÃ©lÃ©charge le fichier pour le consulter."));
+                const frame=E("iframe");frame.src=doc.data;frame.title="Aperçu de "+(doc.name||"document");frame.style.cssText="display:block;width:min(100%,760px);height:480px;border:0";preview.append(frame);
+              }else preview.append(E("p","sub","L'aperçu intégré n'est pas disponible pour ce format. Télécharge le fichier pour le consulter."));
             }
           };
           const remove=E("button","b","Retirer");remove.type="button";remove.onclick=()=>{item.documents.splice(docIndex,1);save();render()};
@@ -213,21 +213,21 @@ async function start(){
           const used=D.actus.reduce((sum,actu)=>sum+[...(actu.documents||[]),...(actu.photos||[])].reduce((n,file)=>n+(Number(file.size)||0),0),0);
           let added=0;
           for(const file of files){
-            if(file.size>1024*1024){alert("Â« "+file.name+" Â» dÃ©passe la limite de 1 Mo.");continue}
+            if(file.size>1024*1024){alert("« "+file.name+" » dépasse la limite de 1 Mo.");continue}
             if(used+added+file.size>2*1024*1024){alert("La limite totale de 2 Mo de documents joints est atteinte.");break}
             try{
               const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file)});
               item.documents.push({name:file.name,type:file.type||"application/octet-stream",size:file.size,data});added+=file.size;
-            }catch(e){alert("Impossible de lire Â« "+file.name+" Â».")}
+            }catch(e){alert("Impossible de lire « "+file.name+" ».")}
           }
           if(added){save();render()}
         };
         card.append(docs);
-        const photos=E("div"),photosTitle=E("label","","Photos de l'actualitÃ©"),photosHelp=E("small","sub","Formats JPG, PNG, GIF ou WebP â€” 1 Mo maximum par photo, 2 Mo au total avec les documents.");
+        const photos=E("div"),photosTitle=E("label","","Photos de l'actualité"),photosHelp=E("small","sub","Formats JPG, PNG, GIF ou WebP — 1 Mo maximum par photo, 2 Mo au total avec les documents.");
         const photoPicker=E("input");photoPicker.type="file";photoPicker.multiple=true;photoPicker.accept=".jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/png,image/gif,image/webp";
         photos.append(photosTitle,photosHelp,photoPicker);
         item.photos.forEach((photo,photoIndex)=>{
-          const line=E("div","r"),img=E("img");img.src=photo.data;img.alt=photo.name||"Photo de l'actualitÃ©";img.style.cssText="width:96px;height:64px;object-fit:cover;border-radius:4px";
+          const line=E("div","r"),img=E("img");img.src=photo.data;img.alt=photo.name||"Photo de l'actualité";img.style.cssText="width:96px;height:64px;object-fit:cover;border-radius:4px";
           const name=E("span","",photo.name||"Photo");name.style.cssText="align-self:center;overflow-wrap:anywhere;margin-right:auto";
           const remove=E("button","b","Retirer");remove.type="button";remove.onclick=()=>{item.photos.splice(photoIndex,1);save();render()};line.append(img,name,remove);photos.append(line);
         });
@@ -236,159 +236,159 @@ async function start(){
           const used=D.actus.reduce((sum,actu)=>sum+[...(actu.documents||[]),...(actu.photos||[])].reduce((n,file)=>n+(Number(file.size)||0),0),0);
           let added=0;
           for(const file of files){
-            if(!/^image\/(jpeg|png|gif|webp)$/.test(file.type)){alert("Â« "+file.name+" Â» n'est pas au format JPG, PNG, GIF ou WebP.");continue}
-            if(file.size>1024*1024){alert("Â« "+file.name+" Â» dÃ©passe la limite de 1 Mo.");continue}
+            if(!/^image\/(jpeg|png|gif|webp)$/.test(file.type)){alert("« "+file.name+" » n'est pas au format JPG, PNG, GIF ou WebP.");continue}
+            if(file.size>1024*1024){alert("« "+file.name+" » dépasse la limite de 1 Mo.");continue}
             if(used+added+file.size>2*1024*1024){alert("La limite totale de 2 Mo de documents et photos est atteinte.");break}
             try{
               const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file)});
               item.photos.push({name:file.name,type:file.type,size:file.size,data});added+=file.size;
-            }catch(e){alert("Impossible de lire Â« "+file.name+" Â».")}
+            }catch(e){alert("Impossible de lire « "+file.name+" ».")}
           }
           if(added){save();render()}
         };
         card.append(photos);
         const row=E("div","r");
-        [["â†‘",()=>move(i,-1)],["â†“",()=>move(i,1)],["Supprimer",()=>{if(confirm("Supprimer cette actualitÃ© ?")){D.actus.splice(i,1);save();render()}}]].forEach(([label,fn])=>{const b=E("button","b",label);b.type="button";b.onclick=fn;row.append(b)});
+        [["↑",()=>move(i,-1)],["↓",()=>move(i,1)],["Supprimer",()=>{if(confirm("Supprimer cette actualité ?")){D.actus.splice(i,1);save();render()}}]].forEach(([label,fn])=>{const b=E("button","b",label);b.type="button";b.onclick=fn;row.append(b)});
         card.append(row);box.append(card);
       });
-      const add=E("button","b p","Ajouter une actualitÃ©");add.type="button";add.onclick=()=>{D.actus.unshift({date:new Date().toISOString().slice(0,10),titre:"Nouvelle actualitÃ©",resume:"",texte:"",documents:[],photos:[]});save();render()};box.append(add);
+      const add=E("button","b p","Ajouter une actualité");add.type="button";add.onclick=()=>{D.actus.unshift({date:new Date().toISOString().slice(0,10),titre:"Nouvelle actualité",resume:"",texte:"",documents:[],photos:[]});save();render()};box.append(add);
     };
     render();
   };
 
   const drawPresentation=p=>{
     const c=D.presentation;
-    p.append(E("h2","","PrÃ©sentation du site"),E("p","sub","Modifie ici les textes, les missions, les valeurs, la chaÃ®ne de commandement, les images et la vidÃ©o de la page PrÃ©sentation. Les images sont incluses dans content.json : 600 Ko maximum chacune, 1 Mo au total."));
-    field(p,"Titre principal",c,"introTitle");field(p,"Titre de la liste des missions",c,"missionsTitle");field(p,"Titre des accordÃ©ons",c,"accordionTitle");field(p,"Titre des valeurs",c,"valuesTitle");field(p,"Titre de l'organigramme",c,"commandTitle");
-    const paragraphs=E("div");p.append(E("h3","","Texte de prÃ©sentation"),paragraphs);
+    p.append(E("h2","","Présentation du site"),E("p","sub","Modifie ici les textes, les missions, les valeurs, la chaîne de commandement, les images et la vidéo de la page Présentation. Les images sont incluses dans content.json : 600 Ko maximum chacune, 1 Mo au total."));
+    field(p,"Titre principal",c,"introTitle");field(p,"Titre de la liste des missions",c,"missionsTitle");field(p,"Titre des accordéons",c,"accordionTitle");field(p,"Titre des valeurs",c,"valuesTitle");field(p,"Titre de l'organigramme",c,"commandTitle");
+    const paragraphs=E("div");p.append(E("h3","","Texte de présentation"),paragraphs);
     const renderParagraphs=()=>{paragraphs.textContent="";c.introParagraphs.forEach((text,i)=>{const row=E("div","job"),label=E("label","","Paragraphe "+(i+1)),area=E("textarea");area.rows=3;area.value=text;area.oninput=()=>{c.introParagraphs[i]=area.value;save()};row.append(label,area);
       const controls=E("div","r"),move=(dir)=>{const j=i+dir;if(j<0||j>=c.introParagraphs.length)return;[c.introParagraphs[i],c.introParagraphs[j]]=[c.introParagraphs[j],c.introParagraphs[i]];save();renderParagraphs()};
-      [["â†‘",()=>move(-1)],["â†“",()=>move(1)],["Supprimer",()=>{c.introParagraphs.splice(i,1);save();renderParagraphs()}]].forEach(([label,fn])=>{const b=E("button","b",label);b.type="button";b.onclick=fn;controls.append(b)});row.append(controls);paragraphs.append(row)});
+      [["↑",()=>move(-1)],["↓",()=>move(1)],["Supprimer",()=>{c.introParagraphs.splice(i,1);save();renderParagraphs()}]].forEach(([label,fn])=>{const b=E("button","b",label);b.type="button";b.onclick=fn;controls.append(b)});row.append(controls);paragraphs.append(row)});
       const add=E("button","b","Ajouter un paragraphe");add.type="button";add.onclick=()=>{c.introParagraphs.push("");save();renderParagraphs()};paragraphs.append(add)};
     renderParagraphs();
 
-    const media=E("div","job");media.append(E("h3","","Images"),E("p","sub","Ajoute le logo du ministÃ¨re et la photo du bÃ¢timent. Formats PNG, JPG et WebP."));
+    const media=E("div","job");media.append(E("h3","","Images"),E("p","sub","Ajoute le logo du ministère et la photo du bâtiment. Formats PNG, JPG et WebP."));
     const renderMedia=()=>{
       media.querySelectorAll(".media-field").forEach(el=>el.remove());
-      [["Logo du ministÃ¨re","ministryLogo","Logo institutionnel"],["Photo du bÃ¢timent","buildingPhoto","Photo de la PrÃ©fecture"]].forEach(([label,key,alt])=>{
+      [["Logo du ministère","ministryLogo","Logo institutionnel"],["Photo du bâtiment","buildingPhoto","Photo de la Préfecture"]].forEach(([label,key,alt])=>{
         const group=E("div","g media-field"),title=E("label","",label),input=E("input"),preview=E("div");input.type="file";input.accept="image/png,image/jpeg,image/webp";
         group.append(title,input);
         if(c[key]){const img=E("img");img.src=c[key];img.alt=alt;img.style.cssText="display:block;max-width:100%;max-height:220px;object-fit:contain;margin:10px 0";group.append(img);const remove=E("button","b","Retirer l'image");remove.type="button";remove.onclick=()=>{c[key]="";c[key+"Size"]=0;save();renderMedia()};group.append(remove)}
-        input.onchange=async()=>{const file=input.files&&input.files[0];if(!file)return;if(!/^image\/(png|jpeg|webp)$/.test(file.type)){alert("Choisis une image PNG, JPG ou WebP.");input.value="";return}if(file.size>600*1024){alert("L'image ne doit pas dÃ©passer 600 Ko.");input.value="";return}const total=(Number(c.ministryLogoSize)||0)+(Number(c.buildingPhotoSize)||0)-(Number(c[key+"Size"])||0);if(total+file.size>1024*1024){alert("Les deux images de prÃ©sentation ne peuvent pas dÃ©passer 1 Mo au total.");input.value="";return}try{c[key]=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file)});c[key+"Size"]=file.size;save();renderMedia()}catch(e){alert("Impossible de lire cette image.")}};
+        input.onchange=async()=>{const file=input.files&&input.files[0];if(!file)return;if(!/^image\/(png|jpeg|webp)$/.test(file.type)){alert("Choisis une image PNG, JPG ou WebP.");input.value="";return}if(file.size>600*1024){alert("L'image ne doit pas dépasser 600 Ko.");input.value="";return}const total=(Number(c.ministryLogoSize)||0)+(Number(c.buildingPhotoSize)||0)-(Number(c[key+"Size"])||0);if(total+file.size>1024*1024){alert("Les deux images de présentation ne peuvent pas dépasser 1 Mo au total.");input.value="";return}try{c[key]=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file)});c[key+"Size"]=file.size;save();renderMedia()}catch(e){alert("Impossible de lire cette image.")}};
         media.append(group);
       });
     };
     p.append(media);renderMedia();
 
-    field(p,"Lien YouTube de la vidÃ©o (facultatif)",c,"videoUrl");
+    field(p,"Lien YouTube de la vidéo (facultatif)",c,"videoUrl");
     const addStringList=(heading,key)=>{
       const section=E("div"),rows=E("div");section.append(E("h3","",heading),rows);p.append(section);
       const render=()=>{rows.textContent="";c[key].forEach((value,i)=>{const row=E("div","job"),label=E("label","",heading+" "+(i+1)),area=E("textarea");area.rows=2;area.value=value;area.oninput=()=>{c[key][i]=area.value;save()};row.append(label,area);
         const controls=E("div","r"),move=dir=>{const j=i+dir;if(j<0||j>=c[key].length)return;[c[key][i],c[key][j]]=[c[key][j],c[key][i]];save();render()};
-        [["â†‘",()=>move(-1)],["â†“",()=>move(1)],["Supprimer",()=>{c[key].splice(i,1);save();render()}]].forEach(([text,fn])=>{const b=E("button","b",text);b.type="button";b.onclick=fn;controls.append(b)});row.append(controls);rows.append(row)});
+        [["↑",()=>move(-1)],["↓",()=>move(1)],["Supprimer",()=>{c[key].splice(i,1);save();render()}]].forEach(([text,fn])=>{const b=E("button","b",text);b.type="button";b.onclick=fn;controls.append(b)});row.append(controls);rows.append(row)});
         const add=E("button","b","Ajouter");add.type="button";add.onclick=()=>{c[key].push("");save();render()};rows.append(add)};render();
     };
     addStringList("Mission","missionItems");
     const addObjectList=(heading,key,fields,makeDefault)=>{
       const section=E("div"),rows=E("div");section.append(E("h3","",heading),rows);p.append(section);
       const render=()=>{rows.textContent="";c[key].forEach((item,i)=>{const row=E("div","job");fields.forEach(([label,name,type])=>field(row,label,item,name,type));const controls=E("div","r"),move=dir=>{const j=i+dir;if(j<0||j>=c[key].length)return;[c[key][i],c[key][j]]=[c[key][j],c[key][i]];save();render()};
-        [["â†‘",()=>move(-1)],["â†“",()=>move(1)],["Supprimer",()=>{c[key].splice(i,1);save();render()}]].forEach(([text,fn])=>{const b=E("button","b",text);b.type="button";b.onclick=fn;controls.append(b)});row.append(controls);rows.append(row)});
+        [["↑",()=>move(-1)],["↓",()=>move(1)],["Supprimer",()=>{c[key].splice(i,1);save();render()}]].forEach(([text,fn])=>{const b=E("button","b",text);b.type="button";b.onclick=fn;controls.append(b)});row.append(controls);rows.append(row)});
         const add=E("button","b","Ajouter");add.type="button";add.onclick=()=>{c[key].push(makeDefault());save();render()};rows.append(add)};render();
     };
-    addObjectList("AccordÃ©ons : missions dÃ©taillÃ©es","missionDetails",[["Titre","titre"],["Description","texte","area"]],()=>({titre:"Nouvelle mission",texte:""}));
+    addObjectList("Accordéons : missions détaillées","missionDetails",[["Titre","titre"],["Description","texte","area"]],()=>({titre:"Nouvelle mission",texte:""}));
     addObjectList("Valeurs","values",[["Titre","titre"],["Description","texte","area"]],()=>({titre:"Nouvelle valeur",texte:""}));
-    addObjectList("ChaÃ®ne de commandement","command",[["Fonction","fonction"],["Nom","nom"]],()=>({fonction:"Nouvelle fonction",nom:""}));
+    addObjectList("Chaîne de commandement","command",[["Fonction","fonction"],["Nom","nom"]],()=>({fonction:"Nouvelle fonction",nom:""}));
   };
 
-  const showTicketAttachments=(container,attachments)=>{(attachments||[]).forEach(file=>{if(!file?.data||!file?.name)return;const link=E("a","",`ðŸ“Ž ${file.name}`);link.href=file.data;link.download=file.name;link.target="_blank";link.rel="noopener noreferrer";link.style.cssText="display:block;margin-top:6px;color:var(--bleu);overflow-wrap:anywhere";container.append(link)})};
-  const readTicketAttachments=files=>Promise.all([...files].map(file=>{if(file.size>1024*1024)throw new Error("Chaque piÃ¨ce jointe doit faire 1 Mo maximum.");if(!["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","image/jpeg","image/png","image/webp","text/plain"].includes(file.type))throw new Error("Format de piÃ¨ce jointe non acceptÃ©.");return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type,size:file.size,data:reader.result});reader.onerror=()=>reject(new Error("Impossible de lire une piÃ¨ce jointe."));reader.readAsDataURL(file)})})).then(items=>{if(items.reduce((sum,item)=>sum+item.size,0)>2.5*1024*1024)throw new Error("La taille totale des piÃ¨ces jointes ne peut pas dÃ©passer 2,5 Mo.");return items});
+  const showTicketAttachments=(container,attachments)=>{(attachments||[]).forEach(file=>{if(!file?.data||!file?.name)return;const link=E("a","",`📎 ${file.name}`);link.href=file.data;link.download=file.name;link.target="_blank";link.rel="noopener noreferrer";link.style.cssText="display:block;margin-top:6px;color:var(--bleu);overflow-wrap:anywhere";container.append(link)})};
+  const readTicketAttachments=files=>Promise.all([...files].map(file=>{if(file.size>1024*1024)throw new Error("Chaque pièce jointe doit faire 1 Mo maximum.");if(!["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","image/jpeg","image/png","image/webp","text/plain"].includes(file.type))throw new Error("Format de pièce jointe non accepté.");return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type,size:file.size,data:reader.result});reader.onerror=()=>reject(new Error("Impossible de lire une pièce jointe."));reader.readAsDataURL(file)})})).then(items=>{if(items.reduce((sum,item)=>sum+item.size,0)>2.5*1024*1024)throw new Error("La taille totale des pièces jointes ne peut pas dépasser 2,5 Mo.");return items});
   const procedureName=ticket=>{
-    const prefix="DÃ©marche en ligne â€” ";
-    if(ticket.subject?.startsWith(prefix))return ticket.subject.slice(prefix.length).replace(/ \[TEST\]$/," ").trim()||"Autres dÃ©marches";
-    if(ticket.subject?.startsWith("CrÃ©ation d'entreprise â€”"))return "CrÃ©ation d'entreprise";
-    return "Autres dÃ©marches";
+    const prefix="Démarche en ligne — ";
+    if(ticket.subject?.startsWith(prefix))return ticket.subject.slice(prefix.length).replace(/ \[TEST\]$/," ").trim()||"Autres démarches";
+    if(ticket.subject?.startsWith("Création d'entreprise —"))return "Création d'entreprise";
+    return "Autres démarches";
   };
   const ticketCard=(ticket,{demo=false,call=null,reload=null}={})=>{
     const card=E("details","ticket ticket-card"),summary=E("summary"),main=E("div","ticket-summary-main");
-    const heading=E("strong","",ticket.subject?.replace(/^DÃ©marche en ligne â€” /,"DÃ©marche : ")||"Demande sans objet");
+    const heading=E("strong","",ticket.subject?.replace(/^Démarche en ligne — /,"Démarche : ")||"Demande sans objet");
     const meta=E("div","ticket-summary-meta");
-    meta.append(E("span","","RÃ©f. "+(ticket.reference||"â€”")),E("span","",ticket.requester_name||"Demandeur inconnu"),E("span","",ticket.discord_username||""),E("span","",new Date(ticket.created_at||Date.now()).toLocaleString("fr-FR")));
-    main.append(heading,meta);summary.append(main);if(ticket.is_test)summary.append(E("span","demo-badge","TEST"));summary.append(E("span","ticket-status"+(ticket.status==="FermÃ©"?" closed":""),ticket.status||"Ouvert"));card.append(summary);
+    meta.append(E("span","","Réf. "+(ticket.reference||"—")),E("span","",ticket.requester_name||"Demandeur inconnu"),E("span","",ticket.discord_username||""),E("span","",new Date(ticket.created_at||Date.now()).toLocaleString("fr-FR")));
+    main.append(heading,meta);summary.append(main);if(ticket.is_test)summary.append(E("span","demo-badge","TEST"));summary.append(E("span","ticket-status"+(ticket.status==="Fermé"?" closed":""),ticket.status||"Ouvert"));card.append(summary);
     const body=E("div","ticket-content");
-    body.append(E("div","ticket-head",ticket.motif+" Â· "+(ticket.phone?"TÃ©lÃ©phone : "+ticket.phone:"Aucun tÃ©lÃ©phone renseignÃ©")));
+    body.append(E("div","ticket-head",ticket.motif+" · "+(ticket.phone?"Téléphone : "+ticket.phone:"Aucun téléphone renseigné")));
     (ticket.messages||[]).forEach(message=>{
       const staff=message.sender==="prefecture",row=E("div","ticket-message"+(staff?" staff":"")),header=E("div","ticket-message-head");
-      header.append(E("span","",(staff?"RÃ©ponse de la PrÃ©fecture":"Message du demandeur")+(message.author?" Â· "+message.author:"")),E("span","",message.createdAt?new Date(message.createdAt).toLocaleString("fr-FR"):""));
+      header.append(E("span","",(staff?"Réponse de la Préfecture":"Message du demandeur")+(message.author?" · "+message.author:"")),E("span","",message.createdAt?new Date(message.createdAt).toLocaleString("fr-FR"):""));
       row.append(header,E("div","ticket-message-text",message.text||"(Message vide)"));showTicketAttachments(row,message.attachments);body.append(row);
     });
     if(ticket.status==="Ouvert"&&!demo&&call){
-      const area=E("textarea");area.placeholder="RÃ©dige une rÃ©ponse claireâ€¦";area.setAttribute("aria-label","RÃ©ponse au demandeur");
+      const area=E("textarea");area.placeholder="Rédige une réponse claire…";area.setAttribute("aria-label","Réponse au demandeur");
       const picker=E("input");picker.type="file";picker.multiple=true;picker.accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,image/webp,text/plain";
-      const hint=E("small","sub","PiÃ¨ces jointes : PDF, Word, JPG, PNG, WebP ou TXT â€” 1 Mo par fichier, 2,5 Mo au total.");
-      const actions=E("div","ticket-tools"),send=E("button","b p","Envoyer la rÃ©ponse");send.type="button";
-      send.onclick=async()=>{if(!area.value.trim()&&!picker.files.length)return;send.disabled=true;try{const attachments=await readTicketAttachments(picker.files);const result=await call("POST",{reference:ticket.reference,text:area.value,attachments});if(!result.discordNotified)alert("RÃ©ponse enregistrÃ©e sur le site. Discord nâ€™a pas reÃ§u sa notification.");await reload()}catch(error){alert("Impossible dâ€™enregistrer la rÃ©ponse : "+error.message);send.disabled=false}};
-      const close=E("button","b","ClÃ´turer cette demande");close.type="button";close.onclick=async()=>{if(!confirm("ClÃ´turer la demande "+ticket.reference+" ?"))return;close.disabled=true;try{await call("PATCH",{reference:ticket.reference});await reload()}catch(error){alert("Impossible de clÃ´turer : "+error.message);close.disabled=false}};
+      const hint=E("small","sub","Pièces jointes : PDF, Word, JPG, PNG, WebP ou TXT — 1 Mo par fichier, 2,5 Mo au total.");
+      const actions=E("div","ticket-tools"),send=E("button","b p","Envoyer la réponse");send.type="button";
+      send.onclick=async()=>{if(!area.value.trim()&&!picker.files.length)return;send.disabled=true;try{const attachments=await readTicketAttachments(picker.files);const result=await call("POST",{reference:ticket.reference,text:area.value,attachments});if(!result.discordNotified)alert("Réponse enregistrée sur le site. Discord n’a pas reçu sa notification.");await reload()}catch(error){alert("Impossible d’enregistrer la réponse : "+error.message);send.disabled=false}};
+      const close=E("button","b","Clôturer cette demande");close.type="button";close.onclick=async()=>{if(!confirm("Clôturer la demande "+ticket.reference+" ?"))return;close.disabled=true;try{await call("PATCH",{reference:ticket.reference});await reload()}catch(error){alert("Impossible de clôturer : "+error.message);close.disabled=false}};
       actions.append(send,close);body.append(area,hint,picker,actions);
     }
-    /* Suppression dÃ©finitive d'une demande (disparaÃ®t aussi de Â« Mes dÃ©marches Â» chez le demandeur) */
+    /* Suppression définitive d'une demande (disparaît aussi de « Mes démarches » chez le demandeur) */
     if(!demo&&call){
       const del=E("button","b danger","Supprimer cette demande");del.type="button";
-      del.onclick=async()=>{if(!confirm("Supprimer dÃ©finitivement la demande "+ticket.reference+" ? Elle disparaÃ®tra aussi de Â« Mes dÃ©marches Â» chez le demandeur. Action irrÃ©versible."))return;del.disabled=true;try{await call("DELETE",{reference:ticket.reference});await reload()}catch(error){alert("Impossible de supprimer : "+error.message);del.disabled=false}};
+      del.onclick=async()=>{if(!confirm("Supprimer définitivement la demande "+ticket.reference+" ? Elle disparaîtra aussi de « Mes démarches » chez le demandeur. Action irréversible."))return;del.disabled=true;try{await call("DELETE",{reference:ticket.reference});await reload()}catch(error){alert("Impossible de supprimer : "+error.message);del.disabled=false}};
       const wrap=E("div","ticket-tools");wrap.append(del);body.append(wrap);
     }
-    if(!demo&&!ticket.discord_notified)body.append(E("p","bad","Notification Discord non dÃ©livrÃ©e. La demande reste conservÃ©e sur le site."));
-    if(demo)body.prepend(E("p","demo-badge","Simulation locale Â· rien nâ€™est enregistrÃ© ni envoyÃ©"));
+    if(!demo&&!ticket.discord_notified)body.append(E("p","bad","Notification Discord non délivrée. La demande reste conservée sur le site."));
+    if(demo)body.prepend(E("p","demo-badge","Simulation locale · rien n’est enregistré ni envoyé"));
     card.append(body);if(demo)card.open=true;return card;
   };
   const drawTickets=async(p,ticketType="contact")=>{
-    const procedures=ticketType==="procedure",title=procedures?"DÃ©marches en ligne":"Demandes de contact";
-    p.append(E("h2","",title),E("p","sub",procedures?"Les dÃ©clarations et formulaires de dÃ©marches sont regroupÃ©s ici par type.":"Les demandes gÃ©nÃ©rales sont sÃ©parÃ©es des dÃ©marches administratives. Ouvre une fiche pour lire la conversation et rÃ©pondre."));
-    const controls=E("div","ticket-tools"),refresh=E("button","b","Actualiser"),expand=E("button","b","Tout dÃ©velopper"),collapse=E("button","b","Tout replier"),closeAll=E("button","b danger","ClÃ´turer toutes les demandes ouvertes de cet onglet"),deleteAll=E("button","b danger","Supprimer toutes les demandes de cet onglet"),box=E("div");
+    const procedures=ticketType==="procedure",title=procedures?"Démarches en ligne":"Demandes de contact";
+    p.append(E("h2","",title),E("p","sub",procedures?"Les déclarations et formulaires de démarches sont regroupés ici par type.":"Les demandes générales sont séparées des démarches administratives. Ouvre une fiche pour lire la conversation et répondre."));
+    const controls=E("div","ticket-tools"),refresh=E("button","b","Actualiser"),expand=E("button","b","Tout développer"),collapse=E("button","b","Tout replier"),closeAll=E("button","b danger","Clôturer toutes les demandes ouvertes de cet onglet"),deleteAll=E("button","b danger","Supprimer toutes les demandes de cet onglet"),box=E("div");
     refresh.type=expand.type=collapse.type=closeAll.type=deleteAll.type="button";refresh.onclick=()=>{p.textContent="";drawTickets(p,ticketType)};
     expand.onclick=()=>box.querySelectorAll("details").forEach(item=>item.open=true);collapse.onclick=()=>box.querySelectorAll("details").forEach(item=>item.open=false);
-    closeAll.onclick=async()=>{if(!confirm("ClÃ´turer toutes les demandes ouvertes de lâ€™onglet Â« "+title+" Â» ? Cette action concerne uniquement cette catÃ©gorie."))return;closeAll.disabled=true;try{const result=await call("PATCH",{closeAll:true,ticketType});alert(result.closed+" demande(s) clÃ´turÃ©e(s).");await reload()}catch(error){alert("Impossible de clÃ´turer les demandes : "+error.message);closeAll.disabled=false}};
-    deleteAll.onclick=async()=>{if(!confirm("Supprimer DÃ‰FINITIVEMENT toutes les demandes de lâ€™onglet Â« "+title+" Â» (ouvertes et clÃ´turÃ©es) ? Elles disparaÃ®tront aussi de Â« Mes dÃ©marches Â» chez tous les demandeurs. Action irrÃ©versible."))return;if(prompt("Pour confirmer, tape SUPPRIMER")!=="SUPPRIMER")return;deleteAll.disabled=true;try{const result=await call("DELETE",{all:true,ticketType});alert(result.deleted+" demande(s) supprimÃ©e(s).");await reload()}catch(error){alert("Impossible de supprimer les demandes : "+error.message);deleteAll.disabled=false}};
+    closeAll.onclick=async()=>{if(!confirm("Clôturer toutes les demandes ouvertes de l’onglet « "+title+" » ? Cette action concerne uniquement cette catégorie."))return;closeAll.disabled=true;try{const result=await call("PATCH",{closeAll:true,ticketType});alert(result.closed+" demande(s) clôturée(s).");await reload()}catch(error){alert("Impossible de clôturer les demandes : "+error.message);closeAll.disabled=false}};
+    deleteAll.onclick=async()=>{if(!confirm("Supprimer DÉFINITIVEMENT toutes les demandes de l’onglet « "+title+" » (ouvertes et clôturées) ? Elles disparaîtront aussi de « Mes démarches » chez tous les demandeurs. Action irréversible."))return;if(prompt("Pour confirmer, tape SUPPRIMER")!=="SUPPRIMER")return;deleteAll.disabled=true;try{const result=await call("DELETE",{all:true,ticketType});alert(result.deleted+" demande(s) supprimée(s).");await reload()}catch(error){alert("Impossible de supprimer les demandes : "+error.message);deleteAll.disabled=false}};
     controls.append(refresh,expand,collapse,closeAll,deleteAll);p.append(controls,box);
     const call=async(method,body)=>{
       const response=await fetch("/api/admin/tickets",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
       const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||String(response.status));return data;
     };
     const reload=()=>{p.textContent="";return drawTickets(p,ticketType)};
-    box.append(E("p","sub","Chargement des demandesâ€¦"));
+    box.append(E("p","sub","Chargement des demandes…"));
     try{
-      const all=await call("GET"),tickets=all.filter(ticket=>procedures?ticket.motif==="DÃ©claration / dÃ©marche":ticket.motif!=="DÃ©claration / dÃ©marche");box.textContent="";
-      if(!tickets.length){box.append(E("p","sub","Aucune demande ouverte ou archivÃ©e dans cette rubrique."));return}
+      const all=await call("GET"),tickets=all.filter(ticket=>procedures?ticket.motif==="Déclaration / démarche":ticket.motif!=="Déclaration / démarche");box.textContent="";
+      if(!tickets.length){box.append(E("p","sub","Aucune demande ouverte ou archivée dans cette rubrique."));return}
       if(procedures){
         const categories=new Map();tickets.forEach(ticket=>{const name=procedureName(ticket);if(!categories.has(name))categories.set(name,[]);categories.get(name).push(ticket)});
         [...categories.entries()].sort(([a],[b])=>a.localeCompare(b,"fr")).forEach(([name,items])=>{
           const group=E("details","ticket-category"),label=E("summary"),openCount=items.filter(t=>t.status==="Ouvert").length;
-          label.append(E("span","",name),E("span","ticket-status",`${items.length} demande(s) Â· ${openCount} ouverte(s)`));group.append(label);
+          label.append(E("span","",name),E("span","ticket-status",`${items.length} demande(s) · ${openCount} ouverte(s)`));group.append(label);
           items.forEach(ticket=>group.append(ticketCard(ticket,{call,reload})));box.append(group);
         });
       }else tickets.forEach(ticket=>box.append(ticketCard(ticket,{call,reload})));
-    }catch(error){box.textContent=error.message==="admin_required"?"Ton compte nâ€™a pas le rÃ´le Discord Staff.":error.message==="discord_auth_unavailable"?"Discord ne rÃ©pond pas pour le moment. RÃ©essaie dans un instant.":error.message==="database_not_configured"?"La base de donnÃ©es nâ€™est pas encore reliÃ©e au projet Vercel.":"Impossible de charger les demandes. VÃ©rifie le stockage Vercel et rÃ©essaie."}
+    }catch(error){box.textContent=error.message==="admin_required"?"Ton compte n’a pas le rôle Discord Staff.":error.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessaie dans un instant.":error.message==="database_not_configured"?"La base de données n’est pas encore reliée au projet Vercel.":"Impossible de charger les demandes. Vérifie le stockage Vercel et réessaie."}
   };
   const drawFormTests=p=>{
-    p.append(E("h2","","Tests des formulaires"),E("p","sub","Chaque bouton crÃ©e un vrai ticket marquÃ© TEST et lâ€™envoie au webhook du motif. Le demandeur, le sujet, le message Discord et le fil de crÃ©ation dâ€™entreprise portent tous cette mention."));
-    const controls=E("div","ticket-tools"),motif=E("select"),sendContact=E("button","b p","Envoyer le test de contact"),procControls=E("div","ticket-tools"),procedure=E("select"),sendProcedure=E("button","b p","Envoyer le test de la dÃ©marche"),status=E("p","sub"),history=E("div");
-    (D.ticketMotifs||[]).filter(item=>item!=="DÃ©claration / dÃ©marche").forEach(item=>motif.add(new Option(item,item)));
+    p.append(E("h2","","Tests des formulaires"),E("p","sub","Chaque bouton crée un vrai ticket marqué TEST et l’envoie au webhook du motif. Le demandeur, le sujet, le message Discord et le fil de création d’entreprise portent tous cette mention."));
+    const controls=E("div","ticket-tools"),motif=E("select"),sendContact=E("button","b p","Envoyer le test de contact"),procControls=E("div","ticket-tools"),procedure=E("select"),sendProcedure=E("button","b p","Envoyer le test de la démarche"),status=E("p","sub"),history=E("div");
+    (D.ticketMotifs||[]).filter(item=>item!=="Déclaration / démarche").forEach(item=>motif.add(new Option(item,item)));
     TEST_PROCEDURES.forEach(name=>procedure.add(new Option(name,name)));
-    motif.setAttribute("aria-label","Motif du test de contact");procedure.setAttribute("aria-label","DÃ©marche Ã  tester");
+    motif.setAttribute("aria-label","Motif du test de contact");procedure.setAttribute("aria-label","Démarche à tester");
     motif.style.maxWidth=procedure.style.maxWidth="340px";
     sendContact.type=sendProcedure.type="button";
     controls.append(motif,sendContact);procControls.append(procedure,sendProcedure);
-    p.append(E("h3","ticket-section-title","Formulaire de contact"),controls,E("h3","ticket-section-title","DÃ©marches en ligne"),procControls,status,E("h3","ticket-section-title","Demandes de test rÃ©centes"),history);
+    p.append(E("h3","ticket-section-title","Formulaire de contact"),controls,E("h3","ticket-section-title","Démarches en ligne"),procControls,status,E("h3","ticket-section-title","Demandes de test récentes"),history);
     const api=async(method,body)=>{const response=await fetch("/api/admin/tickets",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||String(response.status));return data};
-    const refreshHistory=async()=>{history.textContent="Chargementâ€¦";try{const tickets=await api("GET"),tests=tickets.filter(item=>item.is_test).slice(0,20);history.textContent="";if(!tests.length){history.append(E("p","sub","Aucun test envoyÃ© pour le moment."));return}tests.forEach(ticket=>history.append(ticketCard(ticket,{call:api,reload:refreshHistory})))}catch(error){history.textContent="Impossible de charger lâ€™historique des tests : "+error.message}};
-    const sendTest=async(button,testForm,selectedMotif,procedureName)=>{button.disabled=true;status.className="sub";status.textContent="Envoi du test au webhookâ€¦";try{const result=await api("POST",{testForm,motif:selectedMotif,procedureName});status.className=result.discordNotified?"sub":"bad";status.textContent=result.discordNotified?"Test envoyÃ© au webhook Â· RÃ©fÃ©rence : "+result.reference:"Ticket de test crÃ©Ã© ("+result.reference+") mais Discord nâ€™a pas reÃ§u lâ€™envoi. VÃ©rifie le webhook Vercel du motif.";await refreshHistory()}catch(error){status.className="bad";status.textContent="Ã‰chec du test : "+error.message}finally{button.disabled=false}};
+    const refreshHistory=async()=>{history.textContent="Chargement…";try{const tickets=await api("GET"),tests=tickets.filter(item=>item.is_test).slice(0,20);history.textContent="";if(!tests.length){history.append(E("p","sub","Aucun test envoyé pour le moment."));return}tests.forEach(ticket=>history.append(ticketCard(ticket,{call:api,reload:refreshHistory})))}catch(error){history.textContent="Impossible de charger l’historique des tests : "+error.message}};
+    const sendTest=async(button,testForm,selectedMotif,procedureName)=>{button.disabled=true;status.className="sub";status.textContent="Envoi du test au webhook…";try{const result=await api("POST",{testForm,motif:selectedMotif,procedureName});status.className=result.discordNotified?"sub":"bad";status.textContent=result.discordNotified?"Test envoyé au webhook · Référence : "+result.reference:"Ticket de test créé ("+result.reference+") mais Discord n’a pas reçu l’envoi. Vérifie le webhook Vercel du motif.";await refreshHistory()}catch(error){status.className="bad";status.textContent="Échec du test : "+error.message}finally{button.disabled=false}};
     sendContact.onclick=()=>sendTest(sendContact,"contact",motif.value||"Support technique");
     sendProcedure.onclick=()=>sendTest(sendProcedure,"procedure",undefined,procedure.value);
     refreshHistory();
   };
 
   const drawFinances=async p=>{
-    p.append(E("h2","","Direction GÃ©nÃ©rale des Finances Publiques"),E("p","sub","Les dÃ©clarations de crÃ©ation dâ€™entreprise reÃ§ues sont ajoutÃ©es automatiquement. Tu peux aussi crÃ©er une fiche manuellement. Statut fiscal, dÃ©clarations, contrÃ´les et notes sont sauvegardÃ©s automatiquement dans la base du site, sans modifier content.json."));
-    const tools=E("div","finance-head-tools"),add=E("button","b p","Ajouter une entreprise"),status=E("span","finance-save","Chargement des dossiersâ€¦"),list=E("div");
+    p.append(E("h2","","Direction Générale des Finances Publiques"),E("p","sub","Les déclarations de création d’entreprise reçues sont ajoutées automatiquement. Tu peux aussi créer une fiche manuellement. Statut fiscal, déclarations, contrôles et notes sont sauvegardés automatiquement dans la base du site, sans modifier content.json."));
+    const tools=E("div","finance-head-tools"),add=E("button","b p","Ajouter une entreprise"),status=E("span","finance-save","Chargement des dossiers…"),list=E("div");
     add.type="button";tools.append(add,status);p.append(tools,list);
     const api=async(method,body)=>{
       const response=await fetch("/api/admin/finances",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
@@ -396,11 +396,11 @@ async function start(){
       if(!response.ok)throw new Error(data.error||String(response.status));
       return data;
     };
-    const showError=error=>status.textContent=error.message==="database_not_configured"?"Stockage de la base non configurÃ© dans Vercel.":"Erreur de sauvegarde ou de chargement. RÃ©essaie.";
+    const showError=error=>status.textContent=error.message==="database_not_configured"?"Stockage de la base non configuré dans Vercel.":"Erreur de sauvegarde ou de chargement. Réessaie.";
     const renderCompany=company=>{
       const details=E("details","finance-company"),summary=E("summary"),summaryName=E("span","",company.company_name),summaryStatus=E("span","ticket-status",company.tax_status);
       summary.append(summaryName,summaryStatus);details.append(summary);
-      const form=E("div","finance-form"),saveState=E("span","finance-save","EnregistrÃ©");
+      const form=E("div","finance-form"),saveState=E("span","finance-save","Enregistré");
       const makeField=(label,value,{kind="input",full=false,options=[]}={})=>{
         const wrap=E("div","finance-field"+(full?" full":"")),caption=E("label","",label);let input;
         if(kind==="select"){
@@ -412,51 +412,51 @@ async function start(){
         }
         wrap.append(caption,input);form.append(wrap);return input;
       };
-      const name=makeField("Entreprise",company.company_name),taxStatus=makeField("Statut des impÃ´ts",company.tax_status,{kind:"select",options:["Non renseignÃ©","Ã€ jour","Ã€ rÃ©gulariser","En attente","En contrÃ´le"]}),period=makeField("PÃ©riode fiscale suivie",company.tax_period),taxDetails=makeField("DÃ©clarations, montants ou Ã©chÃ©ances",company.tax_details,{kind:"area",full:true}),investigation=makeField("EnquÃªte ou contrÃ´le potentiel",company.investigation,{kind:"area",full:true}),notes=makeField("Notes internes",company.notes,{kind:"area",full:true});
-      const meta=E("div","finance-meta");meta.append(saveState);if(company.source_reference)meta.append(E("span",""," Â· DÃ©claration initiale : "+company.source_reference));form.append(meta);
+      const name=makeField("Entreprise",company.company_name),taxStatus=makeField("Statut des impôts",company.tax_status,{kind:"select",options:["Non renseigné","À jour","À régulariser","En attente","En contrôle"]}),period=makeField("Période fiscale suivie",company.tax_period),taxDetails=makeField("Déclarations, montants ou échéances",company.tax_details,{kind:"area",full:true}),investigation=makeField("Enquête ou contrôle potentiel",company.investigation,{kind:"area",full:true}),notes=makeField("Notes internes",company.notes,{kind:"area",full:true});
+      const meta=E("div","finance-meta");meta.append(saveState);if(company.source_reference)meta.append(E("span",""," · Déclaration initiale : "+company.source_reference));form.append(meta);
       const remove=E("button","b","Supprimer cette fiche");remove.type="button";remove.style.margin="0 18px 18px";remove.onclick=async()=>{
         if(!confirm("Supprimer la fiche de "+company.company_name+" ?"))return;
-        remove.disabled=true;try{await api("DELETE",{id:company.id});details.remove();if(!list.children.length)list.append(E("p","sub","Aucune entreprise enregistrÃ©e."));status.textContent="Fiche supprimÃ©e."}catch(error){showError(error);remove.disabled=false}
+        remove.disabled=true;try{await api("DELETE",{id:company.id});details.remove();if(!list.children.length)list.append(E("p","sub","Aucune entreprise enregistrée."));status.textContent="Fiche supprimée."}catch(error){showError(error);remove.disabled=false}
       };
       details.append(form,remove);
       let timer;
       let saving=Promise.resolve();
       const scheduleSave=()=>{
-        clearTimeout(timer);saveState.textContent="Modification en attenteâ€¦";status.textContent="Modifications en coursâ€¦";
+        clearTimeout(timer);saveState.textContent="Modification en attente…";status.textContent="Modifications en cours…";
         timer=setTimeout(()=>{
           const payload={id:company.id,company_name:name.value,tax_status:taxStatus.value,tax_period:period.value,tax_details:taxDetails.value,investigation:investigation.value,notes:notes.value};
-          saving=saving.then(()=>api("PATCH",payload)).then(updated=>{Object.assign(company,updated);summaryName.textContent=updated.company_name;summaryStatus.textContent=updated.tax_status;saveState.textContent="EnregistrÃ© automatiquement Â· "+new Date(updated.updated_at).toLocaleTimeString("fr-FR");status.textContent="Toutes les modifications sont enregistrÃ©es."}).catch(error=>{saveState.textContent="Ã‰chec â€” modification non enregistrÃ©e";showError(error)});
+          saving=saving.then(()=>api("PATCH",payload)).then(updated=>{Object.assign(company,updated);summaryName.textContent=updated.company_name;summaryStatus.textContent=updated.tax_status;saveState.textContent="Enregistré automatiquement · "+new Date(updated.updated_at).toLocaleTimeString("fr-FR");status.textContent="Toutes les modifications sont enregistrées."}).catch(error=>{saveState.textContent="Échec — modification non enregistrée";showError(error)});
         },650);
       };
       [name,taxStatus,period,taxDetails,investigation,notes].forEach(input=>{input.addEventListener("input",scheduleSave);input.addEventListener("change",scheduleSave)});
       return details;
     };
     const load=async()=>{
-      status.textContent="Chargement des dossiersâ€¦";
-      try{const companies=await api("GET");list.textContent="";if(!companies.length)list.append(E("p","sub","Aucune entreprise enregistrÃ©e. Ajoute une fiche pour commencer."));companies.forEach(company=>list.append(renderCompany(company)));status.textContent=companies.length+" entreprise(s) Â· sauvegarde automatique activÃ©e."}
+      status.textContent="Chargement des dossiers…";
+      try{const companies=await api("GET");list.textContent="";if(!companies.length)list.append(E("p","sub","Aucune entreprise enregistrée. Ajoute une fiche pour commencer."));companies.forEach(company=>list.append(renderCompany(company)));status.textContent=companies.length+" entreprise(s) · sauvegarde automatique activée."}
       catch(error){list.textContent="";showError(error)}
     };
     add.onclick=async()=>{
-      const name=prompt("Nom de l'entreprise Ã  ajouter :");if(!name?.trim())return;
-      add.disabled=true;try{const company=await api("POST",{company_name:name});if(list.querySelector("p"))list.textContent="";const card=renderCompany(company);card.open=true;list.prepend(card);status.textContent="Entreprise ajoutÃ©e et enregistrÃ©e."}catch(error){showError(error)}finally{add.disabled=false}
+      const name=prompt("Nom de l'entreprise à ajouter :");if(!name?.trim())return;
+      add.disabled=true;try{const company=await api("POST",{company_name:name});if(list.querySelector("p"))list.textContent="";const card=renderCompany(company);card.open=true;list.prepend(card);status.textContent="Entreprise ajoutée et enregistrée."}catch(error){showError(error)}finally{add.disabled=false}
     };
     await load();
   };
 
   const drawFields=(p,k)=>{
     p.append(E("h2","",k==="shared"?"Menu & pied de page":"Page : "+PAGES.find(x=>x[0]===k)[1]),
-      E("p","sub",k==="shared"?"Ces textes sont communs Ã  toutes les pages.":"Mise en forme : **gras**, [texte du lien](adresse). Un retour Ã  la ligne reste un retour Ã  la ligne."));
-    const fs=of(k),q=E("input");q.type="search";q.placeholder="Rechercher un texteâ€¦";const box=E("div");p.append(q,box);
+      E("p","sub",k==="shared"?"Ces textes sont communs à toutes les pages.":"Mise en forme : **gras**, [texte du lien](adresse). Un retour à la ligne reste un retour à la ligne."));
+    const fs=of(k),q=E("input");q.type="search";q.placeholder="Rechercher un texte…";const box=E("div");p.append(q,box);
     const dr=()=>{box.textContent="";const s=q.value.toLowerCase();
       fs.forEach(f=>{const cur=D.texts[f.key]??f.def;if(s&&!(cur+f.def).toLowerCase().includes(s))return;
         const r=E("div","f"+(D.texts[f.key]!=null?" mod":"")),l=E("label","",KIND[f.tag]||"Texte"),t=E("textarea");
         t.value=cur;t.rows=Math.min(8,cur.split("\n").length+Math.floor(cur.length/90));
         t.oninput=()=>{if(t.value===f.def)delete D.texts[f.key];else D.texts[f.key]=t.value;r.classList.toggle("mod",t.value!==f.def);save();nav()};
-        const o=E("small","","Original : "+f.def.slice(0,100)+(f.def.length>100?"â€¦":""));
+        const o=E("small","","Original : "+f.def.slice(0,100)+(f.def.length>100?"…":""));
         r.append(l,t,o);
-        if(D.texts[f.key]!=null){const b=E("button","b","RÃ©tablir l'original");b.type="button";b.style.marginTop="8px";b.onclick=()=>{delete D.texts[f.key];save();nav();dr()};r.append(b)}
+        if(D.texts[f.key]!=null){const b=E("button","b","Rétablir l'original");b.type="button";b.style.marginTop="8px";b.onclick=()=>{delete D.texts[f.key];save();nav();dr()};r.append(b)}
         box.append(r)});
-      if(!box.children.length)box.append(E("p","sub",fs.length?"Aucun rÃ©sultat.":"Aucun texte trouvÃ© sur cette page."))};
+      if(!box.children.length)box.append(E("p","sub",fs.length?"Aucun résultat.":"Aucun texte trouvé sur cette page."))};
     q.oninput=dr;dr()};
 
   const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p,"contact"):view==="procedures"?drawTickets(p,"procedure"):view==="finances"?drawFinances(p):view==="testForms"?drawFormTests(p):drawFields(p,view)};
@@ -465,7 +465,7 @@ async function start(){
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
   $("#im").onclick=()=>$("#fi").click();
   $("#fi").onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());localStorage.setItem("lgp_admin_draft",JSON.stringify(d));location.reload()}catch(x){alert("Fichier invalide.")}};
-  $("#rs").onclick=()=>{if(confirm("Abandonner le brouillon et revenir Ã  la version publiÃ©e ?")){localStorage.removeItem("lgp_admin_draft");location.reload()}};
+  $("#rs").onclick=()=>{if(confirm("Abandonner le brouillon et revenir à la version publiée ?")){localStorage.removeItem("lgp_admin_draft");location.reload()}};
   nav();draw();
 }
 </script>
