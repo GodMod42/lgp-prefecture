@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:botid": "esbuild src/botid-src.js --bundle --format=esm --minify --outfile=botid.js",
     "deploy": "vercel --prod"
   },
   "engines": {
@@ -16,6 +17,7 @@
     "botid": "^1.5.11"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "vercel": "latest"
   }
 }
