@@ -65,7 +65,7 @@ footer{background:#1e1e1e;color:#ddd}.cols{display:grid;grid-template-columns:1.
 <main><div class="wrap">
   <a class="back" href="demarche.html">← Retour aux démarches en ligne</a>
   <div class="intro"><p class="eyebrow">Démarches en ligne · Accueil des citoyens</p><h1>Prendre rendez-vous</h1><p>Planifiez un rendez-vous avec l'accueil des citoyens.</p></div>
-  <div class="notice"><strong>Avant de commencer</strong>Votre demande est transmise à l'équipe d'accueil et suivie dans votre espace « Mes démarches », où un agent vous confirmera le créneau. Les créneaux proposés respectent les horaires d'ouverture : du lundi au vendredi de 8h30 à 22h00, le samedi de 9h00 à 22h00, fermé le dimanche. Le créneau n'est définitif qu'après confirmation d'un agent.</div>
+  <div class="notice"><strong>Avant de commencer</strong>Votre demande est transmise à l'équipe d'accueil et suivie dans votre espace « Mes démarches », où un agent vous confirmera le créneau. Les créneaux proposés respectent les horaires d'ouverture : tous les jours, de 8h30 à 00h30 du lundi au vendredi et de 9h00 à 00h30 le week-end. Le créneau n'est définitif qu'après confirmation d'un agent.</div>
 
   <form id="rdv-form">
     <fieldset class="card"><legend>1. Objet du rendez-vous</legend><div class="grid">
@@ -117,10 +117,10 @@ footer{background:#1e1e1e;color:#ddd}.cols{display:grid;grid-template-columns:1.
 <footer><div class="cols">
   <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
   <div><h4>Coordonnées</h4><p><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l'équipe</a></p></div>
-  <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
+  <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–00h30</li><li>Sam–Dim : 9h00–00h30</li><li>Urgences : 24h / 24</li></ul></div>
   <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
   <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
-</div><div class="bas"><span>© 2026 Préfecture de du Grand Paname — Portail de services communautaires.</span><nav class="legal" aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="plan-du-site.html">Plan du site</a></nav></div></footer>
+</div><div class="bas"><span>© 2026 Préfecture du Grand Paname — Portail de services communautaires.</span><nav class="legal" aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="plan-du-site.html">Plan du site</a></nav></div></footer>
 <script src="assets/js/auth.js"></script>
 <script>
 try{const saved=localStorage.getItem("theme");if(saved)document.documentElement.dataset.theme=saved}catch{}
@@ -130,17 +130,16 @@ const form=document.getElementById("rdv-form"),status=document.getElementById("f
 const user=getUser();
 if(!user||!user.token){try{sessionStorage.setItem("lgp_after_login","rendez-vous.html")}catch{}location.replace("connexion.html")}
 
-/* Dates et créneaux : horaires du portail (lun-ven 8h30-22h, samedi 9h-22h, dimanche fermé) */
+/* Dates et créneaux : tous les jours, 8h30 (9h00 le week-end) jusqu'à 00h30 inclus */
 const pad=n=>String(n).padStart(2,"0");
 const today=new Date(),todayStr=today.getFullYear()+"-"+pad(today.getMonth()+1)+"-"+pad(today.getDate());
 function slots(dateStr){
   if(!dateStr)return [];
   const d=new Date(dateStr+"T12:00:00"),day=d.getDay();
-  if(day===0)return [];
-  const start=day===6?9*60:8*60+30,end=22*60,now=today.getHours()*60+today.getMinutes(),list=[];
-  for(let m=start;m<end;m+=30){
+  const start=(day===6||day===0)?9*60:8*60+30,end=24*60+30,now=today.getHours()*60+today.getMinutes(),list=[];
+  for(let m=start;m<=end;m+=30){
     if(dateStr===todayStr&&m<=now+30)continue;
-    list.push(pad(Math.floor(m/60))+":"+pad(m%60));
+    list.push(pad(Math.floor(m/60)%24)+":"+pad(m%60));
   }
   return list;
 }
@@ -154,7 +153,7 @@ function bind(dateId,timeId){
     if(!date.value){time.disabled=true;time.innerHTML='<option value="">Choisissez d\'abord une date</option>';return}
     if(date.value<todayStr){date.setCustomValidity("Cette date est passée.");date.reportValidity();time.disabled=true;return}
     if(!list.length){
-      date.setCustomValidity(new Date(date.value+"T12:00:00").getDay()===0?"Le portail est fermé le dimanche.":"Plus de créneau disponible ce jour-là.");
+      date.setCustomValidity("Plus de créneau disponible ce jour-là.");
       date.reportValidity();time.disabled=true;time.innerHTML='<option value="">Aucun créneau</option>';return
     }
     time.disabled=false;
@@ -185,7 +184,7 @@ form.addEventListener("submit",async event=>{
     const messages={
       database_not_configured:"Le stockage des demandes n'est pas configuré sur le site.",
       discord_auth_unavailable:"Discord ne répond pas pour le moment. Réessayez dans un instant.",
-      invalid_slot:"Le créneau choisi n'est pas valide (date passée, dimanche ou hors horaires).",
+      invalid_slot:"Le créneau choisi n'est pas valide (date passée ou hors horaires).",
       fields:"Certains champs obligatoires sont manquants. Vérifiez le formulaire."
     };
     status.className="status err";status.textContent=messages[error.message]||"L'envoi a échoué. Réessayez plus tard.";submit.disabled=false;
@@ -193,9 +192,6 @@ form.addEventListener("submit",async event=>{
 });
 </script>
 <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
-<script src="/tracker.js" defer></script>`r`n</body>
+<script src="/tracker.js" defer></script>
+</body>
 </html>
-
-
-
-
