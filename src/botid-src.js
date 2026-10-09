@@ -10,6 +10,6 @@ initBotId({
     { path: "/api/info", method: "POST" },
     { path: "/api/purge", method: "POST" },
     { path: "/api/tickets", method: "POST" },
-    { path: "/api/tracker", method: "POST" },
+    { path: "/api/tracker", method: "POST" }
   ],
 });
