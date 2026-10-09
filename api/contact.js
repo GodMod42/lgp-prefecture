@@ -17,16 +17,16 @@ const parisToday = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Eur
 const frDate = (date) => date.split("-").reverse().join("/");
 
 // Mêmes horaires que le formulaire : tous les jours, lun-ven dès 8h30, samedi et dimanche dès 9h,
-// dernier créneau à 00h30 (les créneaux 00:00 et 00:30 comptent comme la fin de la journée choisie).
+// dernier créneau à minuit (00:00 compte comme la fin de la journée choisie).
 function validSlot(date, time) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) return false;
   if (date < parisToday()) return false;
   const day = new Date(date + "T12:00:00Z").getUTCDay();
   const [h, m] = time.split(":").map(Number);
   if (h > 23 || m > 59 || m % 30 !== 0) return false;
-  const minutes = (h === 0 ? 24 * 60 : 0) + h * 60 + m; // 00:00 → 1440, 00:30 → 1470
+  const minutes = (h === 0 ? 24 * 60 : 0) + h * 60 + m; // 00:00 → 1440
   const start = day === 6 || day === 0 ? 9 * 60 : 8 * 60 + 30;
-  return minutes >= start && minutes <= 24 * 60 + 30;
+  return minutes >= start && minutes <= 24 * 60;
 }
 
 function buildRdv(raw) {
