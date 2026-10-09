@@ -136,7 +136,7 @@ const today=new Date(),todayStr=today.getFullYear()+"-"+pad(today.getMonth()+1)+
 function slots(dateStr){
   if(!dateStr)return [];
   const d=new Date(dateStr+"T12:00:00"),day=d.getDay();
-  const start=(day===6||day===0)?9*60:8*60+30,end=24*60,now=today.getHours()*60+today.getMinutes(),list=[];
+  const start=0,end=23*60+30,now=today.getHours()*60+today.getMinutes(),list=[];
   for(let m=start;m<=end;m+=30){
     if(dateStr===todayStr&&m<=now+30)continue;
     list.push(pad(Math.floor(m/60)%24)+":"+pad(m%60));

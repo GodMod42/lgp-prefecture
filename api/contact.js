@@ -23,10 +23,7 @@ function validSlot(date, time) {
   if (date < parisToday()) return false;
   const day = new Date(date + "T12:00:00Z").getUTCDay();
   const [h, m] = time.split(":").map(Number);
-  if (h > 23 || m > 59 || m % 30 !== 0) return false;
-  const minutes = (h === 0 ? 24 * 60 : 0) + h * 60 + m; // 00:00 → 1440
-  const start = day === 6 || day === 0 ? 9 * 60 : 8 * 60 + 30;
-  return minutes >= start && minutes <= 24 * 60;
+  return h >= 0 && h <= 23 && (m === 0 || m === 30);
 }
 
 function buildRdv(raw) {
