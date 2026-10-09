@@ -2,7 +2,6 @@ import { randomUUID } from "node:crypto";
 import {
   db, discordUser, ensureSchema, isKnownMotif, notifyDiscord, sendJson,
 } from "../lib/contact-data.js";
-import { checkBotId } from "botid/server";
 
 const MAX_MESSAGE = 3800;
 
@@ -75,12 +74,6 @@ async function notifyRdv(embed, threadName) {
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return sendJson(res, 405, { error: "method_not_allowed" });
-
-  const { isBot } = await checkBotId();
-
-  if (isBot) {
-    return sendJson(res, 403, { error: "bot_detected" });
-  }
 
   const origin = req.headers.origin;
   if (origin && new URL(origin).host !== req.headers.host)
