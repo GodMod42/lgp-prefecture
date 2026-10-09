@@ -1,21 +1,21 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/assets/img/favicon2.png">
-<title>Nous contacter â€” PrÃ©fecture de LGP</title>
-<meta name="description" content="Portail officiel de la PrÃ©fecture de : informations administratives, services publics et dÃ©marches en ligne.">
+<title>Nous contacter — Préfecture de LGP</title>
+<meta name="description" content="Portail officiel de la Préfecture de : informations administratives, services publics et démarches en ligne.">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Nous contacter â€” PrÃ©fecture de LGP">
+<meta property="og:title" content="Nous contacter — Préfecture de LGP">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="https://lgp-prefecture.vercel.app/contact.html">
 <meta property="og:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:image:alt" content="PrÃ©fecture de LGP">
+<meta property="og:image:alt" content="Préfecture de LGP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:description" content="Portail officiel de la PrÃ©fecture de : informations administratives, services publics et dÃ©marches en ligne.">
+<meta property="og:description" content="Portail officiel de la Préfecture de : informations administratives, services publics et démarches en ligne.">
 <style>
 :root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;
 --sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
@@ -30,7 +30,7 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 .eyebrow{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bleu)}
 .eyebrow::before{content:"";width:22px;height:3px;background:var(--rouge)}
 
-/* En-tÃªte */
+/* En-tête */
 header{background:var(--nav);border-top:5px solid;border-image:linear-gradient(90deg,var(--bleu) 33.3%,#999 33.3% 66.6%,var(--rouge) 66.6%) 1;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--ligne)}
 header .w{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px;max-width:none}
 .logo{display:flex;align-items:center;gap:16px}
@@ -215,14 +215,14 @@ textarea{height:150px;padding:12px;resize:vertical}
 
 <header>
   <div class="w">
-    <a class="logo" href="index.html" aria-label="PrÃ©fecture de LGP â€” Accueil">
-      <img src="assets/img/logo-prefecture.png" alt="PrÃ©fecture de LGP â€” LibertÃ© Ã‰galitÃ© FraternitÃ©">
+    <a class="logo" href="index.html" aria-label="Préfecture de LGP — Accueil">
+      <img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP — Liberté Égalité Fraternité">
     </a>
     <nav aria-label="Navigation principale">
-      <a href="index.html">Accueil</a><a href="presentation.html">PrÃ©sentation</a><a href="demarche.html">DÃ©marches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html" aria-current="page">Nous contacter</a>
+      <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html" aria-current="page">Nous contacter</a>
     </nav>
     <div class="actions">
-      <button id="theme" aria-label="Changer de thÃ¨me"><svg class="i" style="width:18px;height:18px"><use href="#sun"/></svg></button>
+      <button id="theme" aria-label="Changer de thème"><svg class="i" style="width:18px;height:18px"><use href="#sun"/></svg></button>
       <a class="btn-co" href="connexion.html">Se connecter</a>
     </div>
   </div>
@@ -231,18 +231,18 @@ textarea{height:150px;padding:12px;resize:vertical}
 
 <main>
 <div class="page"><div class="wide">
-  <div class="who"><span id="who"></span><a id="out">Se dÃ©connecter</a></div>
-  <div class="info"><svg class="i"><use href="#info"/></svg><div><b>Suivi de votre demande</b><br>Votre demande est enregistrÃ©e sur le site et signalÃ©e dans le salon Discord correspondant au motif. Consultez les rÃ©ponses dans Â« Mes dÃ©marches Â».</div></div>
+  <div class="who"><span id="who"></span><a id="out">Se déconnecter</a></div>
+  <div class="info"><svg class="i"><use href="#info"/></svg><div><b>Suivi de votre demande</b><br>Votre demande est enregistrée sur le site et signalée dans le salon Discord correspondant au motif. Consultez les réponses dans « Mes démarches ».</div></div>
   <div id="nv">
   <form class="fcard" id="f" novalidate>
     <p class="eyebrow" style="font-size:.7rem">Formulaire de contact</p>
     <h2>Envoyer une demande</h2>
     <div class="grid">
-      <div class="c8"><label for="nom">Nom et prÃ©nom</label><input id="nom" required autocomplete="name"></div>
-      <div class="c4"><label for="tel">TÃ©lÃ©phone (optionnel)</label><input id="tel" type="tel" placeholder="06 12 34 56 78"></div>
+      <div class="c8"><label for="nom">Nom et prénom</label><input id="nom" required autocomplete="name"></div>
+      <div class="c4"><label for="tel">Téléphone (optionnel)</label><input id="tel" type="tel" placeholder="06 12 34 56 78"></div>
       <div class="c6"><label for="motif">Motif de la demande</label><select id="motif" required><option value="">Choisissez un motif</option></select></div>
-      <div class="c6"><label for="objet">Objet</label><input id="objet" required maxlength="100" placeholder="RÃ©sumez votre demande en quelques mots"></div>
-      <div class="c12"><label for="txt">Votre message</label><textarea id="txt" required maxlength="1500" placeholder="DÃ©crivez votre demande en dÃ©tail."></textarea></div>
+      <div class="c6"><label for="objet">Objet</label><input id="objet" required maxlength="100" placeholder="Résumez votre demande en quelques mots"></div>
+      <div class="c12"><label for="txt">Votre message</label><textarea id="txt" required maxlength="1500" placeholder="Décrivez votre demande en détail."></textarea></div>
     </div>
     <button class="send" id="send" type="submit">Envoyer ma demande</button>
     <p id="msg" role="status"></p>
@@ -254,17 +254,17 @@ textarea{height:150px;padding:12px;resize:vertical}
   <div class="w">
     <div class="cols">
       <div>
-        <div class="flogo"><img src="assets/img/logo-prefecture.png" alt="PrÃ©fecture de LGP" style="height:84px;width:auto;display:block"></div>
-        <p>Portail de services de la PrÃ©fecture du Grand Paname.</p>
+        <div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP" style="height:84px;width:auto;display:block"></div>
+        <p>Portail de services de la Préfecture du Grand Paname.</p>
       </div>
-      <div><h4>CoordonnÃ©es</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;Ã©quipe</a></p></div>
-      <div><h4>Horaires</h4><ul><li>Lunâ€“Ven : 8h30â€“22h00</li><li>Samedi : 9h00â€“22h00</li><li>Dimanche : fermÃ©</li><li>Urgences : 24h / 24</li></ul></div>
-      <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous Contacter</a></li><li><a href="demarche.html">Services publics</a></li><li><a href="demarche.html">DÃ©marches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
-      <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la PrÃ©fecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
+      <div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
+      <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
+      <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous Contacter</a></li><li><a href="demarche.html">Services publics</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
+      <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
     </div>
     <div class="bas">
-      <span>Â© 2026 PrÃ©fecture de Grand Paname â€” Portail de services communautaires.</span>
-      <nav aria-label="Liens lÃ©gaux"><a href="mentions-legales.html">Mentions lÃ©gales</a><a href="politique-confidentialite.html">Politique de confidentialitÃ©</a><a href="#">AccessibilitÃ© : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav>
+      <span>© 2026 Préfecture de Grand Paname — Portail de services communautaires.</span>
+      <nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav>
     </div>
   </div>
 </footer>
@@ -274,7 +274,7 @@ textarea{height:150px;padding:12px;resize:vertical}
 <script src="assets/js/auth.js"></script>
 <script>
 
-/* ThÃ¨me clair / sombre */
+/* Thème clair / sombre */
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 document.getElementById("theme").onclick=()=>{
   const d=document.documentElement.dataset.theme==="dark"?"light":"dark";
@@ -294,7 +294,7 @@ const fillMotifs=motifs=>{
 };
 fillMotifs(SITE.defaults.ticketMotifs);
 SITE.ready.then(data=>fillMotifs(data.ticketMotifs??SITE.defaults.ticketMotifs));
-$("who").textContent="ConnectÃ© en tant que "+user.name;
+$("who").textContent="Connecté en tant que "+user.name;
 $("nom").value=user.name;
 $("out").onclick=logout;
 form.onsubmit=async event=>{
@@ -303,7 +303,7 @@ form.onsubmit=async event=>{
   if(!value("nom")||!value("motif")||!value("objet")||!value("txt")){
     status.className="ko";status.textContent="Merci de remplir tous les champs obligatoires.";return;
   }
-  submit.disabled=true;status.className="";status.textContent="Transmission de votre demandeâ€¦";
+  submit.disabled=true;status.className="";status.textContent="Transmission de votre demande…";
   try{
     const response=await fetch("/api/contact",{
       method:"POST",
@@ -311,26 +311,26 @@ form.onsubmit=async event=>{
       body:JSON.stringify({nom:value("nom"),tel:value("tel"),motif:value("motif"),objet:value("objet"),txt:value("txt")})
     });
     const result=await response.json().catch(()=>({}));
-    if(response.status===401){alert("Votre session Discord a expirÃ©. Reconnectez-vous.");logout();return;}
+    if(response.status===401){alert("Votre session Discord a expiré. Reconnectez-vous.");logout();return;}
     if(!response.ok)throw new Error(result.error||"send_failed");
     form.reset();$("nom").value=user.name;
-    status.className="ok";status.textContent=result.discordNotified?"Demande enregistrÃ©e et transmise au service concernÃ©. RÃ©fÃ©rence : "+result.reference+". Suivez les rÃ©ponses dans Â« Mes dÃ©marches Â». ":"Demande enregistrÃ©e dans le panneau admin. Discord nâ€™a pas reÃ§u sa notification. RÃ©fÃ©rence : "+result.reference+".";
+    status.className="ok";status.textContent=result.discordNotified?"Demande enregistrée et transmise au service concerné. Référence : "+result.reference+". Suivez les réponses dans « Mes démarches ». ":"Demande enregistrée dans le panneau admin. Discord n’a pas reçu sa notification. Référence : "+result.reference+".";
   }catch(error){
     status.className="ko";
     const issues={
-      discord_unavailable:"Discord a refusÃ© lâ€™envoi. VÃ©rifie lâ€™URL de webhook de ce motif dans Vercel.",
-      auth:"Ta session Discord a expirÃ©. DÃ©connecte-toi puis reconnecte-toi.",
-      discord_auth_unavailable:"Discord met trop de temps Ã  rÃ©pondre. Ta demande nâ€™a pas Ã©tÃ© envoyÃ©e ; rÃ©essaie dans un instant.",
-      not_member:"Connecte-toi avec un compte membre du serveur Discord de la PrÃ©fecture.",
-      rate_limited:"Tu as envoyÃ© plusieurs demandes rÃ©cemment. RÃ©essaie dans une heure.",
-      origin_refused:"Le domaine du site ne correspond pas Ã  la configuration Vercel de la fonction.",
-      fields:"Un champ du formulaire est invalide. VÃ©rifie le motif, lâ€™objet et le message.",
-      unknown_motif:"Ce motif nâ€™est pas reconnu. Recharge la page et rÃ©essaie.",
-      database_not_configured:"La base de donnÃ©es des demandes nâ€™est pas reliÃ©e au projet Vercel.",
-      contact_unavailable:"La demande nâ€™a pas pu Ãªtre enregistrÃ©e. VÃ©rifie la connexion Ã  la base de donnÃ©es du projet Vercel.",
-      invalid_request:"La fonction Vercel nâ€™a pas pu traiter la demande. VÃ©rifie son journal dâ€™exÃ©cution.",
+      discord_unavailable:"Discord a refusé l’envoi. Vérifie l’URL de webhook de ce motif dans Vercel.",
+      auth:"Ta session Discord a expiré. Déconnecte-toi puis reconnecte-toi.",
+      discord_auth_unavailable:"Discord met trop de temps à répondre. Ta demande n’a pas été envoyée ; réessaie dans un instant.",
+      not_member:"Connecte-toi avec un compte membre du serveur Discord de la Préfecture.",
+      rate_limited:"Tu as envoyé plusieurs demandes récemment. Réessaie dans une heure.",
+      origin_refused:"Le domaine du site ne correspond pas à la configuration Vercel de la fonction.",
+      fields:"Un champ du formulaire est invalide. Vérifie le motif, l’objet et le message.",
+      unknown_motif:"Ce motif n’est pas reconnu. Recharge la page et réessaie.",
+      database_not_configured:"La base de données des demandes n’est pas reliée au projet Vercel.",
+      contact_unavailable:"La demande n’a pas pu être enregistrée. Vérifie la connexion à la base de données du projet Vercel.",
+      invalid_request:"La fonction Vercel n’a pas pu traiter la demande. Vérifie son journal d’exécution.",
     };
-    status.textContent=issues[error.message]||"Le service de contact est indisponible. VÃ©rifie que les fichiers du site sont Ã  la racine du dÃ©pÃ´t GitHub reliÃ© Ã  Vercel, puis redÃ©ploie.";
+    status.textContent=issues[error.message]||"Le service de contact est indisponible. Vérifie que les fichiers du site sont à la racine du dépôt GitHub relié à Vercel, puis redéploie.";
   }finally{submit.disabled=false;}
 };</script>
 <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
