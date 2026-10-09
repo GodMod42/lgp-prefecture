@@ -65,7 +65,7 @@ footer{background:#1e1e1e;color:#ddd}.cols{display:grid;grid-template-columns:1.
 <main><div class="wrap">
   <a class="back" href="demarche.html">← Retour aux démarches en ligne</a>
   <div class="intro"><p class="eyebrow">Démarches en ligne · Accueil des citoyens</p><h1>Prendre rendez-vous</h1><p>Planifiez un rendez-vous avec l'accueil des citoyens.</p></div>
-  <div class="notice"><strong>Avant de commencer</strong>Votre demande est transmise à l'équipe d'accueil et suivie dans votre espace « Mes démarches », où un agent vous confirmera le créneau. Les créneaux proposés respectent les horaires d'ouverture : tous les jours, de 8h30 à 00h30 du lundi au vendredi et de 9h00 à 00h30 le week-end. Le créneau n'est définitif qu'après confirmation d'un agent.</div>
+  <div class="notice"><strong>Avant de commencer</strong>Votre demande est transmise à l'équipe d'accueil et suivie dans votre espace « Mes démarches », où un agent vous confirmera le créneau. Les créneaux proposés respectent les horaires d'ouverture : 7j/7, de 8h30 à minuit du lundi au vendredi et de 9h00 à minuit le week-end. Le créneau n'est définitif qu'après confirmation d'un agent.</div>
 
   <form id="rdv-form">
     <fieldset class="card"><legend>1. Objet du rendez-vous</legend><div class="grid">
@@ -117,7 +117,7 @@ footer{background:#1e1e1e;color:#ddd}.cols{display:grid;grid-template-columns:1.
 <footer><div class="cols">
   <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
   <div><h4>Coordonnées</h4><p><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l'équipe</a></p></div>
-  <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–00h30</li><li>Sam–Dim : 9h00–00h30</li><li>Urgences : 24h / 24</li></ul></div>
+  <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–00h00</li><li>Sam–Dim : 9h00–00h00</li><li>Urgences : 24h / 24</li></ul></div>
   <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
   <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
 </div><div class="bas"><span>© 2026 Préfecture du Grand Paname — Portail de services communautaires.</span><nav class="legal" aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="plan-du-site.html">Plan du site</a></nav></div></footer>
@@ -130,25 +130,28 @@ const form=document.getElementById("rdv-form"),status=document.getElementById("f
 const user=getUser();
 if(!user||!user.token){try{sessionStorage.setItem("lgp_after_login","rendez-vous.html")}catch{}location.replace("connexion.html")}
 
-/* Dates et créneaux : tous les jours, 8h30 (9h00 le week-end) jusqu'à 00h30 inclus */
+/* Dates et créneaux : tous les jours, 8h30 (9h00 le week-end) jusqu'à minuit (dernier créneau 00:00) */
 const pad=n=>String(n).padStart(2,"0");
 const today=new Date(),todayStr=today.getFullYear()+"-"+pad(today.getMonth()+1)+"-"+pad(today.getDate());
 function slots(dateStr){
   if(!dateStr)return [];
   const d=new Date(dateStr+"T12:00:00"),day=d.getDay();
-  const start=(day===6||day===0)?9*60:8*60+30,end=24*60+30,now=today.getHours()*60+today.getMinutes(),list=[];
+  const start=(day===6||day===0)?9*60:8*60+30,end=24*60,now=today.getHours()*60+today.getMinutes(),list=[];
   for(let m=start;m<=end;m+=30){
     if(dateStr===todayStr&&m<=now+30)continue;
     list.push(pad(Math.floor(m/60)%24)+":"+pad(m%60));
   }
   return list;
 }
+function nextDay(dateStr){const d=new Date(dateStr+"T12:00:00");d.setDate(d.getDate()+1);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function bind(dateId,timeId){
   const date=document.getElementById(dateId),time=document.getElementById(timeId);
   date.min=todayStr;
   date.addEventListener("change",()=>{
     date.setCustomValidity("");
-    const list=slots(date.value);
+    let list=slots(date.value);
+    /* Plus de créneau aujourd'hui : on passe automatiquement au lendemain */
+    if(date.value===todayStr&&!list.length){date.value=nextDay(date.value);list=slots(date.value)}
     time.innerHTML="";
     if(!date.value){time.disabled=true;time.innerHTML='<option value="">Choisissez d\'abord une date</option>';return}
     if(date.value<todayStr){date.setCustomValidity("Cette date est passée.");date.reportValidity();time.disabled=true;return}
@@ -161,6 +164,8 @@ function bind(dateId,timeId){
   });
 }
 bind("date1","time1");bind("date2","time2");
+/* Date souhaitée pré-remplie : aujourd'hui, ou demain s'il ne reste plus de créneau */
+{const d1=document.getElementById("date1");d1.value=todayStr;d1.dispatchEvent(new Event("change"))}
 
 form.addEventListener("submit",async event=>{
   event.preventDefault();if(!form.reportValidity())return;
