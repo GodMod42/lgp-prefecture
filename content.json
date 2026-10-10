@@ -23,13 +23,13 @@
       "titre": "Directeur de cabinet",
       "salaire": "6 000 – 9 000 €+",
       "texte": "Bras droit du Préfet. Il pilote le cabinet, coordonne les actions prioritaires, gère les affaires sensibles, les relations avec les autorités (Élysée, ministère, Ville de Paris) et prépare les décisions du Préfet.",
-      "disponibilite": "Disponible"
+      "disponibilite": "Indisponible"
     },
     {
       "titre": "Secrétaire Général",
       "salaire": "5 500 – 8 000 €+",
       "texte": "Responsable de l'administration générale de la PP (SGAP). Il gère les moyens (budgets, ressources humaines, logistique), l'organisation des services et le fonctionnement quotidien de l'administration policière.",
-      "disponibilite": "Disponible"
+      "disponibilite": "Indisponible"
     },
     {
       "titre": "Attaché d'administration",
@@ -66,7 +66,7 @@
       "titre": "Responsable Section APR ",
       "salaire": "3 500 à 5 500 €",
       "texte": "Le responsable de section assure le commandement, la coordination et la supervision des agents chargés de la protection rapprochée.",
-      "disponibilite": "Disponible"
+      "disponibilite": "Indisponible"
     },
     {
       "titre": "Agent de Protection Rapproché",
