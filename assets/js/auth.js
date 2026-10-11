@@ -2,6 +2,23 @@
    À inclure AVANT le script de la page :  <script src="assets/js/auth.js"></script> */
 const AUTH_KEY = "lgp_user";
 const SITE_ADMIN_ROLE_ID = "1556690350171754496";
+
+/* ===== Popup « site non officiel » =====
+   Affichée sur toutes les pages qui chargent auth.js. Modifie les textes et réglages ici. */
+const LGP_DISCLAIMER = {
+  enabled: true,        // false = désactive complètement la popup
+  everyPage: true,      // true = à chaque changement de page ; false = une seule fois par session
+  showOnAdmin: false,   // true = l'affiche aussi sur le panneau d'administration
+  badge: "Site non officiel",
+  title: "Ce site est un projet de jeu de rôle",
+  paragraphs: [
+    "Ce portail est un site communautaire non officiel, créé pour un serveur de jeu de rôle (RP). Il n'est affilié à aucune administration, institution ou organisme public réel.",
+    "Les services, démarches, noms, logos et personnages présentés sont fictifs et n'ont aucune valeur administrative ou légale.",
+    "N'indiquez aucune information personnelle réelle (identité, adresse, téléphone, courriel, documents)."
+  ],
+  button: "J'ai compris"
+};
+
 function isSiteAdmin(user){return !!user&&((Array.isArray(user.roles)&&user.roles.includes(SITE_ADMIN_ROLE_ID))||user.role==="Staff")}
 function getUser(){
   try{const u=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");if(u&&u.exp>Date.now())return u}catch(e){}
@@ -11,6 +28,56 @@ function logout(){
   try{localStorage.removeItem(AUTH_KEY)}catch(e){}
   location.href="connexion.html";
 }
+
+(function(){
+  const c=LGP_DISCLAIMER;
+  if(!c.enabled||(window.LGP_ADMIN&&!c.showOnAdmin))return;
+  try{if(!c.everyPage&&sessionStorage.getItem("lgp_disclaimer_ok"))return}catch(e){}
+
+  const show=()=>{
+    if(document.getElementById("lgp-disc"))return;
+    const st=document.createElement("style");
+    st.textContent=`
+.lgp-disc{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:16px;background:rgba(7,14,28,.72);backdrop-filter:blur(3px)}
+.lgp-disc-box{width:min(520px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--carte,#fff);color:var(--texte,#161616);border:1px solid var(--ligne,#ddd);border-top:6px solid;border-image:linear-gradient(90deg,#000091 33.3%,#fff 33.3% 66.6%,#e1000f 66.6%) 1;border-radius:4px;box-shadow:0 18px 50px rgba(0,0,0,.35);padding:26px 26px 22px;font-family:var(--sans,system-ui,sans-serif);line-height:1.6}
+.lgp-disc-badge{display:inline-block;background:#fbe9e9;color:#a11018;font-weight:800;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:12px}
+:root[data-theme=dark] .lgp-disc-badge{background:#3a1f21;color:#ffb4b4}
+.lgp-disc-box h2{margin:12px 0 10px;font-size:1.3rem;line-height:1.25}
+.lgp-disc-box p{margin:0 0 10px;font-size:.95rem;color:var(--gris,#525b66)}
+.lgp-disc-box button{margin-top:10px;min-height:44px;padding:10px 22px;border:0;border-radius:4px;background:var(--bleu,#000091);color:#fff;font:700 .95rem var(--sans,system-ui,sans-serif);cursor:pointer}
+:root[data-theme=dark] .lgp-disc-box button{color:#111a2a}
+.lgp-disc-box button:hover{background:var(--bleu-f,#00006d)}
+.lgp-disc-box button:focus-visible{outline:3px solid #315efb;outline-offset:3px}`;
+    document.head.append(st);
+
+    const prev=document.activeElement;
+    const overlay=document.createElement("div");overlay.className="lgp-disc";overlay.id="lgp-disc";
+    const box=document.createElement("div");box.className="lgp-disc-box";
+    box.setAttribute("role","dialog");box.setAttribute("aria-modal","true");box.setAttribute("aria-labelledby","lgp-disc-title");
+    const badge=document.createElement("span");badge.className="lgp-disc-badge";badge.textContent=c.badge;
+    const h=document.createElement("h2");h.id="lgp-disc-title";h.textContent=c.title;
+    box.append(badge,h);
+    c.paragraphs.forEach(t=>{const p=document.createElement("p");p.textContent=t;box.append(p)});
+    const btn=document.createElement("button");btn.type="button";btn.textContent=c.button;
+    box.append(btn);overlay.append(box);document.body.append(overlay);
+
+    const prevOverflow=document.body.style.overflow;document.body.style.overflow="hidden";
+    const close=()=>{
+      overlay.remove();st.remove();document.body.style.overflow=prevOverflow;
+      document.removeEventListener("keydown",onKey,true);
+      try{sessionStorage.setItem("lgp_disclaimer_ok","1")}catch(e){}
+      if(prev&&prev.focus)try{prev.focus()}catch(e){}
+    };
+    const onKey=e=>{
+      if(e.key==="Escape"){e.preventDefault();close()}
+      else if(e.key==="Tab"){e.preventDefault();btn.focus()}   /* une seule zone cliquable : le focus reste sur le bouton */
+    };
+    document.addEventListener("keydown",onKey,true);
+    btn.onclick=close;
+    btn.focus();
+  };
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",show);else show();
+})();
 
 (function(){
   const css=`
@@ -79,4 +146,3 @@ function logout(){
   wrap.append(pill,menu);
   btn.replaceWith(wrap);
 })();
-
