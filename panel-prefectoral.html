@@ -159,12 +159,12 @@ const store=(()=>{
   let off=false;
   const lk=m=>"lgp_pref_"+m,lr=m=>{try{return JSON.parse(localStorage.getItem(lk(m))||"[]")}catch(e){return[]}},lw=(m,v)=>{try{localStorage.setItem(lk(m),JSON.stringify(v))}catch(e){}};
   const api=async(method,m,body)=>{
-    const r=await fetch("/api/prefecture/"+m,{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+    const r=await fetch("/api/prefecture?module="+m,{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
     const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.error||r.status);e.status=r.status;throw e}return d};
   const run=async(method,m,body,local)=>{
     if(!off){try{return await api(method,m,body)}catch(e){
       if(e.status===401||e.status===403)throw e;
-      off=true;$("#st").innerHTML="<b>Mode local</b> : l'API /api/prefecture est introuvable, les données restent dans ce navigateur et ne sont pas partagées entre agents."}}
+      off=true;const why=String(e.status||e.message||"aucune réponse")+(e.status&&e.message&&e.message!==String(e.status)?" – "+e.message:"");$("#st").innerHTML="<b>Mode local</b> : l'API /api/prefecture a répondu « "+why.replace(/[<>&]/g,"")+" ». Les données restent dans ce navigateur et ne sont pas partagées entre agents."}}
     return local()};
   const me=()=>u.username||u.name||u.global_name||"Agent";
   return{
