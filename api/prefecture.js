@@ -1,5 +1,5 @@
 /* api/prefecture.js — API du panel préfectoral
-   Appel : /api/prefecture?module=annonce  (GET, POST, PATCH, DELETE)
+   App :el /api/prefecture?module=annonce  (GET, POST, PATCH, DELETE)
    Réutilise lib/contact-data.js (base Neon + vérification Discord).
    Accès : rôle Staff (ADMIN_ROLE_ID) ou rôle Préfectoral (variable Vercel PREFECTURE_ROLE_ID). */
 import { db, discordUser, sendJson, ADMIN_ROLE_ID } from "../lib/contact-data.js";
