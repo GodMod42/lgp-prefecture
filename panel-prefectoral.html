@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel préfectoral — Préfecture de Police · LGP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;700&family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--encre:#16233f;--encre2:#24365c;--papier:#f4f5f8;--carte:#fff;--trait:#d9dde6;--texte:#1d2433;--doux:#667086;--rouge:#b3202a;--ok:#1f7a4d;--attente:#a86a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--papier:#0f1626;--carte:#172036;--trait:#2a3655;--texte:#e8ebf3;--doux:#98a3bd;--encre:#0b1120;--encre2:#1b2a4a}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font:15px/1.55 "Libre Franklin",system-ui,sans-serif;background:var(--papier);color:var(--texte)}
+h1,h2,h3{font-family:Spectral,Georgia,serif;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--rouge);outline-offset:2px}
+.hidden{display:none!important}
+
+/* écran verrouillé */
+#verrou{min-height:100%;display:grid;place-items:center;padding:24px}
+.verrou-box{max-width:440px;background:var(--carte);border:1px solid var(--trait);border-top:4px solid var(--rouge);padding:32px}
+.verrou-box h1{font-size:26px;margin-bottom:8px}
+.verrou-box p{color:var(--doux);margin:0 0 20px}
+
+/* panel */
+#app{display:grid;grid-template-columns:260px 1fr;min-height:100%}
+aside{background:var(--encre);color:#fff;padding:22px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+.marque{display:flex;gap:12px;align-items:center;padding:0 8px 18px;border-bottom:1px solid #ffffff22;margin-bottom:14px}
+.marque img{width:44px;height:44px;object-fit:contain}
+.marque .cocarde{width:44px;height:44px;border-radius:50%;background:linear-gradient(90deg,#1d3f8f 33%,#fff 33% 66%,var(--rouge) 66%);flex:none}
+.marque b{font:700 16px/1.2 Spectral,Georgia,serif;display:block}
+.marque span{font-size:12px;opacity:.7}
+nav button{display:flex;width:100%;gap:10px;align-items:center;background:none;border:0;color:#ffffffcc;padding:10px 12px;border-radius:6px;cursor:pointer;text-align:left}
+nav button:hover{background:#ffffff14}
+nav button[aria-current="page"]{background:#fff;color:var(--encre);font-weight:600}
+nav .n{margin-left:auto;font-size:12px;opacity:.7}
+.profil{margin-top:18px;padding:12px 8px 0;border-top:1px solid #ffffff22;font-size:13px;color:#ffffffb3}
+main{padding:32px clamp(16px,4vw,48px);max-width:1000px;width:100%}
+.entete{display:flex;justify-content:space-between;gap:16px;align-items:end;flex-wrap:wrap;margin-bottom:6px}
+.entete h2{font-size:30px}
+.sous{color:var(--doux);margin:2px 0 22px}
+.outils{display:flex;gap:10px;flex-wrap:wrap}
+input,select,textarea{background:var(--carte);border:1px solid var(--trait);border-radius:6px;padding:9px 11px;width:100%}
+.recherche{width:240px}
+.btn{background:var(--encre2);color:#fff;border:0;border-radius:6px;padding:9px 16px;cursor:pointer;font-weight:600}
+.btn:hover{background:var(--rouge)}
+.btn.lien{background:none;color:var(--rouge);padding:4px 8px;font-weight:500}
+.btn.lien:hover{text-decoration:underline;background:none}
+form{background:var(--carte);border:1px solid var(--trait);border-radius:8px;padding:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px 14px;margin-bottom:26px}
+form label{font-size:13px;color:var(--doux);display:grid;gap:4px}
+form .large{grid-column:1/-1}
+form .actions{grid-column:1/-1;display:flex;gap:10px}
+.liste{display:grid;gap:10px}
+.item{background:var(--carte);border:1px solid var(--trait);border-left:3px solid var(--encre2);border-radius:6px;padding:14px 16px;display:grid;gap:4px}
+.item h3{font-size:18px}
+.meta{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:13px;color:var(--doux)}
+.meta b{color:var(--texte);font-weight:500}
+.corps{white-space:pre-wrap;margin:4px 0 0}
+.item .bas{display:flex;justify-content:space-between;align-items:center;margin-top:4px;font-size:12px;color:var(--doux)}
+.statut{display:inline-block;padding:1px 10px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid currentColor}
+.s-ouvert{color:var(--attente)}.s-cours{color:#2455b8}.s-clos{color:var(--ok)}.s-refuse{color:var(--rouge)}
+.vide{padding:36px;text-align:center;color:var(--doux);border:1px dashed var(--trait);border-radius:8px}
+a.doc{color:var(--rouge);word-break:break-all}
+
+/* popup site non officiel */
+#popup{position:fixed;inset:0;background:#0009;display:grid;place-items:center;padding:20px;z-index:50}
+#popup div{background:var(--carte);max-width:420px;padding:26px;border-radius:8px;border-top:4px solid var(--rouge)}
+#popup h2{font-size:21px;margin-bottom:8px}
+#popup p{margin:0 0 16px;color:var(--doux)}
+
+@media(max-width:820px){
+ #app{grid-template-columns:1fr}
+ aside{position:static;height:auto}
+ nav{display:grid;grid-template-columns:repeat(2,1fr);gap:2px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═════════ CONFIGURATION (à modifier) ═════════ -->
+<script>
+const CONFIG = {
+  NOM_SERVICE: "Préfecture de Police",
+  SOUS_TITRE: "Le Grand Paname",
+  LOGO_URL: "",                                   // URL du logo de la Préfecture (laisser vide = cocarde par défaut)
+  ROLE_REQUIS: "prefectoral",                     // rôle Discord autorisé (nom ou ID, selon ce que renvoie getUser())
+  LIEN_CONNEXION: "index.html",                   // page de connexion Discord de ton site
+  INVITATION_DISCORD: "https://discord.gg/8RAFH7KfDj"
+};
+</script>
+
+<div id="verrou" class="hidden">
+  <div class="verrou-box">
+    <h1 id="v-titre">Accès réservé</h1>
+    <p id="v-texte">Le panel préfectoral est réservé aux agents disposant du rôle correspondant sur le serveur Discord.</p>
+    <button class="btn" id="v-btn">Retour</button>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <aside>
+    <div class="marque"><div id="logo"></div><div><b id="m-nom"></b><span id="m-sous"></span></div></div>
+    <nav id="nav" aria-label="Modules du panel"></nav>
+    <div class="profil" id="profil"></div>
+  </aside>
+  <main>
+    <div class="entete"><h2 id="p-titre"></h2><div class="outils"><input class="recherche" id="q" type="search" placeholder="Rechercher" aria-label="Rechercher"></div></div>
+    <p class="sous" id="p-desc"></p>
+    <form id="form"></form>
+    <div class="liste" id="liste"></div>
+  </main>
+</div>
+
+<div id="popup" class="hidden" role="dialog" aria-modal="true" aria-labelledby="pp-t">
+  <div>
+    <h2 id="pp-t">Site non officiel</h2>
+    <p>Ce site est une création de joueurs pour un serveur de jeu de rôle. Il n'est lié à aucune administration réelle.</p>
+    <button class="btn" id="pp-ok">J'ai compris</button>
+  </div>
+</div>
+
+<script src="auth.js" onerror="window.__noAuth=true"></script>
+<script>
+/* ═════════ MODULES ═════════
+   t = type de champ : text | area | date | datetime | select | url
+   Pour ajouter un module ou un champ, il suffit d'éditer ce tableau. */
+const STATUTS=[["ouvert","Ouvert"],["cours","En cours"],["clos","Clos"],["refuse","Refusé"]];
+const MODULES=[
+ {id:"annonce",nom:"Annonces",desc:"Communications officielles adressées aux agents de la Préfecture.",titre:"objet",
+  champs:[{k:"objet",l:"Objet",t:"text",large:1},{k:"portee",l:"Destinataires",t:"select",o:["Tous les agents","Cabinet","Inspection","Administration"]},{k:"texte",l:"Contenu",t:"area",large:1}]},
+ {id:"reunion",nom:"Réunions",desc:"Convocations et ordres du jour.",titre:"objet",
+  champs:[{k:"objet",l:"Objet",t:"text",large:1},{k:"quand",l:"Date et heure",t:"datetime"},{k:"lieu",l:"Lieu ou salon vocal",t:"text"},{k:"odj",l:"Ordre du jour",t:"area",large:1}]},
+ {id:"rdv",nom:"Rendez-vous",desc:"Rendez-vous pris avec les services, entreprises et citoyens.",titre:"avec",
+  champs:[{k:"avec",l:"Interlocuteur",t:"text"},{k:"quand",l:"Date et heure",t:"datetime"},{k:"objet",l:"Objet",t:"text",large:1},{k:"statut",l:"Statut",t:"select",o:["À confirmer","Confirmé","Reporté","Terminé"]}]},
+ {id:"document",nom:"Documents",desc:"Arrêtés, modèles, courriers et pièces de référence.",titre:"intitule",
+  champs:[{k:"intitule",l:"Intitulé",t:"text"},{k:"type",l:"Type",t:"select",o:["Arrêté","Modèle","Courrier","Rapport","Autre"]},{k:"lien",l:"Lien du document (Google Doc, PDF…)",t:"url",large:1}]},
+ {id:"notes",nom:"Notes",desc:"Notes de service et mémos internes.",titre:"sujet",
+  champs:[{k:"sujet",l:"Sujet",t:"text",large:1},{k:"texte",l:"Note",t:"area",large:1}]},
+ {id:"dossier",nom:"Suivi de dossier",desc:"Instruction des demandes : référence, responsable et état d'avancement.",titre:"intitule",statut:1,
+  champs:[{k:"ref",l:"Référence",t:"text"},{k:"intitule",l:"Intitulé du dossier",t:"text"},{k:"resp",l:"Agent en charge",t:"text"},{k:"statut",l:"Statut",t:"select",o:STATUTS},{k:"suivi",l:"Dernière mise à jour",t:"area",large:1}]},
+ {id:"tenues",nom:"Tenues",desc:"Tenues réglementaires par grade.",titre:"nom",
+  champs:[{k:"nom",l:"Nom de la tenue",t:"text"},{k:"grade",l:"Grade concerné",t:"select",o:["Préfet de Police","Sous-Préfet","Directeur de cabinet","Secrétaire Général","Attaché d'administration","Secrétaire administratif","Inspecteur IGPN","Huissier de Justice","Inspecteur"]},{k:"lien",l:"Lien de l'image",t:"url",large:1},{k:"detail",l:"Composition (haut, bas, accessoires)",t:"area",large:1}]},
+ {id:"discussion",nom:"Discussion",desc:"Échanges internes entre agents.",titre:"sujet",
+  champs:[{k:"sujet",l:"Sujet",t:"text",large:1},{k:"texte",l:"Message",t:"area",large:1}]},
+ {id:"absence",nom:"Absences",desc:"Déclarations d'absence des agents.",titre:"agent",
+  champs:[{k:"agent",l:"Agent",t:"text"},{k:"du",l:"Du",t:"date"},{k:"au",l:"Au",t:"date"},{k:"motif",l:"Motif",t:"text",large:1}]},
+ {id:"annuaire",nom:"Annuaire",desc:"Coordonnées des agents de la Préfecture.",titre:"nom",
+  champs:[{k:"nom",l:"Nom Prénom",t:"text"},{k:"grade",l:"Grade",t:"text"},{k:"tel",l:"Téléphone",t:"text"},{k:"discord",l:"Pseudo Discord",t:"text"}]}
+];
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const KEY=id=>"lgp_panel_"+id;
+const lire=id=>{try{return JSON.parse(localStorage.getItem(KEY(id))||"[]")}catch(e){return[]}};
+const ecrire=(id,v)=>{try{localStorage.setItem(KEY(id),JSON.stringify(v))}catch(e){}};
+let user={nom:"Agent",id:"",role:""}, courant=MODULES[0];
+
+function fmt(t,v){
+  if(!v)return"";
+  if(t==="date")return new Date(v).toLocaleDateString("fr-FR");
+  if(t==="datetime")return new Date(v).toLocaleString("fr-FR",{dateStyle:"long",timeStyle:"short"});
+  return v;
+}
+
+function menu(){
+  $("#nav").innerHTML=MODULES.map(m=>`<button data-id="${m.id}" ${m.id===courant.id?'aria-current="page"':""}>${esc(m.nom)}<span class="n">${lire(m.id).length||""}</span></button>`).join("");
+}
+
+function afficher(m){
+  courant=m; $("#q").value="";
+  $("#p-titre").textContent=m.nom; $("#p-desc").textContent=m.desc;
+  $("#form").innerHTML=m.champs.map(c=>{
+    const cl=c.large?' class="large"':"";
+    let ctrl;
+    if(c.t==="area")ctrl=`<textarea name="${c.k}" rows="3" required></textarea>`;
+    else if(c.t==="select")ctrl=`<select name="${c.k}">${(c.o.map?c.o:[]).map(o=>Array.isArray(o)?`<option value="${o[0]}">${o[1]}</option>`:`<option>${esc(o)}</option>`).join("")}</select>`;
+    else ctrl=`<input name="${c.k}" type="${c.t==="datetime"?"datetime-local":c.t}" ${c.t==="url"?"":"required"}>`;
+    return`<label${cl}>${c.l}${ctrl}</label>`;
+  }).join("")+`<div class="actions"><button class="btn" type="submit">Enregistrer</button></div>`;
+  menu(); liste();
+}
+
+function liste(){
+  const m=courant, q=$("#q").value.toLowerCase();
+  const data=lire(m.id).filter(d=>!q||JSON.stringify(d).toLowerCase().includes(q));
+  if(!data.length){$("#liste").innerHTML=`<div class="vide">${q?"Aucun résultat.":"Rien pour le moment. Utilise le formulaire ci-dessus pour ajouter une entrée."}</div>`;return}
+  $("#liste").innerHTML=data.map(d=>{
+    const corps=m.champs.filter(c=>c.t==="area"&&c.k!=="suivi"&&d[c.k]).map(c=>`<p class="corps">${esc(d[c.k])}</p>`).join("");
+    const meta=m.champs.filter(c=>c.k!==m.titre&&c.t!=="area"&&d[c.k]&&c.k!=="statut"||(c.k==="statut"&&!m.statut&&d[c.k]))
+      .map(c=>c.t==="url"?`<span><a class="doc" href="${esc(d[c.k])}" target="_blank" rel="noopener noreferrer">Ouvrir le lien</a></span>`:`<span>${c.l} : <b>${esc(fmt(c.t,d[c.k]))}</b></span>`).join("");
+    const st=m.statut&&d.statut?`<span class="statut s-${esc(d.statut)}">${esc((STATUTS.find(s=>s[0]===d.statut)||[,d.statut])[1])}</span>`:"";
+    const suivi=d.suivi?`<p class="corps">${esc(d.suivi)}</p>`:"";
+    return`<article class="item"><div class="entete" style="margin:0;align-items:center"><h3>${esc(d[m.titre])}</h3>${st}</div><div class="meta">${meta}</div>${corps}${suivi}
+      <div class="bas"><span>Par ${esc(d._auteur)} · ${new Date(d._date).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</span><button class="btn lien" data-del="${d._id}">Supprimer</button></div></article>`;
+  }).join("");
+}
+
+function demarrer(){
+  $("#verrou").classList.add("hidden"); $("#app").classList.remove("hidden");
+  $("#m-nom").textContent=CONFIG.NOM_SERVICE; $("#m-sous").textContent=CONFIG.SOUS_TITRE;
+  $("#logo").outerHTML=CONFIG.LOGO_URL?`<img id="logo" src="${esc(CONFIG.LOGO_URL)}" alt="Logo">`:`<div id="logo" class="cocarde"></div>`;
+  $("#profil").innerHTML=`Connecté : <b>${esc(user.nom)}</b>${user.id?`<br>ID Discord : ${esc(user.id)}`:""}${user.role?`<br>Rôle : ${esc(user.role)}`:""}`;
+  afficher(MODULES[0]);
+}
+
+function verrouiller(titre,texte,btn,url){
+  $("#app").classList.add("hidden"); $("#verrou").classList.remove("hidden");
+  $("#v-titre").textContent=titre; $("#v-texte").textContent=texte; $("#v-btn").textContent=btn;
+  $("#v-btn").onclick=()=>location.href=url;
+}
+
+document.addEventListener("submit",e=>{
+  if(e.target.id!=="form")return; e.preventDefault();
+  const fd=Object.fromEntries(new FormData(e.target)), data=lire(courant.id);
+  data.unshift({...fd,_id:Date.now().toString(36),_auteur:user.nom,_date:new Date().toISOString()});
+  ecrire(courant.id,data); e.target.reset(); menu(); liste();
+});
+document.addEventListener("click",e=>{
+  const n=e.target.closest("nav button"); if(n)afficher(MODULES.find(m=>m.id===n.dataset.id));
+  const d=e.target.closest("[data-del]");
+  if(d&&confirm("Supprimer cette entrée ?")){ecrire(courant.id,lire(courant.id).filter(x=>x._id!==d.dataset.del));menu();liste()}
+});
+$("#q").addEventListener("input",liste);
+$("#pp-ok").onclick=()=>$("#popup").classList.add("hidden");
+
+(async function init(){
+  $("#popup").classList.remove("hidden");
+  // Aperçu local (fichier ouvert directement) : pas de vérification
+  if(location.protocol==="file:"){user={nom:"Aperçu local",id:"",role:CONFIG.ROLE_REQUIS};return demarrer()}
+  if(window.__noAuth||typeof getUser!=="function")
+    return verrouiller("Connexion indisponible","Le script de connexion (auth.js) est introuvable sur cette page.","Retour",CONFIG.LIEN_CONNEXION);
+  let u=null; try{u=await getUser()}catch(e){}
+  if(!u)return verrouiller("Connexion requise","Connecte-toi avec ton compte Discord pour accéder au panel préfectoral.","Se connecter",CONFIG.LIEN_CONNEXION);
+  const roles=[].concat(u.roles||u.role||[]).map(r=>String(r.name||r.id||r).toLowerCase());
+  if(!roles.includes(String(CONFIG.ROLE_REQUIS).toLowerCase()))
+    return verrouiller("Accès refusé","Ton compte Discord ne dispose pas du rôle préfectoral. Contacte le Cabinet si tu penses qu'il s'agit d'une erreur.","Retour",CONFIG.LIEN_CONNEXION);
+  user={nom:u.username||u.name||u.global_name||"Agent",id:u.id||u.discord_id||"",role:CONFIG.ROLE_REQUIS};
+  demarrer();
+})();
+</script>
+</body>
+</html>
