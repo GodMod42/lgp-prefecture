@@ -88,6 +88,9 @@ textarea{resize:vertical;min-height:90px}input[type=search]{margin:16px 0 8px}
 .comp{display:flex;gap:10px;padding:12px;border-top:1px solid var(--ligne);align-items:flex-end}.comp textarea{min-height:44px;height:44px;border-radius:22px;padding:11px 16px}
 @media(max-width:700px){.finance-form{grid-template-columns:1fr}.finance-field.full{grid-column:auto}.dos{grid-template-columns:1fr}.chat{grid-template-columns:1fr;height:70vh}.rooms{flex-direction:row;overflow:auto;border-right:0;border-bottom:1px solid var(--ligne)}.reu{flex-direction:column}}
 @media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static;max-height:none;overflow:visible;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));align-items:start}}
+.ico{display:inline-flex;vertical-align:-3px;flex:none}.it{display:inline-flex;align-items:center;gap:5px}
+.nv{align-items:center}.hero .ic{color:var(--bleu)}.vide .ico{display:flex;justify-content:center;margin-bottom:8px}.look .ph{color:var(--gris)}
+img.av{object-fit:cover;background:var(--fond)}.me-chip{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.85rem}
 </style>
 <script>window.LGP_ADMIN=true</script>
 <script src="assets/js/site.js"></script>
@@ -100,6 +103,7 @@ textarea{resize:vertical;min-height:90px}input[type=search]{margin:16px 0 8px}
 <div id="app" hidden>
   <div class="top"><div class="in">
     <h1>Panel préfectoral</h1>
+    <span class="me-chip" id="me"></span>
     <a class="b" href="admin.html" id="lk-admin" hidden>Panneau d'administration</a>
     <a class="b" href="dashboard.html">← Mon espace</a>
     <button class="b p" id="rf" type="button">Actualiser</button>
@@ -118,16 +122,16 @@ const SALONS = ["Général","Cabinet","Inspection","Administration"];   // salon
 
 /* Modules : champs [clé, libellé, type, options]. Types : text | area | date | datetime | select | url */
 const MODS={
- annonce:{i:"📢",n:"Annonces",d:"Communications officielles adressées aux agents de la Préfecture.",f:[["objet","Objet","text"],["importance","Niveau","select",["Information","Important","Urgent"]],["portee","Destinataires","select",["Tous les agents","Cabinet","Inspection","Administration"]],["texte","Contenu","area"]]},
- reunion:{i:"📅",n:"Réunions",d:"Convocations, lieux et ordres du jour.",f:[["objet","Objet","text"],["quand","Date et heure","datetime"],["lieu","Lieu ou salon vocal","text"],["odj","Ordre du jour (un point par ligne)","area"]]},
- discussion:{i:"💬",n:"Discussion",d:"Messagerie interne entre agents, par salon."},
- rdv:{i:"🤝",n:"Rendez-vous",d:"Rendez-vous avec les services, entreprises et citoyens.",f:[["avec","Interlocuteur","text"],["quand","Date et heure","datetime"],["objet","Objet","text"],["statut","Statut","select",["À confirmer","Confirmé","Reporté","Terminé"]]]},
- dossier:{i:"🗂️",n:"Suivi de dossier",d:"Instruction des demandes : référence, agent en charge et avancement.",f:[["ref","Référence","text"],["intitule","Intitulé du dossier","text"],["resp","Agent en charge","text"],["statut","Statut","select",["Ouvert","En cours","Clos","Refusé"]],["suivi","Dernière mise à jour","area"]]},
- document:{i:"📄",n:"Documents",d:"Arrêtés, modèles, courriers et pièces de référence.",f:[["intitule","Intitulé","text"],["type","Type","select",["Arrêté","Modèle","Courrier","Rapport","Autre"]],["lien","Lien du document (Google Doc, PDF…)","url"]]},
- notes:{i:"📝",n:"Notes",d:"Notes de service et mémos internes.",f:[["sujet","Sujet","text"],["texte","Note","area"]]},
- tenues:{i:"👔",n:"Tenues",d:"Tenues réglementaires par grade.",f:[["nom","Nom de la tenue","text"],["grade","Grade concerné","select",["Préfet de Police","Sous-Préfet","Directeur de cabinet","Secrétaire Général","Attaché d'administration","Secrétaire administratif","Inspecteur IGPN","Huissier de Justice","Inspecteur"]],["lien","Lien de l'image","url"],["detail","Composition (haut, bas, accessoires)","area"]]},
- absence:{i:"🏖️",n:"Absences",d:"Déclarations d'absence des agents.",f:[["agent","Agent","text"],["du","Du","date"],["au","Au","date"],["motif","Motif","text"]]},
- annuaire:{i:"📇",n:"Annuaire",d:"Coordonnées des agents de la Préfecture.",f:[["nom","Nom Prénom","text"],["grade","Grade","text"],["tel","Téléphone","text"],["discord","Pseudo Discord","text"]]}
+ annonce:{i:"annonce",n:"Annonces",d:"Communications officielles adressées aux agents de la Préfecture.",f:[["objet","Objet","text"],["importance","Niveau","select",["Information","Important","Urgent"]],["portee","Destinataires","select",["Tous les agents","Cabinet","Inspection","Administration"]],["texte","Contenu","area"]]},
+ reunion:{i:"reunion",n:"Réunions",d:"Convocations, lieux et ordres du jour.",f:[["objet","Objet","text"],["quand","Date et heure","datetime"],["lieu","Lieu ou salon vocal","text"],["odj","Ordre du jour (un point par ligne)","area"]]},
+ discussion:{i:"discussion",n:"Discussion",d:"Messagerie interne entre agents, par salon."},
+ rdv:{i:"rdv",n:"Rendez-vous",d:"Rendez-vous avec les services, entreprises et citoyens.",f:[["avec","Interlocuteur","text"],["quand","Date et heure","datetime"],["objet","Objet","text"],["statut","Statut","select",["À confirmer","Confirmé","Reporté","Terminé"]]]},
+ dossier:{i:"dossier",n:"Suivi de dossier",d:"Instruction des demandes : référence, agent en charge et avancement.",f:[["ref","Référence","text"],["intitule","Intitulé du dossier","text"],["resp","Agent en charge","text"],["statut","Statut","select",["Ouvert","En cours","Clos","Refusé"]],["suivi","Dernière mise à jour","area"]]},
+ document:{i:"document",n:"Documents",d:"Arrêtés, modèles, courriers et pièces de référence.",f:[["intitule","Intitulé","text"],["type","Type","select",["Arrêté","Modèle","Courrier","Rapport","Autre"]],["lien","Lien du document (Google Doc, PDF…)","url"]]},
+ notes:{i:"notes",n:"Notes",d:"Notes de service et mémos internes.",f:[["sujet","Sujet","text"],["texte","Note","area"]]},
+ tenues:{i:"tenues",n:"Tenues",d:"Tenues réglementaires par grade.",f:[["nom","Nom de la tenue","text"],["grade","Grade concerné","select",["Préfet de Police","Sous-Préfet","Directeur de cabinet","Secrétaire Général","Attaché d'administration","Secrétaire administratif","Inspecteur IGPN","Huissier de Justice","Inspecteur"]],["lien","Lien de l'image","url"],["detail","Composition (haut, bas, accessoires)","area"]]},
+ absence:{i:"absence",n:"Absences",d:"Déclarations d'absence des agents.",f:[["agent","Agent","text"],["du","Du","date"],["au","Au","date"],["motif","Motif","text"]]},
+ annuaire:{i:"annuaire",n:"Annuaire",d:"Coordonnées des agents de la Préfecture.",f:[["nom","Nom Prénom","text"],["grade","Grade","text"],["tel","Téléphone","text"],["discord","Pseudo Discord","text"]]}
 };
 const GROUPS=[["Communication",["annonce","reunion","discussion"]],["Agenda et dossiers",["rdv","dossier","document","notes"]],["Personnel",["tenues","absence","annuaire"]]];
 
@@ -142,9 +146,35 @@ const byNew=a=>[...a].sort((x,y)=>T(y.created_at)-T(x.created_at));
 const hm=d=>new Date(d).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
 const D0=d=>{const x=new Date(d);x.setHours(0,0,0,0);return x};
 const dayLabel=d=>{const n=Math.round((D0(d)-D0(new Date()))/864e5);return n===0?"Aujourd'hui":n===1?"Demain":n===-1?"Hier":new Date(d).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})};
-const av=(n,s=36)=>{const e=E("span","av",(String(n||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("")||"?").toUpperCase());let h=0;for(const c of String(n||""))h=(h*31+c.charCodeAt(0))%360;e.style.cssText="--s:"+s+"px;background:hsl("+h+" 45% 38%)";return e};
+const P={
+ annonce:'<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18 6a8.5 8.5 0 0 1 0 12"/>',
+ reunion:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/>',
+ discussion:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/>',
+ rdv:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ dossier:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+ document:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+ notes:'<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+ tenues:'<path d="M8 3L3 6l2 4 3-1v12h8V9l3 1 2-4-5-3a4 4 0 0 1-8 0z"/>',
+ absence:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M10 14l4 4M14 14l-4 4"/>',
+ annuaire:'<rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="10" r="2.5"/><path d="M8 17c.8-2 2.3-3 4-3s3.2 1 4 3"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+ warn:'<path d="M12 3l10 18H2z"/><path d="M12 10v4M12 17h.01"/>',
+ urgent:'<path d="M8 3h8l5 5v8l-5 5H8l-5-5V8z"/><path d="M12 8v5M12 16h.01"/>',
+ pin:'<path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+ phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+ at:'<circle cx="12" cy="12" r="4"/><path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-3.5 7.1"/>'
+};
+const ico=(n,s=18)=>{const e=E("span","ico");e.innerHTML='<svg viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(P[n]||"")+'</svg>';return e};
+const li=(i,t)=>{const e=E("span","it");e.append(ico(i,15),document.createTextNode(String(t)));return e};
+const row=(...a)=>{const d=E("div","line");a.forEach(([i,t])=>d.append(li(i,t)));return d};
+const ini=(n,s)=>{const e=E("span","av",(String(n||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("")||"?").toUpperCase());let h=0;for(const c of String(n||""))h=(h*31+c.charCodeAt(0))%360;e.style.cssText="--s:"+s+"px;background:hsl("+h+" 45% 38%)";return e};
+const av=(n,s=36,url)=>{if(/^https:\/\/cdn\.discordapp\.com\//.test(url||"")){const i=E("img","av");i.src=url;i.alt="";i.loading="lazy";i.style.setProperty("--s",s+"px");i.onerror=()=>i.replaceWith(ini(n,s));return i}return ini(n,s)};
 
 const u=getUser();
+const myId=()=>String(u.id||u.discord_id||u.user_id||"");
+const myName=()=>u.nick||u.nickname||(u.member&&u.member.nick)||u.global_name||u.username||u.name||"Agent";
+const myAvatar=()=>{const a=u.avatar||u.avatar_url||"";if(/^https:/.test(a))return a;return a&&myId()?"https://cdn.discordapp.com/avatars/"+myId()+"/"+a+".png?size=64":""};
+const isMine=x=>x.mine!==undefined?x.mine:(x.author_id&&myId()?String(x.author_id)===myId():x.author===myName());
 const hasRole=x=>{
   const all=[].concat(x.roles||[],x.roleIds||[],x.role||[]).map(r=>String(r&&(r.id||r.name)||r).toLowerCase());
   return (ROLE_PREFECTORAL_ID!==""&&all.includes(String(ROLE_PREFECTORAL_ID).toLowerCase()))||all.includes(String(ROLE_PREFECTORAL_NOM).toLowerCase());
@@ -166,10 +196,10 @@ const store=(()=>{
       if(e.status===401||e.status===403)throw e;
       off=true;const why=String(e.status||e.message||"aucune réponse")+(e.status&&e.message&&e.message!==String(e.status)?" – "+e.message:"");$("#st").innerHTML="<b>Mode local</b> : l'API /api/prefecture a répondu « "+why.replace(/[<>&]/g,"")+" ». Les données restent dans ce navigateur et ne sont pas partagées entre agents."}}
     return local()};
-  const me=()=>u.username||u.name||u.global_name||"Agent";
+  const me=()=>myName();
   return{
     list:m=>run("GET",m,null,()=>lr(m)),
-    add:(m,it)=>run("POST",m,it,()=>{const v=lr(m);v.unshift({...it,id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),author:me(),created_at:new Date().toISOString()});lw(m,v)}),
+    add:(m,it)=>run("POST",m,it,()=>{const v=lr(m);v.unshift({...it,id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),author:me(),author_id:myId(),avatar:myAvatar(),created_at:new Date().toISOString()});lw(m,v)}),
     patch:(m,id,ch)=>run("PATCH",m,{id,...ch},()=>{const v=lr(m),i=v.findIndex(x=>x.id===id);if(i>-1)Object.assign(v[i],ch);lw(m,v)}),
     del:(m,id)=>run("DELETE",m,{id},()=>lw(m,lr(m).filter(x=>x.id!==id))),
     me};
@@ -178,16 +208,17 @@ const store=(()=>{
 function start(){
   $("#app").hidden=false;
   if(isSiteAdmin(u))$("#lk-admin").hidden=false;
+  $("#me").append(av(myName(),28,myAvatar()),E("span","",myName()));
   let view="annonce",poll=null;
 
   const nav=()=>{const n=$("#nav");n.textContent="";
     GROUPS.forEach(([title,ids])=>{const g=E("section","nav-group");g.append(E("h2","nav-group-title",title));
-      ids.forEach(id=>{const b=E("button","nv"+(id===view?" on":""),MODS[id].i+"  "+MODS[id].n);b.type="button";b.onclick=()=>{view=id;nav();draw()};g.append(b)});n.append(g)})};
+      ids.forEach(id=>{const b=E("button","nv"+(id===view?" on":""));b.append(ico(MODS[id].i,18),document.createTextNode(MODS[id].n));b.type="button";b.onclick=()=>{view=id;nav();draw()};g.append(b)});n.append(g)})};
 
   /* --- briques communes --- */
   const delB=(it,c)=>{const b=E("button","b danger sm","Supprimer");b.type="button";
     b.onclick=async()=>{if(!confirm("Supprimer cette entrée ? Action irréversible."))return;b.disabled=true;try{await store.del(c.mod,it.id);await c.reload()}catch(e){alert("Impossible de supprimer : "+e.message);b.disabled=false}};return b};
-  const foot=(it,c)=>{const f=E("div","foot");f.append(av(it.author,24),E("span","",(it.author||"—")+" · "+(it.created_at?new Date(it.created_at).toLocaleDateString("fr-FR"):"")),delB(it,c));return f};
+  const foot=(it,c)=>{const f=E("div","foot");f.append(av(it.author,24,it.avatar),E("span","",(it.author||"—")+" · "+(it.created_at?new Date(it.created_at).toLocaleDateString("fr-FR"):"")),delB(it,c));return f};
   const CH={"Confirmé":"ok","Terminé":"mute","À confirmer":"warn","Reporté":"err","Ouvert":"warn","En cours":"bl","Clos":"ok","Refusé":"err"};
   const chip=(it,c,opts)=>{const s=E("select","chip");opts.forEach(o=>s.add(new Option(o,o)));s.value=it.statut||opts[0];s.setAttribute("aria-label","Statut");
     const paint=()=>s.className="chip c-"+(CH[s.value]||"mute");paint();
@@ -197,21 +228,21 @@ function start(){
   const R={
    annonce(its,box,c){byNew(its).forEach((it,i)=>{const imp=it.importance||"Information",k={Information:"",Important:"warn",Urgent:"err"}[imp]||"";
      const a=E("article","ann "+k+(i===0?" first":"")),top=E("div","line");top.style.margin="0";
-     top.append(E("span","tag",(imp==="Urgent"?"🚨 ":imp==="Important"?"⚠️ ":"ℹ️ ")+imp),E("span","","Pour : "+(it.portee||"Tous les agents")));
+     const tg=E("span","tag");tg.append(ico(imp==="Urgent"?"urgent":imp==="Important"?"warn":"info",13),document.createTextNode(" "+imp));top.append(tg,E("span","","Pour : "+(it.portee||"Tous les agents")));
      a.append(top,E("h3","",it.objet),E("p","",it.texte),foot(it,c));box.append(a)})},
    reunion(its,box,c){const now=Date.now(),up=its.filter(i=>T(i.quand)>=now-72e5).sort((a,b)=>T(a.quand)-T(b.quand)),pa=its.filter(i=>!up.includes(i)).sort((a,b)=>T(b.quand)-T(a.quand));
      const part=(t,l,past)=>{if(!l.length)return;box.append(E("div","sec",t));l.forEach(it=>{const d=new Date(it.quand),r=E("article","reu"+(past?" past":"")),cal=E("div","cal");
        cal.innerHTML="<i></i><b></b><span></span>";cal.children[0].textContent=d.toLocaleDateString("fr-FR",{month:"short"});cal.children[1].textContent=d.getDate();cal.children[2].textContent=d.toLocaleDateString("fr-FR",{weekday:"short"});
        const b=E("div"),h=E("h3","",it.objet),ln=E("div","line");b.style.cssText="flex:1;min-width:0";
        if(!past&&dayLabel(d)==="Aujourd'hui")h.append(" ",E("span","tag","Aujourd'hui"));
-       ln.append(E("span","","🕘 "+hm(d)+" · "+dayLabel(d)),E("span","","📍 "+(it.lieu||"—")));b.append(h,ln);
+       ln.append(li("rdv",hm(d)+" · "+dayLabel(d)),li("pin",it.lieu||"—"));b.append(h,ln);
        if(it.odj){const ul=E("ul","odj");it.odj.split("\n").filter(x=>x.trim()).forEach(x=>ul.append(E("li","",x.replace(/^[-•*\s]+/,""))));b.append(E("strong","","Ordre du jour"),ul)}
        b.append(foot(it,c));r.append(cal,b);box.append(r)})};
      part("À venir",up);part("Passées",pa,true)},
    rdv(its,box,c){let last="";[...its].sort((a,b)=>T(a.quand)-T(b.quand)).forEach(it=>{const d=new Date(it.quand),k=d.toDateString();
      if(k!==last){box.append(E("div","dayh",dayLabel(d)));last=k}
      const r=E("div","rdv"+(T(it.quand)<Date.now()?" past":"")),cd=E("div","c"),x=E("div","x");
-     x.append(E("strong","","🤝 "+it.avec),E("div","line",it.objet||""));cd.append(x,chip(it,c,["À confirmer","Confirmé","Reporté","Terminé"]),delB(it,c));r.append(E("div","t",hm(d)),cd);box.append(r)})},
+     x.append(E("strong","",it.avec),E("div","line",it.objet||""));cd.append(x,chip(it,c,["À confirmer","Confirmé","Reporté","Terminé"]),delB(it,c));r.append(E("div","t",hm(d)),cd);box.append(r)})},
    dossier(its,box,c){byNew(its).forEach(it=>{const s=it.statut||"Ouvert",pct={"Ouvert":20,"En cours":60,"Clos":100,"Refusé":100}[s]||20,r=E("div","dos"),m=E("div"),bar=E("div","bar"),i=E("i");
      m.append(E("strong","",it.intitule),E("div","line","Agent en charge : "+(it.resp||"—")));if(it.suivi)m.append(E("div","dt",it.suivi));
      i.style.width=pct+"%";i.style.background=s==="Refusé"?"var(--err)":s==="Clos"?"var(--ok)":"var(--bleu)";bar.append(i);m.append(bar);
@@ -224,15 +255,15 @@ function start(){
    notes(its,box,c){const g=E("div","tiles"),TN=["#fff3a8","#c9f0d0","#ffd6e0","#cfe3ff"];
      byNew(its).forEach((it,i)=>{const t=E("div","tile sticky");t.style.setProperty("--t",TN[i%4]);t.style.setProperty("--r",(i%3-1)+"deg");t.append(E("strong","",it.sujet),E("p","",it.texte),foot(it,c));t.lastChild.style.width="100%";g.append(t)});box.append(g)},
    tenues(its,box,c){const g=E("div","tiles");
-     byNew(its).forEach(it=>{const t=E("div","tile look");let im;if(safeUrl(it.lien)!=="#"){im=E("img");im.src=it.lien;im.alt=it.nom;im.loading="lazy"}else im=E("div","ph","👔");
+     byNew(its).forEach(it=>{const t=E("div","tile look");let im;if(safeUrl(it.lien)!=="#"){im=E("img");im.src=it.lien;im.alt=it.nom;im.loading="lazy"}else{im=E("div","ph");im.append(ico("tenues",44))}
        t.append(im,E("span","tag",it.grade||"—"),E("strong","",it.nom));if(it.detail)t.append(E("p","dt",it.detail));t.append(foot(it,c));t.lastChild.style.width="100%";g.append(t)});box.append(g)},
    absence(its,box,c){const now=D0(new Date());
      [...its].sort((a,b)=>T(b.du)-T(a.du)).forEach(it=>{const du=new Date(it.du),au=new Date(it.au),n=Math.round((au-du)/864e5)+1,st=now>au?["Terminée","mute"]:now>=du?["En cours","ok"]:["À venir","bl"],r=E("div","abs"),x=E("div","x");
-       x.append(E("strong","",it.agent),E("div","line","📆 Du "+fmt("date",it.du)+" au "+fmt("date",it.au)+" · "+n+" j"+(it.motif?" · "+it.motif:"")));
+       x.append(E("strong","",it.agent),row(["reunion","Du "+fmt("date",it.du)+" au "+fmt("date",it.au)+" · "+n+" j"+(it.motif?" · "+it.motif:"")]));
        r.append(av(it.agent,40),x,E("span","chip c-"+st[1],st[0]),delB(it,c));box.append(r)})},
    annuaire(its,box,c){const g=E("div","tiles");
      [...its].sort((a,b)=>(a.nom||"").localeCompare(b.nom||"","fr")).forEach(it=>{const t=E("div","tile ctc");
-       t.append(av(it.nom,64),E("strong","",it.nom),E("span","tag",it.grade||"—"),E("div","line","📞 "+(it.tel||"—")),E("div","line","💬 "+(it.discord||"—")),delB(it,c));g.append(t)});box.append(g)}
+       t.append(av(it.nom,64),E("strong","",it.nom),E("span","tag",it.grade||"—"),row(["phone",it.tel||"—"]),row(["at",it.discord||"—"]),delB(it,c));g.append(t)});box.append(g)}
   };
 
   /* --- Discussion : vrai chat --- */
@@ -247,12 +278,12 @@ function start(){
       const list=all.filter(x=>(x.salon||SALONS[0])===salon).sort((a,b)=>T(a.created_at)-T(b.created_at));
       if(!list.length)msgs.append(E("div","vide","Aucun message dans ce salon. Lance la conversation !"));
       let prev=null,day="";
-      list.forEach(x=>{const d=new Date(x.created_at),me=x.author===store.me();
+      list.forEach(x=>{const d=new Date(x.created_at),me=isMine(x);
         if(d.toDateString()!==day){day=d.toDateString();msgs.append(E("div","day",dayLabel(d)));prev=null}
         const first=!prev||prev.author!==x.author||d-new Date(prev.created_at)>3e5,row=E("div","m"+(me?" me":"")+(first?" first":"")),col=E("div"),bub=E("div","bub",x.texte);
         if(first&&!me)col.append(E("div","who",x.author||"Agent"));
-        if(me||isSiteAdmin(u)){const del=E("button","x2","✕");del.type="button";del.title="Supprimer ce message";del.onclick=async()=>{if(confirm("Supprimer ce message ?")){try{await store.del("discussion",x.id);await load()}catch(e){alert("Impossible de supprimer : "+e.message)}}};row.append(del)}
-        col.append(bub);row.prepend(E("time","",hm(d)));row.prepend(col);row.prepend(av(x.author,32));
+        if(me||isSiteAdmin(u)){const del=E("button","x2","×");del.type="button";del.title="Supprimer ce message";del.onclick=async()=>{if(confirm("Supprimer ce message ?")){try{await store.del("discussion",x.id);await load()}catch(e){alert("Impossible de supprimer : "+e.message)}}};row.append(del)}
+        col.append(bub);row.prepend(E("time","",hm(d)));row.prepend(col);row.prepend(av(x.author,32,x.avatar));
         msgs.append(row);prev=x});
       if(force||near)msgs.scrollTop=msgs.scrollHeight};
     const load=async force=>{try{all=await store.list("discussion");const s=JSON.stringify(all.map(x=>x.id));if(s!==sig||force){sig=s;render(force)}}catch(e){msgs.textContent="Impossible de charger la discussion."}};
@@ -266,7 +297,7 @@ function start(){
   const draw=async()=>{
     clearInterval(poll);
     const m=MODS[view],p=$("#pane"),mod=view;p.textContent="";
-    const cnt=E("span","cnt"),hero=E("div","hero"),ic=E("div","ic",m.i),tx=E("div");
+    const cnt=E("span","cnt"),hero=E("div","hero"),ic=E("div","ic"),tx=E("div");ic.append(ico(m.i,28));
     tx.append(E("h2","",m.n),E("p","",m.d));hero.append(ic,tx,cnt);p.append(hero);
     if(mod==="discussion"){cnt.hidden=true;return drawChat(p)}
     const add=E("details","finance-company"),form=E("form","finance-form"),inputs={};
@@ -277,13 +308,13 @@ function start(){
       if(t!=="url"&&t!=="select")i.required=true;
       inputs[k]=i;w.append(lab,i);form.append(w)});
     const save=E("button","b p","Enregistrer"),sw=E("div","finance-field full");save.type="submit";sw.append(save);form.append(sw);
-    add.append(E("summary","","＋ Ajouter une entrée"),form);
+    add.append(E("summary","","Ajouter une entrée"),form);
     const q=E("input");q.type="search";q.placeholder="Rechercher…";q.setAttribute("aria-label","Rechercher");
     const box=E("div");p.append(add,q,box);
     let items=[];
     const render=()=>{if(view!==mod)return;box.textContent="";const s=q.value.toLowerCase(),shown=items.filter(it=>!s||JSON.stringify(it).toLowerCase().includes(s));
       cnt.textContent=items.length+(items.length>1?" entrées":" entrée");
-      if(!shown.length){const v=E("div","vide");v.append(E("b","",m.i),E("span","",s?"Aucun résultat.":"Rien ici pour le moment. Utilise « Ajouter une entrée »."));box.append(v);return}
+      if(!shown.length){const v=E("div","vide");v.append(ico(m.i,36),E("span","",s?"Aucun résultat.":"Rien ici pour le moment. Utilise « Ajouter une entrée »."));box.append(v);return}
       R[mod](shown,box,{mod,reload:load})};
     const load=async()=>{try{items=await store.list(mod);render()}catch(e){box.textContent=e.status===403?"Ton compte n'a pas le rôle Préfectoral.":"Impossible de charger les données. Réessaie dans un instant."}};
     q.oninput=render;

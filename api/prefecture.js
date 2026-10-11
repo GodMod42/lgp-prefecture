@@ -1,8 +1,8 @@
 /* api/prefecture.js — API du panel préfectoral
-   App :el /api/prefecture?module=annonce  (GET, POST, PATCH, DELETE)
+   Appel : /api/prefecture?module=annonce  (GET, POST, PATCH, DELETE)
    Réutilise lib/contact-data.js (base Neon + vérification Discord).
    Accès : rôle Staff (ADMIN_ROLE_ID) ou rôle Préfectoral (variable Vercel PREFECTURE_ROLE_ID). */
-import { db, discordUser, sendJson, ADMIN_ROLE_ID } from "../lib/contact-data.js";
+import { db, discordUser, sendJson, ADMIN_ROLE_ID, GUILD_ID } from "../lib/contact-data.js";
 
 const PREFECTURE_ROLE_ID = process.env.PREFECTURE_ROLE_ID || "";
 
@@ -30,6 +30,12 @@ async function ensureSchema() {
       author TEXT,
       author_id TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`;
+    await sql`CREATE TABLE IF NOT EXISTS prefecture_members (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      avatar TEXT,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`;
     await sql`CREATE INDEX IF NOT EXISTS prefecture_items_module_idx ON prefecture_items (module, created_at DESC)`;
   })().catch((error) => { schemaReady = undefined; throw error; });
@@ -59,10 +65,24 @@ export default async function handler(req, res) {
     await ensureSchema();
     const sql = db();
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
-    const row = (r) => ({ ...r.data, id: r.id, author: r.author, created_at: r.created_at });
+    const { user, member } = identity;
+    const nick = member?.nick || user.global_name || user.username;
+    const avatar = member?.avatar
+      ? `https://cdn.discordapp.com/guilds/${GUILD_ID}/users/${user.id}/avatars/${member.avatar}.png?size=64`
+      : user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=64` : "";
+    const row = (r) => ({
+      ...r.data, id: r.id, author: r.m_name || r.author, author_id: r.author_id,
+      avatar: r.m_avatar || "", mine: r.author_id === user.id, created_at: r.created_at,
+    });
+    /* garde à jour le surnom et l'avatar affichés pour cet agent */
+    if (req.method === "GET" || req.method === "POST")
+      await sql`INSERT INTO prefecture_members (id, name, avatar, updated_at) VALUES (${user.id}, ${nick}, ${avatar}, NOW())
+        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, avatar = EXCLUDED.avatar, updated_at = NOW()`;
 
     if (req.method === "GET") {
-      const rows = await sql`SELECT * FROM prefecture_items WHERE module = ${mod} ORDER BY created_at DESC LIMIT 500`;
+      const rows = await sql`SELECT i.*, m.name AS m_name, m.avatar AS m_avatar
+        FROM prefecture_items i LEFT JOIN prefecture_members m ON m.id = i.author_id
+        WHERE i.module = ${mod} ORDER BY i.created_at DESC LIMIT 500`;
       return sendJson(res, 200, rows.map(row));
     }
 
@@ -70,9 +90,10 @@ export default async function handler(req, res) {
       const data = clean(mod, body);
       if (!Object.keys(data).length) return sendJson(res, 400, { error: "empty" });
       const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-      const created = await sql`INSERT INTO prefecture_items (id, module, data, author, author_id)
-        VALUES (${id}, ${mod}, ${JSON.stringify(data)}::jsonb, ${identity.user.username}, ${identity.user.id})
-        RETURNING *`;
+      await sql`INSERT INTO prefecture_items (id, module, data, author, author_id)
+        VALUES (${id}, ${mod}, ${JSON.stringify(data)}::jsonb, ${nick}, ${user.id})`;
+      const created = await sql`SELECT i.*, m.name AS m_name, m.avatar AS m_avatar
+        FROM prefecture_items i LEFT JOIN prefecture_members m ON m.id = i.author_id WHERE i.id = ${id}`;
       return sendJson(res, 201, row(created[0]));
     }
 
@@ -91,7 +112,7 @@ export default async function handler(req, res) {
       if (!id) return sendJson(res, 400, { error: "missing_id" });
       if (mod === "discussion" && !staff) {
         const found = await sql`SELECT author_id FROM prefecture_items WHERE id = ${id} AND module = ${mod}`;
-        if (found.length && found[0].author_id !== identity.user.id) return sendJson(res, 403, { error: "forbidden" });
+        if (found.length && found[0].author_id !== user.id) return sendJson(res, 403, { error: "forbidden" });
       }
       const deleted = await sql`DELETE FROM prefecture_items WHERE id = ${id} AND module = ${mod} RETURNING id`;
       if (!deleted.length) return sendJson(res, 404, { error: "not_found" });
