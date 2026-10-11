@@ -115,8 +115,6 @@ img.av{object-fit:cover;background:var(--fond)}.me-chip{display:flex;align-items
 <script src="assets/js/auth.js"></script>
 <script>
 /* ===== À CONFIGURER ===== */
-const ROLE_PREFECTORAL_ID  = "";               // ID du rôle Discord « Préfectoral » (recommandé)
-const ROLE_PREFECTORAL_NOM = "Préfectoral";    // ou son nom exact, si getUser() renvoie des noms de rôles
 const PAGE_CONNEXION = "connexion.html";
 const SALONS = ["Général","Cabinet","Inspection","Administration"];   // salons de l'onglet Discussion
 
@@ -175,12 +173,8 @@ const myId=()=>String(u.id||u.discord_id||u.user_id||"");
 const myName=()=>u.nick||u.nickname||(u.member&&u.member.nick)||u.global_name||u.username||u.name||"Agent";
 const myAvatar=()=>{const a=u.avatar||u.avatar_url||"";if(/^https:/.test(a))return a;return a&&myId()?"https://cdn.discordapp.com/avatars/"+myId()+"/"+a+".png?size=64":""};
 const isMine=x=>x.mine!==undefined?x.mine:(x.author_id&&myId()?String(x.author_id)===myId():x.author===myName());
-const hasRole=x=>{
-  const all=[].concat(x.roles||[],x.roleIds||[],x.role||[]).map(r=>String(r&&(r.id||r.name)||r).toLowerCase());
-  return (ROLE_PREFECTORAL_ID!==""&&all.includes(String(ROLE_PREFECTORAL_ID).toLowerCase()))||all.includes(String(ROLE_PREFECTORAL_NOM).toLowerCase());
-};
 if(!u) location.replace(PAGE_CONNEXION);
-else if(!(isSiteAdmin(u)||hasRole(u))){
+else if(!(typeof isPrefectoral==="function"?isPrefectoral(u):isSiteAdmin(u))){
   gate('<h2>Accès réservé</h2><p style="margin:12px 0">Le panel préfectoral est réservé aux membres portant le rôle Discord Préfectoral. Vérifie que tu es connecté avec le bon compte.</p><p style="margin-top:16px"><a href="index.html" style="text-decoration:underline">Retour au site</a></p>');
 }else start();
 
