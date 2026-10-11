@@ -7,42 +7,86 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Préfecture de LGP — Panel préfectoral</title>
 <style>
-:root{--bleu:#000091;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--sans:Marianne,"Public Sans","Segoe UI",system-ui,sans-serif}
-:root[data-theme=dark]{--bleu:#8b8bff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a}
+:root{--bleu:#000091;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--ok:#18753c;--warn:#b34000;--err:#ce0500;--sans:Marianne,"Public Sans","Segoe UI",system-ui,sans-serif}
+:root[data-theme=dark]{--bleu:#8b8bff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a;--ok:#27a658;--warn:#fc5d00;--err:#ff6b6b}
 *{box-sizing:border-box;margin:0}
 body{font-family:var(--sans);background:var(--fond);color:var(--texte);line-height:1.5}
 .top{background:var(--carte);border-top:6px solid;border-image:linear-gradient(90deg,#000091 33.3%,#fff 33.3% 66.6%,#e1000f 66.6%) 1;box-shadow:0 1px 0 var(--ligne);position:sticky;top:0;z-index:10}
 .top .in{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 24px}
 .top h1{font-size:1.15rem;margin-right:auto}
-.b{padding:9px 18px;border-radius:999px;border:1px solid var(--ligne);background:var(--carte);color:var(--texte);font:600 .88rem var(--sans);cursor:pointer;text-decoration:none}
+.b{padding:9px 18px;border-radius:999px;border:1px solid var(--ligne);background:var(--carte);color:var(--texte);font:600 .88rem var(--sans);cursor:pointer;text-decoration:none;display:inline-block}
 .b:hover{background:var(--lav)}.b.p{background:#000091;color:#fff;border-color:#000091}
 :root[data-theme=dark] .b.p{background:#8b8bff;color:#000}
-.b.danger{color:#b42318;border-color:#d94a4a}.b.danger:hover{background:#fff1f0}
+.b.danger{color:var(--err);border-color:currentColor}.b.sm{padding:4px 12px;font-size:.78rem}
 .note{background:var(--lav);font-size:.85rem;padding:8px 24px}
-.lay{display:grid;grid-template-columns:260px 1fr;gap:24px;max-width:1300px;margin:0 auto;padding:24px}
-aside{position:sticky;top:120px;align-self:start;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 140px);overflow:auto;padding-right:4px}
-.nav-group{display:flex;flex-direction:column;gap:2px}.nav-group-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--gris);font-weight:800;padding:6px 12px 3px}.nav-group-items{display:grid;gap:2px}
-.nv{all:unset;box-sizing:border-box;display:flex;justify-content:space-between;gap:8px;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.92rem}
+.lay{display:grid;grid-template-columns:250px 1fr;gap:24px;max-width:1300px;margin:0 auto;padding:24px}
+aside{position:sticky;top:120px;align-self:start;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 140px);overflow:auto}
+.nav-group{display:flex;flex-direction:column;gap:2px}.nav-group-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--gris);font-weight:800;padding:6px 12px 3px}
+.nv{all:unset;box-sizing:border-box;display:flex;gap:10px;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.92rem}
 .nv:hover{background:var(--lav)}.nv.on{background:var(--bleu);color:#fff}:root[data-theme=dark] .nv.on{color:#000}
 .nv:focus-visible,.b:focus-visible{outline:3px solid #0a76f6}
-main{background:var(--carte);border:1px solid var(--ligne);border-radius:10px;padding:28px;min-width:0}
-main h2{font-size:1.4rem;margin-bottom:6px}main .sub{color:var(--gris);font-size:.9rem;margin-bottom:20px}
+main{background:var(--carte);border:1px solid var(--ligne);border-radius:10px;padding:26px;min-width:0}
 input[type=text],input[type=search],input[type=date],input[type=datetime-local],select,textarea{width:100%;padding:9px 12px;border:1px solid var(--ligne);border-radius:6px;background:var(--carte);color:var(--texte);font:inherit;font-size:.92rem}
-textarea{resize:vertical;min-height:90px}
-input[type=search]{margin:16px 0}
-.ticket{border:1px solid var(--ligne);border-radius:9px;background:var(--carte);margin:10px 0;overflow:hidden}.ticket>summary{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;list-style:none}.ticket>summary::-webkit-details-marker,.finance-company>summary::-webkit-details-marker{display:none}
-.ticket-summary-main{flex:1;min-width:0}.ticket-summary-main strong{display:block;overflow-wrap:anywhere}.ticket-summary-meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;color:var(--gris);font-size:.82rem}
-.ticket-status{flex:none;border-radius:20px;padding:3px 10px;background:var(--lav);font-size:.78rem;font-weight:700}.ticket-status.closed{background:var(--fond);color:var(--gris)}
-.ticket-content{padding:4px 16px 16px;border-top:1px solid var(--ligne)}
-.ticket-message{border-left:3px solid var(--ligne);background:var(--fond);border-radius:0 7px 7px 0;padding:10px 12px;margin:10px 0}.ticket-message.staff{border-color:var(--bleu)}
-.ticket-message-head{display:flex;justify-content:space-between;gap:10px;color:var(--gris);font-size:.8rem;font-weight:700}
-.ticket-message-text{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px}
-.ticket-tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px;align-items:center}
-.ticket a{color:var(--bleu);overflow-wrap:anywhere}
-.finance-company{border:1px solid var(--ligne);border-radius:10px;margin:12px 0;overflow:hidden}.finance-company>summary{padding:15px 18px;cursor:pointer;list-style:none;font-weight:700;color:var(--bleu)}.finance-company[open]>summary{border-bottom:1px solid var(--ligne);background:var(--fond)}
+textarea{resize:vertical;min-height:90px}input[type=search]{margin:16px 0 8px}
+.hero{display:flex;gap:16px;align-items:center;padding:18px 20px;border-radius:14px;margin-bottom:18px;background:linear-gradient(120deg,var(--lav),var(--carte));border:1px solid var(--ligne)}
+.hero .ic{font-size:1.7rem;width:56px;height:56px;border-radius:14px;background:var(--carte);display:grid;place-items:center;box-shadow:0 2px 8px #0002;flex:none}
+.hero h2{font-size:1.4rem}.hero p{color:var(--gris);font-size:.9rem}.hero .cnt{margin-left:auto;font-weight:800;font-size:.8rem;background:var(--bleu);color:#fff;border-radius:99px;padding:3px 12px;white-space:nowrap}
+:root[data-theme=dark] .hero .cnt{color:#000}
+.finance-company{border:1px solid var(--ligne);border-radius:10px;overflow:hidden}.finance-company>summary{padding:13px 18px;cursor:pointer;list-style:none;font-weight:700;color:var(--bleu)}.finance-company>summary::-webkit-details-marker{display:none}.finance-company[open]>summary{border-bottom:1px solid var(--ligne);background:var(--fond)}
 .finance-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:18px}.finance-field{min-width:0}.finance-field.full{grid-column:1/-1}.finance-field label{display:block;font-size:.82rem;font-weight:700;margin-bottom:5px}
-.bad{color:#c9191e;font-weight:600}
-@media(max-width:600px){.finance-form{grid-template-columns:1fr}.finance-field.full{grid-column:auto}}
+.av{--s:36px;width:var(--s);height:var(--s);border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:calc(var(--s)*.38);flex:none}
+.line{display:flex;flex-wrap:wrap;gap:4px 16px;color:var(--gris);font-size:.88rem;margin:3px 0 6px}
+.dt{white-space:pre-wrap;font-size:.88rem;color:var(--gris)}
+.foot{display:flex;align-items:center;gap:8px;margin-top:12px;color:var(--gris);font-size:.78rem}.foot .b{margin-left:auto}
+.tag{--c:var(--bleu);display:inline-block;font-size:.72rem;font-weight:800;padding:3px 10px;border-radius:99px;background:var(--c);color:#fff}
+:root[data-theme=dark] .tag{color:#000}
+.sec,.dayh{font-size:.8rem;font-weight:800;letter-spacing:.06em;color:var(--gris);margin:22px 0 10px;text-transform:uppercase}.dayh{font-size:.95rem;text-transform:capitalize;letter-spacing:0;color:var(--texte)}
+.chip{width:auto;display:inline-block;border-radius:99px;padding:4px 12px;font-weight:700;font-size:.78rem;border:1px solid currentColor;background:color-mix(in srgb,currentColor 10%,var(--carte))}
+.c-ok{color:var(--ok)}.c-warn{color:var(--warn)}.c-err{color:var(--err)}.c-mute{color:var(--gris)}.c-bl{color:var(--bleu)}
+/* annonces */
+.ann{--c:var(--bleu);border:1px solid var(--ligne);border-left:6px solid var(--c);border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.ann.warn{--c:var(--warn)}.ann.err{--c:var(--err)}.ann.first{background:color-mix(in srgb,var(--c) 7%,var(--carte))}
+.ann .tag{background:var(--c)}.ann h3{font-size:1.25rem;margin:10px 0 6px}.ann p{white-space:pre-wrap}
+/* réunions */
+.reu{display:flex;gap:18px;border:1px solid var(--ligne);border-radius:12px;padding:16px;margin-bottom:14px}.reu.past{opacity:.6}
+.cal{flex:none;width:68px;border-radius:10px;overflow:hidden;text-align:center;border:1px solid var(--ligne);align-self:flex-start}
+.cal i{display:block;font-style:normal;background:var(--bleu);color:#fff;font-size:.7rem;font-weight:800;padding:3px 0;text-transform:uppercase}
+:root[data-theme=dark] .cal i{color:#000}
+.cal b{display:block;font-size:1.7rem;line-height:1.2;padding-top:4px}.cal span{display:block;font-size:.72rem;color:var(--gris);padding-bottom:6px}
+.reu h3{font-size:1.1rem}.odj{margin:4px 0 0 18px;font-size:.9rem}
+/* rendez-vous */
+.rdv{display:grid;grid-template-columns:60px 1fr;gap:14px;margin-bottom:10px}.rdv.past{opacity:.55}
+.rdv .t{font-weight:800;text-align:right;padding-top:14px}
+.rdv .c{border:1px solid var(--ligne);border-left:4px solid var(--bleu);border-radius:10px;padding:10px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.x{flex:1;min-width:150px}
+/* dossiers */
+.dos{display:grid;grid-template-columns:100px 1fr auto auto;gap:14px;align-items:center;border:1px solid var(--ligne);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.ref{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:var(--bleu);font-size:.85rem}
+.bar{height:8px;border-radius:99px;background:var(--fond);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%}
+/* tuiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.tile{border:1px solid var(--ligne);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.ft{width:44px;height:52px;border-radius:6px 14px 6px 6px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.8rem}
+.sticky{--t:#fff3a8;--r:0deg;background:var(--t);border:0;box-shadow:2px 4px 10px #0003;transform:rotate(var(--r));color:#161616}.sticky .foot{color:#444}.sticky p{white-space:pre-wrap}
+.look img,.look .ph{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:8px;background:var(--fond);display:grid;place-items:center;font-size:2.4rem}
+.ctc{align-items:center;text-align:center}.ctc .line{margin:0;justify-content:center}
+.abs{display:flex;gap:14px;align-items:center;border:1px solid var(--ligne);border-radius:12px;padding:12px 14px;margin-bottom:10px}.abs .x{flex:1}
+.vide{text-align:center;color:var(--gris);padding:40px 10px}.vide b{display:block;font-size:2rem}
+/* chat */
+.chat{display:grid;grid-template-columns:170px 1fr;border:1px solid var(--ligne);border-radius:12px;overflow:hidden;height:min(640px,calc(100vh - 280px));min-height:440px}
+.rooms{background:var(--fond);border-right:1px solid var(--ligne);padding:10px;display:flex;flex-direction:column;gap:2px}
+.room{all:unset;box-sizing:border-box;padding:9px 12px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.9rem}.room:hover{background:var(--lav)}.room.on{background:var(--bleu);color:#fff}
+:root[data-theme=dark] .room.on{color:#000}
+.conv{display:flex;flex-direction:column;min-width:0}.ch{padding:12px 16px;border-bottom:1px solid var(--ligne);font-weight:800}.ch small{font-weight:400;color:var(--gris);margin-left:8px}
+.msgs{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:3px}
+.day{align-self:center;font-size:.72rem;font-weight:700;color:var(--gris);background:var(--fond);border-radius:99px;padding:2px 12px;margin:12px 0 6px}
+.m{display:flex;gap:10px;align-items:flex-end;max-width:80%}.m.me{align-self:flex-end;flex-direction:row-reverse}.m .av{--s:32px;visibility:hidden}.m.first .av{visibility:visible}.m.first{margin-top:8px}
+.who{font-size:.74rem;font-weight:700;color:var(--gris);margin:0 0 2px 4px}
+.bub{padding:8px 13px;border-radius:16px 16px 16px 4px;background:var(--lav);overflow-wrap:anywhere;white-space:pre-wrap;position:relative}
+.me .bub{background:var(--bleu);color:#fff;border-radius:16px 16px 4px 16px}:root[data-theme=dark] .me .bub{color:#000}
+.m time{font-size:.66rem;color:var(--gris);padding-bottom:3px}
+.m .x2{all:unset;cursor:pointer;opacity:0;font-size:.8rem;color:var(--err);padding:0 4px}.m:hover .x2{opacity:1}
+.comp{display:flex;gap:10px;padding:12px;border-top:1px solid var(--ligne);align-items:flex-end}.comp textarea{min-height:44px;height:44px;border-radius:22px;padding:11px 16px}
+@media(max-width:700px){.finance-form{grid-template-columns:1fr}.finance-field.full{grid-column:auto}.dos{grid-template-columns:1fr}.chat{grid-template-columns:1fr;height:70vh}.rooms{flex-direction:row;overflow:auto;border-right:0;border-bottom:1px solid var(--ligne)}.reu{flex-direction:column}}
 @media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static;max-height:none;overflow:visible;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));align-items:start}}
 </style>
 <script>window.LGP_ADMIN=true</script>
@@ -70,19 +114,20 @@ input[type=search]{margin:16px 0}
 const ROLE_PREFECTORAL_ID  = "";               // ID du rôle Discord « Préfectoral » (recommandé)
 const ROLE_PREFECTORAL_NOM = "Préfectoral";    // ou son nom exact, si getUser() renvoie des noms de rôles
 const PAGE_CONNEXION = "connexion.html";
+const SALONS = ["Général","Cabinet","Inspection","Administration"];   // salons de l'onglet Discussion
 
 /* Modules : champs [clé, libellé, type, options]. Types : text | area | date | datetime | select | url */
 const MODS={
- annonce:{n:"Annonces",d:"Communications officielles adressées aux agents de la Préfecture.",t:"objet",f:[["objet","Objet","text"],["portee","Destinataires","select",["Tous les agents","Cabinet","Inspection","Administration"]],["texte","Contenu","area"]]},
- reunion:{n:"Réunions",d:"Convocations et ordres du jour.",t:"objet",f:[["objet","Objet","text"],["quand","Date et heure","datetime"],["lieu","Lieu ou salon vocal","text"],["odj","Ordre du jour","area"]]},
- discussion:{n:"Discussion",d:"Échanges internes entre agents.",t:"sujet",f:[["sujet","Sujet","text"],["texte","Message","area"]]},
- rdv:{n:"Rendez-vous",d:"Rendez-vous avec les services, entreprises et citoyens.",t:"avec",f:[["avec","Interlocuteur","text"],["quand","Date et heure","datetime"],["objet","Objet","text"],["statut","Statut","select",["À confirmer","Confirmé","Reporté","Terminé"]]]},
- dossier:{n:"Suivi de dossier",d:"Instruction des demandes : référence, agent en charge et avancement.",t:"intitule",f:[["ref","Référence","text"],["intitule","Intitulé du dossier","text"],["resp","Agent en charge","text"],["statut","Statut","select",["Ouvert","En cours","Clos","Refusé"]],["suivi","Dernière mise à jour","area"]]},
- document:{n:"Documents",d:"Arrêtés, modèles, courriers et pièces de référence.",t:"intitule",f:[["intitule","Intitulé","text"],["type","Type","select",["Arrêté","Modèle","Courrier","Rapport","Autre"]],["lien","Lien du document (Google Doc, PDF…)","url"]]},
- notes:{n:"Notes",d:"Notes de service et mémos internes.",t:"sujet",f:[["sujet","Sujet","text"],["texte","Note","area"]]},
- tenues:{n:"Tenues",d:"Tenues réglementaires par grade.",t:"nom",f:[["nom","Nom de la tenue","text"],["grade","Grade concerné","select",["Préfet de Police","Sous-Préfet","Directeur de cabinet","Secrétaire Général","Attaché d'administration","Secrétaire administratif","Inspecteur IGPN","Huissier de Justice","Inspecteur"]],["lien","Lien de l'image","url"],["detail","Composition (haut, bas, accessoires)","area"]]},
- absence:{n:"Absences",d:"Déclarations d'absence des agents.",t:"agent",f:[["agent","Agent","text"],["du","Du","date"],["au","Au","date"],["motif","Motif","text"]]},
- annuaire:{n:"Annuaire",d:"Coordonnées des agents de la Préfecture.",t:"nom",f:[["nom","Nom Prénom","text"],["grade","Grade","text"],["tel","Téléphone","text"],["discord","Pseudo Discord","text"]]}
+ annonce:{i:"📢",n:"Annonces",d:"Communications officielles adressées aux agents de la Préfecture.",f:[["objet","Objet","text"],["importance","Niveau","select",["Information","Important","Urgent"]],["portee","Destinataires","select",["Tous les agents","Cabinet","Inspection","Administration"]],["texte","Contenu","area"]]},
+ reunion:{i:"📅",n:"Réunions",d:"Convocations, lieux et ordres du jour.",f:[["objet","Objet","text"],["quand","Date et heure","datetime"],["lieu","Lieu ou salon vocal","text"],["odj","Ordre du jour (un point par ligne)","area"]]},
+ discussion:{i:"💬",n:"Discussion",d:"Messagerie interne entre agents, par salon."},
+ rdv:{i:"🤝",n:"Rendez-vous",d:"Rendez-vous avec les services, entreprises et citoyens.",f:[["avec","Interlocuteur","text"],["quand","Date et heure","datetime"],["objet","Objet","text"],["statut","Statut","select",["À confirmer","Confirmé","Reporté","Terminé"]]]},
+ dossier:{i:"🗂️",n:"Suivi de dossier",d:"Instruction des demandes : référence, agent en charge et avancement.",f:[["ref","Référence","text"],["intitule","Intitulé du dossier","text"],["resp","Agent en charge","text"],["statut","Statut","select",["Ouvert","En cours","Clos","Refusé"]],["suivi","Dernière mise à jour","area"]]},
+ document:{i:"📄",n:"Documents",d:"Arrêtés, modèles, courriers et pièces de référence.",f:[["intitule","Intitulé","text"],["type","Type","select",["Arrêté","Modèle","Courrier","Rapport","Autre"]],["lien","Lien du document (Google Doc, PDF…)","url"]]},
+ notes:{i:"📝",n:"Notes",d:"Notes de service et mémos internes.",f:[["sujet","Sujet","text"],["texte","Note","area"]]},
+ tenues:{i:"👔",n:"Tenues",d:"Tenues réglementaires par grade.",f:[["nom","Nom de la tenue","text"],["grade","Grade concerné","select",["Préfet de Police","Sous-Préfet","Directeur de cabinet","Secrétaire Général","Attaché d'administration","Secrétaire administratif","Inspecteur IGPN","Huissier de Justice","Inspecteur"]],["lien","Lien de l'image","url"],["detail","Composition (haut, bas, accessoires)","area"]]},
+ absence:{i:"🏖️",n:"Absences",d:"Déclarations d'absence des agents.",f:[["agent","Agent","text"],["du","Du","date"],["au","Au","date"],["motif","Motif","text"]]},
+ annuaire:{i:"📇",n:"Annuaire",d:"Coordonnées des agents de la Préfecture.",f:[["nom","Nom Prénom","text"],["grade","Grade","text"],["tel","Téléphone","text"],["discord","Pseudo Discord","text"]]}
 };
 const GROUPS=[["Communication",["annonce","reunion","discussion"]],["Agenda et dossiers",["rdv","dossier","document","notes"]],["Personnel",["tenues","absence","annuaire"]]];
 
@@ -92,11 +137,17 @@ const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=nul
 const gate=h=>{const g=$("#gate");g.hidden=false;g.innerHTML=h};
 const fmt=(t,v)=>!v?"":t==="date"?new Date(v).toLocaleDateString("fr-FR"):t==="datetime"?new Date(v).toLocaleString("fr-FR",{dateStyle:"long",timeStyle:"short"}):v;
 const safeUrl=v=>/^https?:\/\//i.test(v||"")?v:"#";
+const T=x=>new Date(x||0).getTime();
+const byNew=a=>[...a].sort((x,y)=>T(y.created_at)-T(x.created_at));
+const hm=d=>new Date(d).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+const D0=d=>{const x=new Date(d);x.setHours(0,0,0,0);return x};
+const dayLabel=d=>{const n=Math.round((D0(d)-D0(new Date()))/864e5);return n===0?"Aujourd'hui":n===1?"Demain":n===-1?"Hier":new Date(d).toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})};
+const av=(n,s=36)=>{const e=E("span","av",(String(n||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("")||"?").toUpperCase());let h=0;for(const c of String(n||""))h=(h*31+c.charCodeAt(0))%360;e.style.cssText="--s:"+s+"px;background:hsl("+h+" 45% 38%)";return e};
 
 const u=getUser();
 const hasRole=x=>{
   const all=[].concat(x.roles||[],x.roleIds||[],x.role||[]).map(r=>String(r&&(r.id||r.name)||r).toLowerCase());
-  return all.includes(String(ROLE_PREFECTORAL_ID).toLowerCase())&&ROLE_PREFECTORAL_ID!==""||all.includes(String(ROLE_PREFECTORAL_NOM).toLowerCase());
+  return (ROLE_PREFECTORAL_ID!==""&&all.includes(String(ROLE_PREFECTORAL_ID).toLowerCase()))||all.includes(String(ROLE_PREFECTORAL_NOM).toLowerCase());
 };
 if(!u) location.replace(PAGE_CONNEXION);
 else if(!(isSiteAdmin(u)||hasRole(u))){
@@ -113,12 +164,12 @@ const store=(()=>{
   const run=async(method,m,body,local)=>{
     if(!off){try{return await api(method,m,body)}catch(e){
       if(e.status===401||e.status===403)throw e;
-      off=true;$("#st").innerHTML='<b>Mode local</b> : l\'API /api/prefecture est introuvable, les données restent dans ce navigateur et ne sont pas partagées entre agents.'}}
+      off=true;$("#st").innerHTML="<b>Mode local</b> : l'API /api/prefecture est introuvable, les données restent dans ce navigateur et ne sont pas partagées entre agents."}}
     return local()};
   const me=()=>u.username||u.name||u.global_name||"Agent";
   return{
     list:m=>run("GET",m,null,()=>lr(m)),
-    add:(m,it)=>run("POST",m,it,()=>{const v=lr(m);v.unshift({...it,id:Date.now().toString(36),author:me(),created_at:new Date().toISOString()});lw(m,v)}),
+    add:(m,it)=>run("POST",m,it,()=>{const v=lr(m);v.unshift({...it,id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),author:me(),created_at:new Date().toISOString()});lw(m,v)}),
     patch:(m,id,ch)=>run("PATCH",m,{id,...ch},()=>{const v=lr(m),i=v.findIndex(x=>x.id===id);if(i>-1)Object.assign(v[i],ch);lw(m,v)}),
     del:(m,id)=>run("DELETE",m,{id},()=>lw(m,lr(m).filter(x=>x.id!==id))),
     me};
@@ -127,62 +178,114 @@ const store=(()=>{
 function start(){
   $("#app").hidden=false;
   if(isSiteAdmin(u))$("#lk-admin").hidden=false;
-  let view="annonce";
+  let view="annonce",poll=null;
 
   const nav=()=>{const n=$("#nav");n.textContent="";
-    GROUPS.forEach(([title,ids])=>{const g=E("section","nav-group"),items=E("div","nav-group-items");
-      ids.forEach(id=>{const b=E("button","nv"+(id===view?" on":""),MODS[id].n);b.type="button";b.onclick=()=>{view=id;nav();draw()};items.append(b)});
-      g.append(E("h2","nav-group-title",title),items);n.append(g)})};
+    GROUPS.forEach(([title,ids])=>{const g=E("section","nav-group");g.append(E("h2","nav-group-title",title));
+      ids.forEach(id=>{const b=E("button","nv"+(id===view?" on":""),MODS[id].i+"  "+MODS[id].n);b.type="button";b.onclick=()=>{view=id;nav();draw()};g.append(b)});n.append(g)})};
 
-  const card=(m,it,reload)=>{
-    const d=E("details","ticket"),s=E("summary"),main=E("div","ticket-summary-main");
-    main.append(E("strong","",it[m.t]||"Sans titre"));
-    const meta=E("div","ticket-summary-meta");
-    m.f.forEach(([k,l,t])=>{if(k===m.t||t==="area"||t==="url"||k==="statut"||!it[k])return;meta.append(E("span","",l+" : "+fmt(t,it[k])))});
-    meta.append(E("span","","Par "+(it.author||"—")),E("span","",it.created_at?new Date(it.created_at).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"}):""));
-    main.append(meta);s.append(main);
-    const badge=E("span","ticket-status",it.statut||"");
-    const upd=()=>{badge.textContent=it.statut||"";badge.classList.toggle("closed",it.statut==="Clos"||it.statut==="Refusé"||it.statut==="Terminé");badge.hidden=!it.statut};upd();
-    s.append(badge);d.append(s);
-    const body=E("div","ticket-content");
-    m.f.forEach(([k,l,t])=>{
-      if(t==="area"&&it[k]){const r=E("div","ticket-message"),h=E("div","ticket-message-head");h.append(E("span","",l));r.append(h,E("div","ticket-message-text",it[k]));body.append(r)}
-      if(t==="url"&&it[k]){const a=E("a","","Ouvrir : "+l);a.href=safeUrl(it[k]);a.target="_blank";a.rel="noopener noreferrer";const w=E("p");w.style.margin="10px 0";w.append(a);body.append(w)}
-    });
-    const tools=E("div","ticket-tools");
-    const st=m.f.find(f=>f[0]==="statut");
-    if(st){const sel=E("select");sel.style.width="auto";sel.setAttribute("aria-label","Statut");st[3].forEach(o=>sel.add(new Option(o,o)));sel.value=it.statut||st[3][0];
-      sel.onchange=async()=>{try{await store.patch(view,it.id,{statut:sel.value});it.statut=sel.value;upd()}catch(e){alert("Impossible de modifier le statut : "+e.message)}};tools.append(sel)}
-    if(view==="discussion"){
-      (it.replies||[]).forEach(r=>{const row=E("div","ticket-message staff"),h=E("div","ticket-message-head");h.append(E("span","",r.author||"Agent"),E("span","",r.date?new Date(r.date).toLocaleString("fr-FR"):""));row.append(h,E("div","ticket-message-text",r.text));body.append(row)});
-      const a=E("textarea");a.placeholder="Écrire une réponse…";a.setAttribute("aria-label","Réponse");
-      const send=E("button","b p","Répondre");send.type="button";
-      send.onclick=async()=>{if(!a.value.trim())return;send.disabled=true;try{await store.patch(view,it.id,{replies:[...(it.replies||[]),{author:store.me(),text:a.value,date:new Date().toISOString()}]});await reload()}catch(e){alert("Impossible d'envoyer : "+e.message);send.disabled=false}};
-      body.append(a);tools.append(send)}
-    const del=E("button","b danger","Supprimer");del.type="button";
-    del.onclick=async()=>{if(!confirm("Supprimer cette entrée ? Action irréversible."))return;del.disabled=true;try{await store.del(view,it.id);await reload()}catch(e){alert("Impossible de supprimer : "+e.message);del.disabled=false}};
-    tools.append(del);body.append(tools);d.append(body);return d};
+  /* --- briques communes --- */
+  const delB=(it,c)=>{const b=E("button","b danger sm","Supprimer");b.type="button";
+    b.onclick=async()=>{if(!confirm("Supprimer cette entrée ? Action irréversible."))return;b.disabled=true;try{await store.del(c.mod,it.id);await c.reload()}catch(e){alert("Impossible de supprimer : "+e.message);b.disabled=false}};return b};
+  const foot=(it,c)=>{const f=E("div","foot");f.append(av(it.author,24),E("span","",(it.author||"—")+" · "+(it.created_at?new Date(it.created_at).toLocaleDateString("fr-FR"):"")),delB(it,c));return f};
+  const CH={"Confirmé":"ok","Terminé":"mute","À confirmer":"warn","Reporté":"err","Ouvert":"warn","En cours":"bl","Clos":"ok","Refusé":"err"};
+  const chip=(it,c,opts)=>{const s=E("select","chip");opts.forEach(o=>s.add(new Option(o,o)));s.value=it.statut||opts[0];s.setAttribute("aria-label","Statut");
+    const paint=()=>s.className="chip c-"+(CH[s.value]||"mute");paint();
+    s.onchange=async()=>{paint();try{await store.patch(c.mod,it.id,{statut:s.value});await c.reload()}catch(e){alert("Impossible de modifier le statut : "+e.message)}};return s};
 
+  /* --- rendu propre à chaque module --- */
+  const R={
+   annonce(its,box,c){byNew(its).forEach((it,i)=>{const imp=it.importance||"Information",k={Information:"",Important:"warn",Urgent:"err"}[imp]||"";
+     const a=E("article","ann "+k+(i===0?" first":"")),top=E("div","line");top.style.margin="0";
+     top.append(E("span","tag",(imp==="Urgent"?"🚨 ":imp==="Important"?"⚠️ ":"ℹ️ ")+imp),E("span","","Pour : "+(it.portee||"Tous les agents")));
+     a.append(top,E("h3","",it.objet),E("p","",it.texte),foot(it,c));box.append(a)})},
+   reunion(its,box,c){const now=Date.now(),up=its.filter(i=>T(i.quand)>=now-72e5).sort((a,b)=>T(a.quand)-T(b.quand)),pa=its.filter(i=>!up.includes(i)).sort((a,b)=>T(b.quand)-T(a.quand));
+     const part=(t,l,past)=>{if(!l.length)return;box.append(E("div","sec",t));l.forEach(it=>{const d=new Date(it.quand),r=E("article","reu"+(past?" past":"")),cal=E("div","cal");
+       cal.innerHTML="<i></i><b></b><span></span>";cal.children[0].textContent=d.toLocaleDateString("fr-FR",{month:"short"});cal.children[1].textContent=d.getDate();cal.children[2].textContent=d.toLocaleDateString("fr-FR",{weekday:"short"});
+       const b=E("div"),h=E("h3","",it.objet),ln=E("div","line");b.style.cssText="flex:1;min-width:0";
+       if(!past&&dayLabel(d)==="Aujourd'hui")h.append(" ",E("span","tag","Aujourd'hui"));
+       ln.append(E("span","","🕘 "+hm(d)+" · "+dayLabel(d)),E("span","","📍 "+(it.lieu||"—")));b.append(h,ln);
+       if(it.odj){const ul=E("ul","odj");it.odj.split("\n").filter(x=>x.trim()).forEach(x=>ul.append(E("li","",x.replace(/^[-•*\s]+/,""))));b.append(E("strong","","Ordre du jour"),ul)}
+       b.append(foot(it,c));r.append(cal,b);box.append(r)})};
+     part("À venir",up);part("Passées",pa,true)},
+   rdv(its,box,c){let last="";[...its].sort((a,b)=>T(a.quand)-T(b.quand)).forEach(it=>{const d=new Date(it.quand),k=d.toDateString();
+     if(k!==last){box.append(E("div","dayh",dayLabel(d)));last=k}
+     const r=E("div","rdv"+(T(it.quand)<Date.now()?" past":"")),cd=E("div","c"),x=E("div","x");
+     x.append(E("strong","","🤝 "+it.avec),E("div","line",it.objet||""));cd.append(x,chip(it,c,["À confirmer","Confirmé","Reporté","Terminé"]),delB(it,c));r.append(E("div","t",hm(d)),cd);box.append(r)})},
+   dossier(its,box,c){byNew(its).forEach(it=>{const s=it.statut||"Ouvert",pct={"Ouvert":20,"En cours":60,"Clos":100,"Refusé":100}[s]||20,r=E("div","dos"),m=E("div"),bar=E("div","bar"),i=E("i");
+     m.append(E("strong","",it.intitule),E("div","line","Agent en charge : "+(it.resp||"—")));if(it.suivi)m.append(E("div","dt",it.suivi));
+     i.style.width=pct+"%";i.style.background=s==="Refusé"?"var(--err)":s==="Clos"?"var(--ok)":"var(--bleu)";bar.append(i);m.append(bar);
+     r.append(E("div","ref",it.ref||"—"),m,chip(it,c,["Ouvert","En cours","Clos","Refusé"]),delB(it,c));box.append(r)})},
+   document(its,box,c){const FT={"Arrêté":["AR","#000091"],"Modèle":["MO","#18753c"],"Courrier":["CO","#b34000"],"Rapport":["RA","#6a6af4"]},g=E("div","tiles");
+     byNew(its).forEach(it=>{const [l,col]=FT[it.type]||["··","#666"],t=E("div","tile"),f=E("div","ft",l);f.style.background=col;
+       t.append(f,E("strong","",it.intitule),E("span","line",it.type||"Autre"));
+       if(it.lien){const a=E("a","b p sm","Ouvrir le document");a.href=safeUrl(it.lien);a.target="_blank";a.rel="noopener noreferrer";t.append(a)}
+       t.append(foot(it,c));t.lastChild.style.width="100%";g.append(t)});box.append(g)},
+   notes(its,box,c){const g=E("div","tiles"),TN=["#fff3a8","#c9f0d0","#ffd6e0","#cfe3ff"];
+     byNew(its).forEach((it,i)=>{const t=E("div","tile sticky");t.style.setProperty("--t",TN[i%4]);t.style.setProperty("--r",(i%3-1)+"deg");t.append(E("strong","",it.sujet),E("p","",it.texte),foot(it,c));t.lastChild.style.width="100%";g.append(t)});box.append(g)},
+   tenues(its,box,c){const g=E("div","tiles");
+     byNew(its).forEach(it=>{const t=E("div","tile look");let im;if(safeUrl(it.lien)!=="#"){im=E("img");im.src=it.lien;im.alt=it.nom;im.loading="lazy"}else im=E("div","ph","👔");
+       t.append(im,E("span","tag",it.grade||"—"),E("strong","",it.nom));if(it.detail)t.append(E("p","dt",it.detail));t.append(foot(it,c));t.lastChild.style.width="100%";g.append(t)});box.append(g)},
+   absence(its,box,c){const now=D0(new Date());
+     [...its].sort((a,b)=>T(b.du)-T(a.du)).forEach(it=>{const du=new Date(it.du),au=new Date(it.au),n=Math.round((au-du)/864e5)+1,st=now>au?["Terminée","mute"]:now>=du?["En cours","ok"]:["À venir","bl"],r=E("div","abs"),x=E("div","x");
+       x.append(E("strong","",it.agent),E("div","line","📆 Du "+fmt("date",it.du)+" au "+fmt("date",it.au)+" · "+n+" j"+(it.motif?" · "+it.motif:"")));
+       r.append(av(it.agent,40),x,E("span","chip c-"+st[1],st[0]),delB(it,c));box.append(r)})},
+   annuaire(its,box,c){const g=E("div","tiles");
+     [...its].sort((a,b)=>(a.nom||"").localeCompare(b.nom||"","fr")).forEach(it=>{const t=E("div","tile ctc");
+       t.append(av(it.nom,64),E("strong","",it.nom),E("span","tag",it.grade||"—"),E("div","line","📞 "+(it.tel||"—")),E("div","line","💬 "+(it.discord||"—")),delB(it,c));g.append(t)});box.append(g)}
+  };
+
+  /* --- Discussion : vrai chat --- */
+  const drawChat=p=>{
+    let salon=SALONS[0],all=[],sig="";
+    const w=E("div","chat"),rooms=E("div","rooms"),conv=E("div","conv"),ch=E("div","ch"),msgs=E("div","msgs"),comp=E("div","comp"),ta=E("textarea"),send=E("button","b p","Envoyer");
+    ta.placeholder="Écrire un message… (Entrée pour envoyer, Maj+Entrée pour un retour à la ligne)";ta.setAttribute("aria-label","Message");send.type="button";
+    comp.append(ta,send);conv.append(ch,msgs,comp);w.append(rooms,conv);p.append(w);
+    const render=force=>{
+      const near=msgs.scrollHeight-msgs.scrollTop-msgs.clientHeight<90;msgs.textContent="";
+      ch.textContent="# "+salon;
+      const list=all.filter(x=>(x.salon||SALONS[0])===salon).sort((a,b)=>T(a.created_at)-T(b.created_at));
+      if(!list.length)msgs.append(E("div","vide","Aucun message dans ce salon. Lance la conversation !"));
+      let prev=null,day="";
+      list.forEach(x=>{const d=new Date(x.created_at),me=x.author===store.me();
+        if(d.toDateString()!==day){day=d.toDateString();msgs.append(E("div","day",dayLabel(d)));prev=null}
+        const first=!prev||prev.author!==x.author||d-new Date(prev.created_at)>3e5,row=E("div","m"+(me?" me":"")+(first?" first":"")),col=E("div"),bub=E("div","bub",x.texte);
+        if(first&&!me)col.append(E("div","who",x.author||"Agent"));
+        if(me||isSiteAdmin(u)){const del=E("button","x2","✕");del.type="button";del.title="Supprimer ce message";del.onclick=async()=>{if(confirm("Supprimer ce message ?")){try{await store.del("discussion",x.id);await load()}catch(e){alert("Impossible de supprimer : "+e.message)}}};row.append(del)}
+        col.append(bub);row.prepend(E("time","",hm(d)));row.prepend(col);row.prepend(av(x.author,32));
+        msgs.append(row);prev=x});
+      if(force||near)msgs.scrollTop=msgs.scrollHeight};
+    const load=async force=>{try{all=await store.list("discussion");const s=JSON.stringify(all.map(x=>x.id));if(s!==sig||force){sig=s;render(force)}}catch(e){msgs.textContent="Impossible de charger la discussion."}};
+    const roomsDraw=()=>{rooms.textContent="";SALONS.forEach(s=>{const b=E("button","room"+(s===salon?" on":""),"# "+s);b.type="button";b.onclick=()=>{salon=s;roomsDraw();render(true);ta.focus()};rooms.append(b)})};
+    const go=async()=>{const t=ta.value.trim();if(!t)return;send.disabled=true;try{await store.add("discussion",{texte:t,salon});ta.value="";await load(true)}catch(e){alert("Impossible d'envoyer : "+e.message)}finally{send.disabled=false;ta.focus()}};
+    send.onclick=go;ta.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();go()}};
+    roomsDraw();load(true);
+    poll=setInterval(()=>{if(view!=="discussion"||!document.body.contains(w)){clearInterval(poll);return}load()},5000)};
+
+  /* --- affichage d'un module --- */
   const draw=async()=>{
+    clearInterval(poll);
     const m=MODS[view],p=$("#pane"),mod=view;p.textContent="";
-    p.append(E("h2","",m.n),E("p","sub",m.d));
-    const add=E("details","finance-company"),sum=E("summary","","Ajouter une entrée"),form=E("form","finance-form"),inputs={};
+    const cnt=E("span","cnt"),hero=E("div","hero"),ic=E("div","ic",m.i),tx=E("div");
+    tx.append(E("h2","",m.n),E("p","",m.d));hero.append(ic,tx,cnt);p.append(hero);
+    if(mod==="discussion"){cnt.hidden=true;return drawChat(p)}
+    const add=E("details","finance-company"),form=E("form","finance-form"),inputs={};
     m.f.forEach(([k,l,t,o])=>{
       const w=E("div","finance-field"+(t==="area"||t==="url"?" full":"")),lab=E("label","",l);let i;
       if(t==="area")i=E("textarea");else if(t==="select"){i=E("select");o.forEach(x=>i.add(new Option(x,x)))}
       else{i=E("input");i.type=t==="datetime"?"datetime-local":t==="url"?"text":t;if(t==="url")i.placeholder="https://…"}
       if(t!=="url"&&t!=="select")i.required=true;
       inputs[k]=i;w.append(lab,i);form.append(w)});
-    const save=E("button","b p","Enregistrer");save.type="submit";const w=E("div","finance-field full");w.append(save);form.append(w);
-    add.append(sum,form);
+    const save=E("button","b p","Enregistrer"),sw=E("div","finance-field full");save.type="submit";sw.append(save);form.append(sw);
+    add.append(E("summary","","＋ Ajouter une entrée"),form);
     const q=E("input");q.type="search";q.placeholder="Rechercher…";q.setAttribute("aria-label","Rechercher");
     const box=E("div");p.append(add,q,box);
     let items=[];
-    const render=()=>{if(view!==mod)return;box.textContent="";const s=q.value.toLowerCase();
-      const shown=items.filter(it=>!s||JSON.stringify(it).toLowerCase().includes(s));
-      if(!shown.length){box.append(E("p","sub",s?"Aucun résultat.":"Aucune entrée pour le moment. Utilise « Ajouter une entrée »."));return}
-      shown.forEach(it=>box.append(card(m,it,load)))};
-    const load=async()=>{box.textContent="Chargement…";try{items=await store.list(mod);render()}catch(e){box.textContent=e.message==="admin_required"||e.status===403?"Ton compte n'a pas le rôle Préfectoral.":"Impossible de charger les données. Réessaie dans un instant."}};
+    const render=()=>{if(view!==mod)return;box.textContent="";const s=q.value.toLowerCase(),shown=items.filter(it=>!s||JSON.stringify(it).toLowerCase().includes(s));
+      cnt.textContent=items.length+(items.length>1?" entrées":" entrée");
+      if(!shown.length){const v=E("div","vide");v.append(E("b","",m.i),E("span","",s?"Aucun résultat.":"Rien ici pour le moment. Utilise « Ajouter une entrée »."));box.append(v);return}
+      R[mod](shown,box,{mod,reload:load})};
+    const load=async()=>{try{items=await store.list(mod);render()}catch(e){box.textContent=e.status===403?"Ton compte n'a pas le rôle Préfectoral.":"Impossible de charger les données. Réessaie dans un instant."}};
     q.oninput=render;
     form.onsubmit=async e=>{e.preventDefault();save.disabled=true;
       try{const data={};Object.keys(inputs).forEach(k=>data[k]=inputs[k].value);await store.add(mod,data);form.reset();add.open=false;await load()}
