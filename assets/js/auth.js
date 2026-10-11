@@ -2,6 +2,7 @@
    À inclure AVANT le script de la page :  <script src="assets/js/auth.js"></script> */
 const AUTH_KEY = "lgp_user";
 const SITE_ADMIN_ROLE_ID = "1556690350171754496";
+const PREFECTORAL_ROLE_ID = "1555233694183194764";
 
 /* ===== Popup « site non officiel » =====
    Affichée sur toutes les pages qui chargent auth.js. Modifie les textes et réglages ici. */
@@ -20,6 +21,7 @@ const LGP_DISCLAIMER = {
 };
 
 function isSiteAdmin(user){return !!user&&((Array.isArray(user.roles)&&user.roles.includes(SITE_ADMIN_ROLE_ID))||user.role==="Staff")}
+function isPrefectoral(user){return !!user&&(isSiteAdmin(user)||(Array.isArray(user.roles)&&user.roles.includes(PREFECTORAL_ROLE_ID)))}
 function getUser(){
   try{const u=JSON.parse(localStorage.getItem(AUTH_KEY)||"null");if(u&&u.exp>Date.now())return u}catch(e){}
   return null;
@@ -135,6 +137,7 @@ function logout(){
   const lk=(t,h)=>{const a=el("a","",t);a.href=h;return a};
   const l2=el("button","out","Se déconnecter");l2.type="button";l2.onclick=logout;
   menu.append(hd,el("hr"),lk("Mon espace","dashboard.html"),lk("Mes démarches","mes-demarches.html"));
+  if(isPrefectoral(u))menu.append(lk("Panel préfectoral","panel-prefectoral.html"));
   if(isSiteAdmin(u))menu.append(lk("Administration","admin.html"));
   menu.append(el("hr"),l2);
 
