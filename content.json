@@ -192,11 +192,11 @@
     "commandTitle": "Chaîne de commandement",
     "command": [
       {
-        "fonction": "Préfet",
+        "fonction": "Préfet de Région",
         "nom": "BLACKWOOD Raven"
       },
       {
-        "fonction": "Sous-Préfet",
+        "fonction": "Préfet de Police",
         "nom": "Frédéric CHENNET"
       },
       {
@@ -205,7 +205,7 @@
       },
       {
         "fonction": "Secrétaire Général",
-        "nom": "Brechenmacher Wilfried"
+        "nom": "Arthur LEFAN"
       }
     ]
   }
