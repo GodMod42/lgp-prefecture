@@ -249,6 +249,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
       <div class="esps">
         <div class="pc esp"><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M10 12h5M10 15h5M10 9h2"/></svg></div><h3>Mes démarches</h3><p>Retrouvez vos demandes et les réponses des services, avec une notification sur Discord.</p><a href="mes-demarches.html">Découvrir la direction →</a></div>
         <div class="pc esp" id="adm" hidden><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Panel administrateur</h3><p>Gérez les demandes, les utilisateurs et le contenu du site.</p><a href="https://lgp-prefecture.vercel.app/admin.html">Ouvrir le panel →</a></div>
+        <div class="pc esp" id="pref" hidden><div class="ic"><svg class="ico" viewBox="0 0 24 24"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></div><h3>Panel préfectoral</h3><p>Annonces, réunions, rendez-vous, dossiers et discussion interne des agents de la Préfecture.</p><a href="panel-prefectoral.html">Ouvrir le panel →</a></div>
       </div>
     </div>
   </section>
@@ -286,6 +287,7 @@ else{
   if(u.role)$("rl").textContent=u.role;else $("rl").hidden=true;
   /* Accès rapide « Panel administrateur » : réservé au staff (même règle que le menu de auth.js) */
   $("adm").hidden=!isSiteAdmin(u);
+  $("pref").hidden=!(typeof isPrefectoral==="function"&&isPrefectoral(u));
   const av=$("av");
   if(u.avatar){av.src=u.avatar.replace("size=64","size=128");av.onerror=()=>{const s=document.createElement("span");s.className="pav";s.textContent=u.name.charAt(0).toUpperCase();av.replaceWith(s)}}
   else{const s=document.createElement("span");s.className="pav";s.textContent=u.name.charAt(0).toUpperCase();av.replaceWith(s)}
