@@ -477,7 +477,7 @@ async function start(){
     [["week","Cette semaine"],["month","Ce mois-ci"],["all","Depuis toujours"]].forEach(([v,l])=>per.add(new Option(l,v)));
     per.style.width="auto";per.setAttribute("aria-label","Période du classement");rf.type=stopAll.type=reset.type="button";
     tools.append(per,rf,stopAll,reset);p.append(tools,box);
-    const api=async(method,body,qs="")=>{const r=await fetch("/api/admin/service"+qs,{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||String(r.status));return d};
+    const api=async(method,body,qs="")=>{const r=await fetch("/api/prefecture?module=service_admin"+qs,{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||String(r.status));return d};
     const dur=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?h+" h "+String(m).padStart(2,"0"):m+" min"};
     const when=d=>new Date(d).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"});
     const ini=n=>E("span","svc-av",(String(n||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("")||"?").toUpperCase());
@@ -486,7 +486,7 @@ async function start(){
     const load=async()=>{
       box.textContent="Chargement…";
       try{
-        const d=await api("GET",null,"?period="+per.value),t=d.totals;box.textContent="";
+        const d=await api("GET",null,"&period="+per.value),t=d.totals;box.textContent="";
         const k=E("div","svc-k");
         [["En service maintenant",d.on_duty.length],["Heures de service",dur(t.seconds)],["Services effectués",t.sessions],["Durée moyenne",t.sessions?dur(t.seconds/t.sessions):"—"],["Agents actifs",t.agents]].forEach(([l,v])=>{const e=E("div");e.append(E("b","",String(v)),E("span","",l));k.append(e)});
         box.append(k,E("h3","svc-h","Classement"));
@@ -507,7 +507,7 @@ async function start(){
           x.append(E("strong","",(s.name||"Agent")+" · "+dur(s.seconds)),E("small","",when(s.started_at)+(s.ended_at?" → "+when(s.ended_at):"")+" · "+(s.ended_at?(FIN[s.ended_by]||"Terminé"):"En cours")));
           b.onclick=async()=>{if(!confirm("Supprimer ce service des statistiques ?"))return;try{await api("DELETE",{id:s.id});await load()}catch(e){alert("Impossible : "+e.message)}};
           r.append(pic(s.name,s.avatar),x,b);box.append(r)});
-      }catch(e){box.textContent=e.message==="admin_required"?"Ton compte n'a pas le rôle Discord Staff.":"Impossible de charger les services. Vérifie que api/admin/service.js est déployé."}
+      }catch(e){box.textContent=e.message==="admin_required"?"Ton compte n'a pas le rôle Discord Staff.":"Impossible de charger les services. Vérifie que api/prefecture.js est à jour et déployé."}
     };
     per.onchange=load;rf.onclick=load;
     stopAll.onclick=async()=>{if(!confirm("Clôturer tous les services en cours ?"))return;try{const r=await api("PATCH",{all:true});alert(r.closed+" service(s) clôturé(s).");await load()}catch(e){alert("Impossible : "+e.message)}};
