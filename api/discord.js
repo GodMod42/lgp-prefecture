@@ -8,7 +8,10 @@ import {
   REDIRECT_URI,
   GUILD_ID,
   encryptToken,
+  decryptToken,
 } from "../lib/discord-oauth.js";
+
+import { discordUser } from "../lib/contact-data.js";
 
 function getCookie(req, name) {
   const cookies = (req.headers.cookie || "").split(";");
@@ -25,12 +28,283 @@ function getCookie(req, name) {
   return null;
 }
 
+
+async function requireAdmin(req, res) {
+  const identity = await discordUser(req, true);
+
+  if (identity.error) {
+    res.setHeader("Cache-Control", "no-store");
+    res.status(identity.status).json({ error: identity.error });
+    return false;
+  }
+
+  return true;
+}
+
+function jsonNoStore(res, status, data) {
+  res.setHeader("Cache-Control", "no-store");
+  return res.status(status).json(data);
+}
+
+async function consentRows() {
+  if (!process.env.DATABASE_URL) {
+    throw new Error("database_not_configured");
+  }
+
+  const sql = neon(process.env.DATABASE_URL);
+
+  return sql`
+    SELECT user_id, access_token, refresh_token,
+           expires_at, consented_at, revoked_at
+    FROM discord_oauth_consents
+    WHERE revoked_at IS NULL
+    ORDER BY consented_at DESC
+    LIMIT 500
+  `;
+}
+
+async function refreshConsentToken(row) {
+  const oldRefreshToken = decryptToken(row.refresh_token);
+
+  const response = await fetch(
+    "https://discord.com/api/v10/oauth2/token",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        grant_type: "refresh_token",
+        refresh_token: oldRefreshToken,
+      }),
+      signal: AbortSignal.timeout(10000),
+    }
+  );
+
+  const data = await response.json().catch(() => ({}));
+
+  if (
+    !response.ok ||
+    !data.access_token ||
+    !data.refresh_token ||
+    !Number.isFinite(Number(data.expires_in))
+  ) {
+    return { ok: false, reason: "refresh_invalid" };
+  }
+
+  const sql = neon(process.env.DATABASE_URL);
+
+  await sql`
+    UPDATE discord_oauth_consents
+    SET access_token = ${encryptToken(data.access_token)},
+        refresh_token = ${encryptToken(data.refresh_token)},
+        expires_at = ${Date.now() + Number(data.expires_in) * 1000}
+    WHERE user_id = ${row.user_id}
+      AND revoked_at IS NULL
+  `;
+
+  return {
+    ok: true,
+    accessToken: data.access_token,
+    expiresAt: Date.now() + Number(data.expires_in) * 1000,
+  };
+}
+
+async function addConsentMember(userId, accessToken) {
+  return fetch(
+    `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${userId}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bot ${BOT_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ access_token: accessToken }),
+      signal: AbortSignal.timeout(10000),
+    }
+  );
+}
+
+async function previewConsents(req, res) {
+  if (req.method !== "GET") {
+    return jsonNoStore(res, 405, { error: "method_not_allowed" });
+  }
+
+  if (!(await requireAdmin(req, res))) return;
+
+  try {
+    const rows = await consentRows();
+
+    const results = rows.map((row) => {
+      let accessReadable = false;
+      let refreshReadable = false;
+
+      try {
+        decryptToken(row.access_token);
+        accessReadable = true;
+      } catch {}
+
+      try {
+        decryptToken(row.refresh_token);
+        refreshReadable = true;
+      } catch {}
+
+      const accessExpired = Number(row.expires_at) <= Date.now();
+
+      let status = "prêt à vérifier";
+      if (!accessReadable || !refreshReadable) {
+        status = "jeton illisible";
+      } else if (accessExpired) {
+        status = "accès expiré — renouvellement nécessaire";
+      }
+
+      return {
+        userId: row.user_id,
+        consentedAt: row.consented_at,
+        expiresAt: Number(row.expires_at),
+        accessExpired,
+        accessReadable,
+        refreshReadable,
+        selectable: accessReadable && refreshReadable,
+        status,
+      };
+    });
+
+    return jsonNoStore(res, 200, { users: results });
+  } catch (error) {
+    console.error("Consent preview failed:", error?.message || error);
+    return jsonNoStore(res, 500, { error: "preview_failed" });
+  }
+}
+
+async function readdConsents(req, res) {
+  if (req.method !== "POST") {
+    return jsonNoStore(res, 405, { error: "method_not_allowed" });
+  }
+
+  if (!(await requireAdmin(req, res))) return;
+
+  if (!CLIENT_ID || !CLIENT_SECRET || !BOT_TOKEN) {
+    return jsonNoStore(res, 500, { error: "discord_config_missing" });
+  }
+
+  const ids = req.body?.userIds;
+
+  if (
+    !Array.isArray(ids) ||
+    ids.length < 1 ||
+    ids.length > 25 ||
+    ids.some((id) => typeof id !== "string" || !/^\d{17,20}$/.test(id))
+  ) {
+    return jsonNoStore(res, 400, {
+      error: "select_between_1_and_25_valid_user_ids",
+    });
+  }
+
+  try {
+    const uniqueIds = [...new Set(ids)];
+    const rows = await consentRows();
+    const selected = uniqueIds.map((id) => ({
+      id,
+      row: rows.find((row) => row.user_id === id),
+    }));
+
+    const results = [];
+
+    for (const item of selected) {
+      const { id, row } = item;
+
+      if (!row) {
+        results.push({ userId: id, status: "consentement absent ou révoqué" });
+        continue;
+      }
+
+      let accessToken;
+
+      try {
+        accessToken = decryptToken(row.access_token);
+        decryptToken(row.refresh_token);
+      } catch {
+        results.push({ userId: id, status: "jeton illisible — aucune action" });
+        continue;
+      }
+
+      // Renouvelle l'accès si le jeton est expiré ou expire dans moins d'une minute.
+      if (Number(row.expires_at) <= Date.now() + 60000) {
+        const refreshed = await refreshConsentToken(row);
+
+        if (!refreshed.ok) {
+          results.push({
+            userId: id,
+            status: "jeton de renouvellement invalide ou révoqué",
+          });
+          continue;
+        }
+
+        accessToken = refreshed.accessToken;
+      }
+
+      let response;
+
+      try {
+        response = await addConsentMember(id, accessToken);
+
+        // Si l'accès est refusé, tente une seule actualisation du jeton.
+        if (response.status === 401) {
+          const refreshed = await refreshConsentToken(row);
+
+          if (!refreshed.ok) {
+            results.push({
+              userId: id,
+              status: "jeton invalide — renouvellement impossible",
+            });
+            continue;
+          }
+
+          response = await addConsentMember(id, refreshed.accessToken);
+        }
+      } catch {
+        results.push({ userId: id, status: "erreur réseau Discord" });
+        continue;
+      }
+
+      if (response.status === 201) {
+        results.push({ userId: id, status: "ajouté au serveur" });
+      } else if (response.status === 204) {
+        results.push({ userId: id, status: "déjà membre" });
+      } else {
+        await response.body?.cancel().catch(() => {});
+        results.push({
+          userId: id,
+          status: `échec Discord (${response.status})`,
+        });
+      }
+    }
+
+    return jsonNoStore(res, 200, { results });
+  } catch (error) {
+    console.error("Consent re-add failed:", error?.message || error);
+    return jsonNoStore(res, 500, { error: "readd_failed" });
+  }
+}
+
+
 export default async function handler(req, res) {
+  const action = req.query.action;
+
+  if (action === "admin-preview") {
+    return previewConsents(req, res);
+  }
+
+  if (action === "admin-readd") {
+    return readdConsents(req, res);
+  }
+
   if (req.method !== "GET") {
     return res.status(405).send("Méthode non autorisée.");
   }
-
-  const action = req.query.action;
 
   if (!CLIENT_ID || !REDIRECT_URI) {
     return res.status(500).send("Configuration Discord manquante.");
