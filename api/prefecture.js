@@ -1,6 +1,7 @@
 /* api/prefecture.js — API du panel préfectoral
    Appel : /api/prefecture?module=annonce   (GET, POST, PATCH, DELETE)
            /api/prefecture?module=service   (GET, POST {action:"start"|"stop"})
+           /api/prefecture?module=service_admin&period=week|month|all  (Staff uniquement : classement, gestion)
    Réutilise lib/contact-data.js (base Neon + vérification Discord).
    Accès : rôle Staff (ADMIN_ROLE_ID) ou rôle Préfectoral (variable Vercel PREFECTURE_ROLE_ID).
 
@@ -181,9 +182,65 @@ async function handleService(req, res, sql, { user, nick, avatar, body }) {
   });
 }
 
+/* ===== Service : classement et gestion (Staff) ===== */
+async function handleServiceAdmin(req, res, sql, body) {
+  await sql`UPDATE prefecture_service SET ended_at = started_at + make_interval(hours => ${SERVICE_MAX_HOURS}), ended_by = 'auto'
+    WHERE ended_at IS NULL AND started_at < NOW() - make_interval(hours => ${SERVICE_MAX_HOURS})`;
+
+  if (req.method === "GET") {
+    const period = ["week", "month", "all"].includes(req.query?.period) ? req.query.period : "week";
+    const board = await sql`SELECT s.user_id, COALESCE(m.name, MAX(s.name)) AS name, m.avatar AS avatar,
+        SUM(EXTRACT(EPOCH FROM (COALESCE(s.ended_at, NOW()) - s.started_at)))::float AS seconds,
+        COUNT(*)::int AS sessions, MAX(COALESCE(s.ended_at, s.started_at)) AS last_seen
+      FROM prefecture_service s LEFT JOIN prefecture_members m ON m.id = s.user_id
+      WHERE ${period} = 'all' OR s.started_at >= CASE WHEN ${period} = 'week'
+        THEN (date_trunc('week', NOW() AT TIME ZONE 'Europe/Paris') AT TIME ZONE 'Europe/Paris')
+        ELSE (date_trunc('month', NOW() AT TIME ZONE 'Europe/Paris') AT TIME ZONE 'Europe/Paris') END
+      GROUP BY s.user_id, m.name, m.avatar ORDER BY seconds DESC LIMIT 50`;
+    const onDuty = await sql`SELECT s.id, s.user_id, COALESCE(m.name, s.name) AS name, m.avatar AS avatar, s.note, s.started_at,
+        EXTRACT(EPOCH FROM (NOW() - s.started_at))::float AS seconds
+      FROM prefecture_service s LEFT JOIN prefecture_members m ON m.id = s.user_id
+      WHERE s.ended_at IS NULL ORDER BY s.started_at`;
+    const recent = await sql`SELECT s.id, s.user_id, COALESCE(m.name, s.name) AS name, m.avatar AS avatar, s.started_at, s.ended_at, s.ended_by,
+        EXTRACT(EPOCH FROM (COALESCE(s.ended_at, NOW()) - s.started_at))::float AS seconds
+      FROM prefecture_service s LEFT JOIN prefecture_members m ON m.id = s.user_id
+      ORDER BY s.started_at DESC LIMIT 30`;
+    const num = (r) => ({ ...r, seconds: Number(r.seconds) });
+    const b = board.map(num);
+    return sendJson(res, 200, {
+      period, board: b, on_duty: onDuty.map(num), recent: recent.map(num),
+      totals: { seconds: b.reduce((n, r) => n + r.seconds, 0), sessions: b.reduce((n, r) => n + r.sessions, 0), agents: b.length },
+    });
+  }
+  if (req.method === "PATCH") {
+    if (body.all) {
+      const closed = await sql`UPDATE prefecture_service SET ended_at = NOW(), ended_by = 'admin' WHERE ended_at IS NULL RETURNING id`;
+      return sendJson(res, 200, { closed: closed.length });
+    }
+    const id = String(body.id || "");
+    if (!id) return sendJson(res, 400, { error: "missing_id" });
+    const done = await sql`UPDATE prefecture_service SET ended_at = NOW(), ended_by = 'admin' WHERE id = ${id} AND ended_at IS NULL RETURNING id`;
+    if (!done.length) return sendJson(res, 404, { error: "not_found" });
+    return sendJson(res, 200, { ok: true });
+  }
+  if (req.method === "DELETE") {
+    if (body.all) {
+      const gone = await sql`DELETE FROM prefecture_service RETURNING id`;
+      return sendJson(res, 200, { deleted: gone.length });
+    }
+    const id = String(body.id || "");
+    if (!id) return sendJson(res, 400, { error: "missing_id" });
+    const gone = await sql`DELETE FROM prefecture_service WHERE id = ${id} RETURNING id`;
+    if (!gone.length) return sendJson(res, 404, { error: "not_found" });
+    return sendJson(res, 200, { ok: true });
+  }
+  res.setHeader("Allow", "GET, PATCH, DELETE");
+  return sendJson(res, 405, { error: "method_not_allowed" });
+}
+
 export default async function handler(req, res) {
   const mod = String(req.query?.module || "");
-  if (mod !== "service" && !Object.hasOwn(FIELDS, mod)) return sendJson(res, 400, { error: "unknown_module" });
+  if (mod !== "service" && mod !== "service_admin" && !Object.hasOwn(FIELDS, mod)) return sendJson(res, 400, { error: "unknown_module" });
 
   const identity = await discordUser(req).catch(() => ({ error: "discord_auth_unavailable", status: 502 }));
   if (identity.error) return sendJson(res, identity.status, { error: identity.error });
@@ -207,11 +264,15 @@ export default async function handler(req, res) {
       avatar: r.m_avatar || "", mine: r.author_id === user.id, created_at: r.created_at,
     });
     /* garde à jour le surnom et l'avatar affichés pour cet agent */
-    if (req.method === "GET" || req.method === "POST")
+    if ((req.method === "GET" || req.method === "POST") && mod !== "service_admin")
       await sql`INSERT INTO prefecture_members (id, name, avatar, updated_at) VALUES (${user.id}, ${nick}, ${avatar}, NOW())
         ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, avatar = EXCLUDED.avatar, updated_at = NOW()`;
 
     if (mod === "service") return await handleService(req, res, sql, { user, nick, avatar, body });
+    if (mod === "service_admin") {
+      if (!staff) return sendJson(res, 403, { error: "admin_required" });
+      return await handleServiceAdmin(req, res, sql, body);
+    }
 
     if (req.method === "GET") {
       const rows = await sql`SELECT i.*, m.name AS m_name, m.avatar AS m_avatar
