@@ -1,6 +1,34 @@
+
 {
-  "crons": [{ "path": "/api/purge", "schedule": "0 3 * * *" }],
+  "rewrites": [
+    {
+      "source": "/api/discord/login",
+      "destination": "/api/discord?action=login"
+    },
+    {
+      "source": "/api/discord/callback",
+      "destination": "/api/discord?action=callback"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/purge",
+      "schedule": "0 3 * * *"
+    }
+  ],
   "headers": [
-    { "source": "/admin.html", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }] }
+    {
+      "source": "/admin.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
   ]
 }

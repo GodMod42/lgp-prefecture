@@ -231,65 +231,135 @@ textarea{height:150px;padding:12px;resize:vertical}
 
 
 <script src="assets/js/auth.js"></script>
-<script>
 
+<script>
 /* Thème clair / sombre */
-try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
-document.getElementById("theme").onclick=()=>{
-  const d=document.documentElement.dataset.theme==="dark"?"light":"dark";
-  document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}
+try {
+  const t = localStorage.getItem("theme");
+  if (t) document.documentElement.dataset.theme = t;
+} catch (e) {}
+
+document.getElementById("theme").onclick = () => {
+  const d = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = d;
+  try { localStorage.setItem("theme", d); } catch (e) {}
 };
 
-
-/* ===== À CONFIGURER ===== */
-const CLIENT_ID = "1554548993709572186";   // ID de l'application (discord.com/developers > OAuth2)
+/* Connexion Discord via le serveur */
 const GUILD_ID = "1554544322068873286";
 const INVITE = "https://discord.gg/8RAFH7KfDj";
-// Ajoute exactement cette URL dans OAuth2 > Redirects de ton application :
-const REDIRECT = location.origin + location.pathname;
-
-const msg=document.getElementById("msg");
-const say=(t,c)=>{msg.className=c||"";msg.innerHTML=t};
-if(getUser()&&!location.hash.includes("access_token")){const next=sessionStorage.getItem("lgp_after_login")||"contact.html";sessionStorage.removeItem("lgp_after_login");location.replace(next)}
-
-document.getElementById("go").onclick=()=>{
-  if(!CLIENT_ID||location.protocol==="file:"){say("Connexion Discord non configurée : renseigne CLIENT_ID et héberge le site (le fichier ne peut pas être ouvert en local).","ko");return}
-  const st=crypto.randomUUID();sessionStorage.setItem("lgp_state",st);
-  location.href="https://discord.com/oauth2/authorize?"+new URLSearchParams({client_id:CLIENT_ID,response_type:"token",redirect_uri:REDIRECT,scope:"identify guilds guilds.members.read",state:st});
+const msg = document.getElementById("msg");
+const say = (t, c = "") => {
+  msg.className = c;
+  msg.innerHTML = t;
 };
 
-(async()=>{
-  if(!location.hash.includes("access_token"))return;
-  const h=new URLSearchParams(location.hash.slice(1));history.replaceState(null,"",location.pathname);
-  if(h.get("state")!==sessionStorage.getItem("lgp_state")){say("Connexion refusée (état invalide). Réessaie.","ko");return}
+if (getUser() && !location.hash.includes("access_token")) {
+  const next = sessionStorage.getItem("lgp_after_login") || "contact.html";
+  sessionStorage.removeItem("lgp_after_login");
+  location.replace(next);
+}
+
+document.getElementById("go").onclick = () => {
+  if (location.protocol === "file:") {
+    say("Héberge le site pour pouvoir te connecter à Discord.", "ko");
+    return;
+  }
+  location.href = "/api/discord/login";
+};
+
+(async () => {
+  if (!location.hash.includes("access_token")) return;
+
+  const h = new URLSearchParams(location.hash.slice(1));
+  history.replaceState(null, "", location.pathname);
+
+  const accessToken = h.get("access_token");
+  if (!accessToken) {
+    say("Jeton de connexion manquant. Réessaie.", "ko");
+    return;
+  }
+
   say("Connexion en cours...");
-  try{
-    const H={Authorization:"Bearer "+h.get("access_token")};
-    const u=await (await fetch("https://discord.com/api/users/@me",{headers:H})).json();
-    const g=await (await fetch("https://discord.com/api/users/@me/guilds",{headers:H})).json();
-    if(!g.some(x=>x.id===GUILD_ID)){say('Tu n\'es pas encore membre du serveur. <a href="'+INVITE+'" target="_blank" rel="noopener">Rejoins le Discord</a> puis reconnecte-toi.',"ko");return}
-    let m={};
-    try{const r=await fetch("https://discord.com/api/users/@me/guilds/"+GUILD_ID+"/member",{headers:H});if(r.ok)m=await r.json()}catch(e){}
-    const ext=h=>h.startsWith("a_")?"gif":"png";
-    const avatar=m.avatar?"https://cdn.discordapp.com/guilds/"+GUILD_ID+"/users/"+u.id+"/avatars/"+m.avatar+"."+ext(m.avatar)+"?size=64"
-      :u.avatar?"https://cdn.discordapp.com/avatars/"+u.id+"/"+u.avatar+"."+ext(u.avatar)+"?size=64"
-      :"https://cdn.discordapp.com/embed/avatars/"+Number((BigInt(u.id)>>22n)%6n)+".png";
-    const name=m.nick||u.global_name||u.username;
-    /* Libellé affiché dans le menu du profil : premier rôle trouvé (ordre = priorité) */
-    const ROLES=[["1554580932411789402","Staff"],["1554577683273486407","Citoyen"]];
-    const role=(ROLES.find(r=>(m.roles||[]).includes(r[0]))||[])[1]||"";
-    localStorage.setItem(AUTH_KEY,JSON.stringify({id:u.id,name,avatar,role,roles:m.roles||[],token:h.get("access_token"),exp:Date.now()+(+h.get("expires_in")||3600)*1000}));
-    const next=sessionStorage.getItem("lgp_after_login")||"contact.html";sessionStorage.removeItem("lgp_after_login");location.replace(next);
-  }catch(e){say("Impossible de contacter Discord. Réessaie dans un instant.","ko")}
+
+  try {
+    const H = { Authorization: "Bearer " + accessToken };
+
+    const userResponse = await fetch("https://discord.com/api/users/@me", {
+      headers: H
+    });
+
+    if (!userResponse.ok) throw new Error("Utilisateur Discord inaccessible");
+
+    const u = await userResponse.json();
+
+    let m = {};
+    const memberResponse = await fetch(
+      "https://discord.com/api/users/@me/guilds/" + GUILD_ID + "/member",
+      { headers: H }
+    );
+
+    if (memberResponse.ok) {
+      m = await memberResponse.json();
+    } else {
+      const guildResponse = await fetch(
+        "https://discord.com/api/users/@me/guilds",
+        { headers: H }
+      );
+
+      if (!guildResponse.ok) throw new Error("Serveurs Discord inaccessibles");
+
+      const guilds = await guildResponse.json();
+
+      if (!Array.isArray(guilds) || !guilds.some(g => g.id === GUILD_ID)) {
+        say(
+          'Impossible de confirmer ton accès au serveur. <a href="' +
+          INVITE +
+          '" target="_blank" rel="noopener">Ouvre le Discord</a>, puis réessaie.',
+          "ko"
+        );
+        return;
+      }
+    }
+
+    const ext = hash => hash && hash.startsWith("a_") ? "gif" : "png";
+
+    const avatar = m.avatar
+      ? "https://cdn.discordapp.com/guilds/" + GUILD_ID +
+        "/users/" + u.id + "/avatars/" + m.avatar + "." +
+        ext(m.avatar) + "?size=64"
+      : u.avatar
+        ? "https://cdn.discordapp.com/avatars/" + u.id + "/" +
+          u.avatar + "." + ext(u.avatar) + "?size=64"
+        : "https://cdn.discordapp.com/embed/avatars/" +
+          Number((BigInt(u.id) >> 22n) % 6n) + ".png";
+
+    const name = m.nick || u.global_name || u.username;
+    const ROLES = [
+      ["1554580932411789402", "Staff"],
+      ["1554577683273486407", "Citoyen"]
+    ];
+
+    const role =
+      (ROLES.find(r => (m.roles || []).includes(r[0])) || [])[1] || "";
+
+    localStorage.setItem(AUTH_KEY, JSON.stringify({
+      id: u.id,
+      name,
+      avatar,
+      role,
+      roles: m.roles || [],
+      token: accessToken,
+      exp: Date.now() + (Number(h.get("expires_in")) || 3600) * 1000
+    }));
+
+    const next = sessionStorage.getItem("lgp_after_login") || "contact.html";
+    sessionStorage.removeItem("lgp_after_login");
+    location.replace(next);
+
+  } catch (e) {
+    console.error("Erreur de connexion Discord :", e);
+    say("Impossible de contacter Discord. Réessaie dans un instant.", "ko");
+  }
 })();
-
 </script>
-<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
-<script src="/tracker.js" defer></script>
-</html>
-
-
-
-
-
-
