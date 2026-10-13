@@ -119,6 +119,7 @@ async function start(){
       ["Vue d'ensemble",[["urgent","Bandeau urgent"],["jobs","Liste des emplois"],["actualites","Actualités"],["presentationData","Présentation"]]],
       ["Demandes",[["tickets","Demandes de contact"],["procedures","Démarches en ligne"]]],
       ["Finances publiques",[["finances","Direction Générale des Finances Publiques"]]],
+      ["Préfecture",[["service","Prise de service"]]],
       ["Outils et réglages",[["testForms","Tests des formulaires"],["motifs","Motifs de la demande"],["shared","Menu & pied de page"]]],
       ["Pages du site",PAGES.filter(p=>F[p[0]]).map(p=>[p[0],p[1]])],
     ];
@@ -458,8 +459,62 @@ async function start(){
         box.append(r)});
       if(!box.children.length)box.append(E("p","sub",fs.length?"Aucun résultat.":"Aucun texte trouvé sur cette page."))};
     q.oninput=dr;dr()};
-
-  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p,"contact"):view==="procedures"?drawTickets(p,"procedure"):view==="finances"?drawFinances(p):view==="testForms"?drawFormTests(p):drawFields(p,view)};
+/* ===== À COLLER DANS admin.html, juste AVANT la ligne :  const draw=()=>{const p=$("#pane"); ... ===== */
+  const drawService=async p=>{
+    if(!document.getElementById("svc-css")){const st=document.createElement("style");st.id="svc-css";st.textContent=`
+.svc-k{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+.svc-k div{border:1px solid var(--ligne);border-radius:10px;padding:14px 16px;background:var(--carte)}
+.svc-k b{display:block;font-size:1.5rem;line-height:1.2}.svc-k span{font-size:.75rem;color:var(--gris);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.svc-h{font-size:1.05rem;margin:26px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--ligne)}
+.svc-r{display:flex;align-items:center;gap:12px;border:1px solid var(--ligne);border-radius:10px;padding:10px 14px;margin-bottom:8px;background:var(--carte)}
+.svc-r .x{flex:1;min-width:0}.svc-r small{color:var(--gris);display:block}
+.svc-rk{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.85rem;background:var(--fond);color:var(--gris);flex:none}
+.svc-r.t1 .svc-rk{background:#f5c542;color:#4a3500}.svc-r.t2 .svc-rk{background:#c9ced6;color:#2b2f36}.svc-r.t3 .svc-rk{background:#d99a6c;color:#3d2410}
+.svc-bar{height:7px;border-radius:99px;background:var(--fond);overflow:hidden;margin-top:6px}.svc-bar i{display:block;height:100%;background:var(--bleu)}
+.svc-av{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--bleu);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.8rem;flex:none}`;document.head.append(st)}
+    p.append(E("h2","","Service préfectoral"),E("p","sub","Classement, statistiques et gestion des prises de service. Les agents prennent leur service depuis le panel préfectoral ; un service oublié est clôturé automatiquement au bout de 12 h."));
+    const tools=E("div","ticket-tools"),per=E("select"),rf=E("button","b","Actualiser"),stopAll=E("button","b danger","Clôturer tous les services en cours"),reset=E("button","b danger","Remettre les statistiques à zéro"),box=E("div");
+    [["week","Cette semaine"],["month","Ce mois-ci"],["all","Depuis toujours"]].forEach(([v,l])=>per.add(new Option(l,v)));
+    per.style.width="auto";per.setAttribute("aria-label","Période du classement");rf.type=stopAll.type=reset.type="button";
+    tools.append(per,rf,stopAll,reset);p.append(tools,box);
+    const api=async(method,body,qs="")=>{const r=await fetch("/api/admin/service"+qs,{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||String(r.status));return d};
+    const dur=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?h+" h "+String(m).padStart(2,"0"):m+" min"};
+    const when=d=>new Date(d).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"});
+    const ini=n=>E("span","svc-av",(String(n||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("")||"?").toUpperCase());
+    const pic=(n,url)=>{if(/^https:\/\/cdn\.discordapp\.com\//.test(url||"")){const i=E("img","svc-av");i.src=url;i.alt="";i.onerror=()=>i.replaceWith(ini(n));return i}return ini(n)};
+    const FIN={agent:"Terminé par l'agent",admin:"Clôturé par un administrateur",auto:"Fin automatique (oubli)"};
+    const load=async()=>{
+      box.textContent="Chargement…";
+      try{
+        const d=await api("GET",null,"?period="+per.value),t=d.totals;box.textContent="";
+        const k=E("div","svc-k");
+        [["En service maintenant",d.on_duty.length],["Heures de service",dur(t.seconds)],["Services effectués",t.sessions],["Durée moyenne",t.sessions?dur(t.seconds/t.sessions):"—"],["Agents actifs",t.agents]].forEach(([l,v])=>{const e=E("div");e.append(E("b","",String(v)),E("span","",l));k.append(e)});
+        box.append(k,E("h3","svc-h","Classement"));
+        if(!d.board.length)box.append(E("p","sub","Aucun service sur cette période."));
+        const top=d.board[0]?d.board[0].seconds||1:1;
+        d.board.forEach((a,i)=>{const r=E("div","svc-r"+(i<3?" t"+(i+1):"")),x=E("div","x"),bar=E("div","svc-bar"),f=E("i");f.style.width=Math.max(2,a.seconds/top*100)+"%";bar.append(f);
+          x.append(E("strong","",a.name||"Agent"),E("small","",a.sessions+" service(s) · moyenne "+dur(a.seconds/a.sessions)+" · dernier : "+when(a.last_seen)),bar);
+          r.append(E("span","svc-rk",String(i+1)),pic(a.name,a.avatar),x,E("strong","",dur(a.seconds)));box.append(r)});
+        box.append(E("h3","svc-h","En service actuellement"));
+        if(!d.on_duty.length)box.append(E("p","sub","Aucun agent en service."));
+        d.on_duty.forEach(s=>{const r=E("div","svc-r"),x=E("div","x"),b=E("button","b danger","Forcer la fin");b.type="button";
+          x.append(E("strong","",s.name||"Agent"),E("small","","Depuis "+when(s.started_at)+" ("+dur(s.seconds)+")"+(s.note?" · "+s.note:"")));
+          b.onclick=async()=>{if(!confirm("Mettre fin au service de "+(s.name||"cet agent")+" ?"))return;try{await api("PATCH",{id:s.id});await load()}catch(e){alert("Impossible : "+e.message)}};
+          r.append(pic(s.name,s.avatar),x,b);box.append(r)});
+        box.append(E("h3","svc-h","Derniers services"));
+        if(!d.recent.length)box.append(E("p","sub","Aucun service enregistré."));
+        d.recent.forEach(s=>{const r=E("div","svc-r"),x=E("div","x"),b=E("button","b","Supprimer");b.type="button";
+          x.append(E("strong","",(s.name||"Agent")+" · "+dur(s.seconds)),E("small","",when(s.started_at)+(s.ended_at?" → "+when(s.ended_at):"")+" · "+(s.ended_at?(FIN[s.ended_by]||"Terminé"):"En cours")));
+          b.onclick=async()=>{if(!confirm("Supprimer ce service des statistiques ?"))return;try{await api("DELETE",{id:s.id});await load()}catch(e){alert("Impossible : "+e.message)}};
+          r.append(pic(s.name,s.avatar),x,b);box.append(r)});
+      }catch(e){box.textContent=e.message==="admin_required"?"Ton compte n'a pas le rôle Discord Staff.":"Impossible de charger les services. Vérifie que api/admin/service.js est déployé."}
+    };
+    per.onchange=load;rf.onclick=load;
+    stopAll.onclick=async()=>{if(!confirm("Clôturer tous les services en cours ?"))return;try{const r=await api("PATCH",{all:true});alert(r.closed+" service(s) clôturé(s).");await load()}catch(e){alert("Impossible : "+e.message)}};
+    reset.onclick=async()=>{if(!confirm("Supprimer DÉFINITIVEMENT tous les services et remettre le classement à zéro ? Action irréversible."))return;if(prompt("Pour confirmer, tape RESET")!=="RESET")return;try{const r=await api("DELETE",{all:true});alert(r.deleted+" service(s) supprimé(s).");await load()}catch(e){alert("Impossible : "+e.message)}};
+    await load();
+  };
+  const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p,"contact"):view==="procedures"?drawTickets(p,"procedure"):view==="finances"?drawFinances(p):   view==="testForms"?drawFormTests(p):view==="service"?drawService(p):drawFields(p,view)};
 
   $("#pv").onclick=()=>{save();window.open("index.html?preview=1","_blank")};
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
