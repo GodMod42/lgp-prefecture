@@ -13,14 +13,13 @@
     const d = document.createElement('div');
     d.setAttribute('role', 'dialog');
     d.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;max-width:560px;margin:auto;background:#161920;color:#c9ced8;border:1px solid #262a33;border-radius:12px;padding:16px;font:14px/1.5 system-ui,sans-serif;z-index:99999';
-    d.innerHTML = '<p style="margin:0 0 12px">Ce site mesure votre visite (appareil, navigateur, localisation approximative, interactions) à des fins statistiques. Cela nécessite votre accord. <a href="/confidentialite.html" style="color:#3ddc97">En savoir plus</a></p><div style="display:flex;gap:8px"><button data-v="no">Refuser</button><button data-v="yes">Accepter</button></div>';
+    d.innerHTML = '<p style="margin:0 0 12px">Ce site mesure votre visite. Cela nécessite votre accord. <a href="/politique-confidentialite.html" style="color:#3ddc97">En savoir plus</a></p><div style="display:flex;gap:8px"><button data-v="no">Refuser</button><button data-v="yes">Accepter</button></div>';
     d.querySelectorAll('button').forEach(b => {
       b.style.cssText = 'flex:1;padding:10px;border-radius:8px;border:1px solid #3a3f4b;background:#262a33;color:#fff;font:inherit;cursor:pointer';
       b.onclick = () => { ls.set(K, b.dataset.v); d.remove(); if (b.dataset.v === 'yes') start(); };
     });
     document.body.appendChild(d);
   }
-
   const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))]
     .map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
 
