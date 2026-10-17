@@ -12,6 +12,28 @@ const MAX_MESSAGE = 3800;
 const RDV_MOTIF = "Déclaration / démarche";
 const RDV_SUBJECT = "Démarche en ligne — Prise de rendez-vous";
 
+/* ===== Création d'entreprise : mise en forme Discord ===== */
+const COMPANY_SUBJECT = "Démarche en ligne — Création d'entreprise";
+const SECTION_ICONS = {
+  1: "📋", 2: "⚙️", 3: "👤", 4: "🏠", 6: "👪", 8: "📍", 10: "🛠️",
+  12: "💼", 13: "👥", 15: "✍️", 16: "🏥", 17: "💶", 18: "📝", 21: "✅",
+};
+
+// Transforme le texte brut du formulaire en description Discord lisible
+// (titres de section avec icône, réponses en citation avec la question en gras).
+function prettyCompany(text) {
+  return text.split("\n").slice(1).map((line) => {
+    const section = /^— (.+) —$/.exec(line);
+    if (section) {
+      const n = Number(/^(\d+)/.exec(section[1])?.[1]);
+      return `\n${SECTION_ICONS[n] || "▪️"} **${section[1]}**`;
+    }
+    if (!line.trim()) return "";
+    const i = line.indexOf(" → ");
+    return i > 0 ? `> **${line.slice(0, i)}** : ${line.slice(i + 3)}` : `> ${line}`;
+  }).join("\n").trim().slice(0, 4096);
+}
+
 const clip = (value, max) => String(value ?? "").trim().slice(0, max);
 const parisToday = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Paris" }); // AAAA-MM-JJ
 const frDate = (date) => date.split("-").reverse().join("/");
@@ -110,9 +132,10 @@ export default async function handler(req, res) {
       (reference, discord_user_id, discord_username, requester_name, phone, motif, subject, messages)
       VALUES (${reference}, ${identity.user.id}, ${identity.user.username}, ${name}, ${phone}, ${motif}, ${subject}, ${JSON.stringify(messages)}::jsonb)`;
 
+    const isCompany = !rdv && subject === COMPANY_SUBJECT;
     const embed = {
-      title: (rdv ? "📅 Prise de rendez-vous" : `${motif} — ${subject}`).slice(0, 256),
-      description: text,
+      title: (rdv ? "📅 Prise de rendez-vous" : isCompany ? "🏢 Création d'entreprise" : `${motif} — ${subject}`).slice(0, 256),
+      description: isCompany ? prettyCompany(text) : text,
       color: 0x000091,
       fields: [
         { name: "Demandeur", value: `${name} · ${identity.user.username}`.slice(0, 1024), inline: true },
