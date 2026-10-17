@@ -159,16 +159,69 @@ document.getElementById("theme").onclick=()=>{const dark=document.documentElemen
 const form=document.getElementById("grant-form"),status=document.getElementById("form-status"),submit=document.getElementById("submit-form");
 let user=getUser();
 if(!user||!user.token){try{sessionStorage.setItem("lgp_after_login","demande-subvention.html")}catch{}location.replace("connexion.html")}
+
+// Libellés plus clairs (sinon : texte du label ou titre du groupe de choix)
+const LABELS={
+  legal_lastname:"Représentant légal — Nom",
+  legal_firstname:"Représentant légal — Prénom",
+  legal_function:"Représentant légal — Fonction",
+  legal_phone:"Représentant légal — Téléphone",
+  legal_email:"Représentant légal — Courriel",
+  contact_lastname:"Personne chargée de la demande — Nom",
+  contact_firstname:"Personne chargée de la demande — Prénom",
+  contact_function:"Personne chargée de la demande — Fonction",
+  contact_phone:"Personne chargée de la demande — Téléphone",
+  contact_email:"Personne chargée de la demande — Courriel",
+  approval_type:"Type d'agrément",
+  approval_authority:"Agrément attribué par",
+  approval_date:"Agrément en date du",
+  publication_date:"Publication au Journal officiel",
+  project_start:"Début prévisionnel",
+  project_end:"Fin prévisionnelle",
+  project_beneficiaries:"Public bénéficiaire",
+  budget_other:"Autres dépenses",
+  signer_name:"Signataire",
+  certification:"Attestation sur l'honneur",
+  signed_date:"Fait le",
+  signed_place:"Fait à"
+};
+const MONEY=/^(budget_|fund_|amount_)/;
+
+// Texte envoyé à l'API : une section par cadre du formulaire, une ligne "Question → Réponse"
 function summary(){
-  const rows=["DEMANDE DE SUBVENTION(S)"];
+  const clean=s=>String(s||"").replace(/\s+/g," ").replace(/^\d+(\.\d+)?\s+/,"").trim();
+  const entries=[];
   for(const control of form.elements){
-    if(!control.name||control.disabled||["submit","button","reset"].includes(control.type)||(["radio","checkbox"].includes(control.type)&&!control.checked))continue;
+    const name=control.name;
+    if(!name||control.disabled||/^period_/.test(name)||["submit","button","reset"].includes(control.type)||(["radio","checkbox"].includes(control.type)&&!control.checked))continue;
     const value=String(control.value||"").trim();if(!value)continue;
-    const choice=control.closest("fieldset.choice"),option=control.closest("label")?.textContent?.trim(),label=choice?[choice.querySelector("legend")?.textContent?.trim(),option].filter(Boolean).join(" — "):control.labels?.[0]?.textContent?.trim()||control.getAttribute("aria-label")||control.name.replaceAll("_"," ");
-    rows.push(label+": "+value);
+    const choice=control.closest("fieldset.choice");
+    let label=LABELS[name]||(choice?choice.querySelector("legend")?.textContent:control.labels?.[0]?.textContent)||control.getAttribute("aria-label")||name.replaceAll("_"," ");
+    label=clean(label);
+    let shown=value;
+    if(MONEY.test(name)){
+      shown=value+" €";
+      const n=/^amount_(\d)$/.exec(name);
+      if(n){
+        label="Subvention demandée n°"+n[1];
+        const period=form.elements["period_"+n[1]]?.value.trim();
+        if(period)shown+=" (au titre de : "+period+")";
+      }
+    }
+    const section=clean(control.closest("fieldset.card")?.querySelector(":scope > legend")?.textContent);
+    const last=entries[entries.length-1];
+    if(control.type==="checkbox"&&last&&last.section===section&&last.label===label){last.value+=", "+shown;continue}
+    entries.push({section,label,value:shown});
+  }
+  const rows=["DEMANDE DE SUBVENTION(S)"];
+  let lastSection="";
+  for(const e of entries){
+    if(e.section&&e.section!==lastSection){rows.push("","— "+e.section+" —");lastSection=e.section}
+    rows.push(e.label+" → "+e.value);
   }
   return rows.join("\n");
 }
+
 form.addEventListener("submit",async event=>{
   event.preventDefault();if(!form.reportValidity())return;
   if(!form.querySelector('input[name="funding_form"]:checked')){status.className="status err";status.textContent="Choisis au moins une forme de demande (numéraire ou en nature).";return}
