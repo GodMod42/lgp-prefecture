@@ -12,21 +12,37 @@ const MAX_MESSAGE = 3800;
 const RDV_MOTIF = "Déclaration / démarche";
 const RDV_SUBJECT = "Démarche en ligne — Prise de rendez-vous";
 
-/* ===== Création d'entreprise : mise en forme Discord ===== */
+/* ===== Mise en forme Discord des formulaires longs =====
+   Les pages envoient un texte brut avec des sections « — 3. Titre — » et des lignes « Question → Réponse ».
+   Ici on le transforme en description d'embed : titres de section avec icône, réponses en citation. */
 const COMPANY_SUBJECT = "Démarche en ligne — Création d'entreprise";
-const SECTION_ICONS = {
+const SUBVENTION_SUBJECT = "Démarche en ligne — Demande de subvention";
+
+const COMPANY_ICONS = {
   1: "📋", 2: "⚙️", 3: "👤", 4: "🏠", 6: "👪", 8: "📍", 10: "🛠️",
   12: "💼", 13: "👥", 15: "✍️", 16: "🏥", 17: "💶", 18: "📝", 21: "✅",
 };
+const SUBVENTION_ICONS = {
+  1: "🏢", 2: "🏛️", 3: "🎯", 4: "🧾", 5: "💶", 6: "📎", 7: "✅",
+};
 
-// Transforme le texte brut du formulaire en description Discord lisible
-// (titres de section avec icône, réponses en citation avec la question en gras).
-function prettyCompany(text) {
+const FORMS = {
+  company: { title: "🏢 Création d'entreprise", icons: COMPANY_ICONS, fallback: "▪️" },
+  subvention: { title: "💶 Demande de subvention", icons: SUBVENTION_ICONS, fallback: "📌" },
+};
+
+function formKind(subject) {
+  if (subject.startsWith(SUBVENTION_SUBJECT)) return "subvention";
+  if (subject.startsWith(COMPANY_SUBJECT)) return "company";
+  return null;
+}
+
+function prettyForm(text, { icons, fallback }) {
   return text.split("\n").slice(1).map((line) => {
     const section = /^— (.+) —$/.exec(line);
     if (section) {
       const n = Number(/^(\d+)/.exec(section[1])?.[1]);
-      return `\n${SECTION_ICONS[n] || "▪️"} **${section[1]}**`;
+      return `\n${icons[n] || fallback} **${section[1]}**`;
     }
     if (!line.trim()) return "";
     const i = line.indexOf(" → ");
@@ -132,10 +148,11 @@ export default async function handler(req, res) {
       (reference, discord_user_id, discord_username, requester_name, phone, motif, subject, messages)
       VALUES (${reference}, ${identity.user.id}, ${identity.user.username}, ${name}, ${phone}, ${motif}, ${subject}, ${JSON.stringify(messages)}::jsonb)`;
 
-    const isCompany = !rdv && subject === COMPANY_SUBJECT;
+    const kind = !rdv && motif === RDV_MOTIF ? formKind(subject) : null;
+    const form = kind ? FORMS[kind] : null;
     const embed = {
-      title: (rdv ? "📅 Prise de rendez-vous" : isCompany ? "🏢 Création d'entreprise" : `${motif} — ${subject}`).slice(0, 256),
-      description: isCompany ? prettyCompany(text) : text,
+      title: (rdv ? "📅 Prise de rendez-vous" : form ? form.title : `${motif} — ${subject}`).slice(0, 256),
+      description: form ? prettyForm(text, form) : text,
       color: 0x000091,
       fields: [
         { name: "Demandeur", value: `${name} · ${identity.user.username}`.slice(0, 1024), inline: true },
