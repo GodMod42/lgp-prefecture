@@ -73,7 +73,7 @@ footer{background:#1e1e1e;color:#ddd}.cols{display:grid;grid-template-columns:1.
     <fieldset class="card"><legend>1. Identification de la société</legend><div class="grid">
       <div class="field c12"><label for="company-name">1.1 Nom — Dénomination</label><input id="company-name" name="company_name" maxlength="120" required autocomplete="organization"></div>
       <div class="field c4"><label for="company-acronym">Sigle de la société</label><input id="company-acronym" name="company_acronym" maxlength="40"></div>
-      <div class="field c8"><label for="company-website">Site web</label><input id="company-website" name="company_website" type="url" maxlength="180" placeholder="https://"></div>
+      <div class="field c8"><label for="company-website">Site web <span class="hint">(facultatif)</span></label><input id="company-website" name="company_website" type="url" maxlength="180" placeholder="https://"></div>
       <div class="field c12"><label for="company-siret">1.2 Numéro SIRET (si disponible)</label><input id="company-siret" name="company_siret" maxlength="20" inputmode="numeric"></div>
       <div class="field c6"><label for="company-address">1.5 Adresse du siège social</label><input id="company-address" name="company_address" maxlength="180" autocomplete="street-address" required></div>
       <div class="field c3"><label for="company-postal">Code postal</label><input id="company-postal" name="company_postal" maxlength="15" autocomplete="postal-code" required></div>
@@ -82,7 +82,7 @@ footer{background:#1e1e1e;color:#ddd}.cols{display:grid;grid-template-columns:1.
       <div class="field c4"><label for="legal-firstname">Prénom</label><input id="legal-firstname" name="legal_firstname" maxlength="100" required autocomplete="given-name"></div>
       <div class="field c4"><label for="legal-function">Fonction</label><input id="legal-function" name="legal_function" maxlength="100" required></div>
       <div class="field c4"><label for="legal-phone">Téléphone</label><input id="legal-phone" name="legal_phone" type="tel" maxlength="30" required autocomplete="tel"></div>
-      <div class="field c8"><label for="legal-email">Courriel</label><input id="legal-email" name="legal_email" type="email" maxlength="140" required autocomplete="email"></div>
+      <div class="field c8"><label for="legal-email">Courriel <span class="hint">(facultatif)</span></label><input id="legal-email" name="legal_email" type="email" maxlength="140" autocomplete="email"></div>
       <div class="field c4"><label for="contact-lastname">1.7 Personne chargée de la présente demande — Nom <span class="hint">(si différent)</span></label><input id="contact-lastname" name="contact_lastname" maxlength="100"></div>
       <div class="field c4"><label for="contact-firstname">Prénom</label><input id="contact-firstname" name="contact_firstname" maxlength="100"></div>
       <div class="field c4"><label for="contact-function">Fonction</label><input id="contact-function" name="contact_function" maxlength="100"></div>
