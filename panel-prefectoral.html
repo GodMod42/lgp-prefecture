@@ -105,6 +105,12 @@ img.av{object-fit:cover;background:var(--fond)}.me-chip{display:flex;align-items
 .relay b{display:block}.relay span{color:var(--texte)}
 .dchip{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:700;color:var(--bleu);border:1px solid var(--bleu);border-radius:99px;padding:3px 10px;white-space:nowrap}
 .toast{position:fixed;right:20px;bottom:24px;max-width:360px;background:var(--texte);color:var(--carte);padding:12px 18px;border-radius:10px;font-size:.9rem;box-shadow:0 8px 24px #0004;z-index:60;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none}.toast.on{opacity:1;transform:none}
+/* modules repris du panel admin */
+.sub{color:var(--gris);font-size:.9rem;margin-bottom:14px}.bad{color:var(--err);font-weight:600}
+.ticket-tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}
+.ticket{border:1px solid var(--ligne);border-radius:9px;background:var(--carte);margin:10px 0;overflow:hidden}.ticket>summary{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;list-style:none}.ticket>summary::-webkit-details-marker,.ticket-category>summary::-webkit-details-marker{display:none}.ticket-summary-main{flex:1;min-width:0}.ticket-summary-main strong{display:block;overflow-wrap:anywhere}.ticket-summary-meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;color:var(--gris);font-size:.82rem}.ticket-status{flex:none;border-radius:20px;padding:3px 10px;background:var(--lav);font-size:.78rem;font-weight:700}.ticket-status.closed{background:var(--fond);color:var(--gris)}.ticket-content{padding:4px 16px 16px;border-top:1px solid var(--ligne)}.ticket-head{margin:10px 0}.ticket-message{border-left:3px solid var(--ligne);background:var(--fond);border-radius:0 7px 7px 0;padding:10px 12px;margin:10px 0}.ticket-message.staff{border-color:var(--bleu)}.ticket-message-head{display:flex;justify-content:space-between;gap:10px;color:var(--gris);font-size:.8rem;font-weight:700}.ticket-message-text{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px}.ticket textarea{min-height:80px;margin:8px 0}.ticket small{color:var(--gris)}.demo-badge{font-size:.75rem;font-weight:800;color:var(--bleu)}
+.ticket-category{border:1px solid var(--ligne);border-radius:9px;margin:12px 0;padding:0 12px 8px}.ticket-category>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 4px;font-weight:700;color:var(--bleu);cursor:pointer;list-style:none}.ticket-category[open]>summary{border-bottom:1px solid var(--ligne)}
+.finance-company{margin:12px 0}.finance-company>summary{display:flex;align-items:center;justify-content:space-between;gap:12px}.finance-head-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}.finance-meta{padding:0 18px 14px;color:var(--gris);font-size:.78rem}.finance-save{font-size:.8rem;color:var(--gris)}
 </style>
 <script>window.LGP_ADMIN=true</script>
 <script src="assets/js/site.js"></script>
@@ -118,8 +124,7 @@ img.av{object-fit:cover;background:var(--fond)}.me-chip{display:flex;align-items
   <div class="top"><div class="in">
     <h1>Panel préfectoral</h1>
     <span class="me-chip" id="me"></span>
-    <a class="b" href="index.html" style="text-decoration:none">← Retour au site</a>
-    <a class="b" href="admin.html" id="lk-admin" hidden>← Panneau d'administration</a>
+    <a class="b" href="admin.html" id="lk-admin" hidden>Panneau d'administration</a>
     <a class="b" href="dashboard.html">← Mon espace</a>
     <button class="b p" id="rf" type="button">Actualiser</button>
   </div>
@@ -143,12 +148,16 @@ const MODS={
  dossier:{i:"dossier",n:"Suivi de dossier",d:"Instruction des demandes : référence, agent en charge et avancement.",f:[["ref","Référence","text"],["intitule","Intitulé du dossier","text"],["resp","Agent en charge","text"],["statut","Statut","select",["Ouvert","En cours","Clos","Refusé"]],["suivi","Dernière mise à jour","area"]]},
  document:{i:"document",n:"Documents",d:"Arrêtés, modèles, courriers et pièces de référence.",f:[["intitule","Intitulé","text"],["type","Type","select",["Arrêté","Modèle","Courrier","Rapport","Autre"]],["lien","Lien du document (Google Doc, PDF…)","url"]]},
  notes:{i:"notes",n:"Notes",d:"Notes de service et mémos internes.",f:[["sujet","Sujet","text"],["texte","Note","area"]]},
- tenues:{i:"tenues",n:"Tenues",d:"Tenues réglementaires par grade.",f:[["nom","Nom de la tenue","text"],["grade","Grade concerné","select",["Préfet de Police","Sous-Préfet","Directeur de cabinet","Secrétaire Général","Attaché d'administration","Secrétaire administratif","Inspecteur IGPN","Huissier de Justice","Inspecteur", "Responsable APR", "APR"]],["lien","Lien de l'image","url"],["detail","Composition (haut, bas, accessoires)","area"]]},
+ tenues:{i:"tenues",n:"Tenues",d:"Tenues réglementaires par grade.",f:[["nom","Nom de la tenue","text"],["grade","Grade concerné","select",["Préfet de Police","Sous-Préfet","Directeur de cabinet","Secrétaire Général","Attaché d'administration","Secrétaire administratif","Inspecteur IGPN","Huissier de Justice","Inspecteur"]],["lien","Lien de l'image","url"],["detail","Composition (haut, bas, accessoires)","area"]]},
  absence:{i:"absence",n:"Absences",d:"Déclarations d'absence des agents.",f:[["agent","Agent","text"],["du","Du","date"],["au","Au","date"],["motif","Motif","text"]]},
- annuaire:{i:"annuaire",n:"Annuaire",d:"Coordonnées des agents de la Préfecture.",f:[["nom","Nom Prénom","text"],["grade","Grade","text"],["tel","Téléphone","text"],["discord","Pseudo Discord","text"]]}
+ annuaire:{i:"annuaire",n:"Annuaire",d:"Coordonnées des agents de la Préfecture.",f:[["nom","Nom Prénom","text"],["grade","Grade","text"],["tel","Téléphone","text"],["discord","Pseudo Discord","text"]]},
+ contact:{i:"discussion",n:"Demandes de contact",d:"Demandes générales reçues via le formulaire « Nous contacter »."},
+ procedures:{i:"dossier",n:"Démarches en ligne",d:"Déclarations et formulaires de démarches, regroupés par type."},
+ finances:{i:"document",n:"Finances publiques",d:"Direction Générale des Finances Publiques : fiches fiscales des entreprises."},
+ svcadmin:{i:"service",n:"Gestion des services",d:"Classement, statistiques et gestion des prises de service.",admin:true}
 };
 const RELAY={annonce:"annonces",reunion:"réunions",rdv:"rendez-vous",absence:"absences"};   /* modules relayés sur Discord (webhook) */
-const GROUPS=[["Service",["service"]],["Communication",["annonce","reunion","discussion"]],["Agenda et dossiers",["rdv","dossier","document","notes"]],["Personnel",["tenues","absence","annuaire"]]];
+const GROUPS=[["Service",["service"]],["Communication",["annonce","reunion","discussion"]],["Agenda et dossiers",["rdv","dossier","document","notes"]],["Personnel",["tenues","absence","annuaire"]],["Administration",["contact","procedures","finances","svcadmin"]]];
 
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 const $=s=>document.querySelector(s);
@@ -221,6 +230,150 @@ const store=(()=>{
     me};
 })();
 
+/* ===== Modules repris du panel admin ===== */
+const showTicketAttachments=(c,att)=>{(att||[]).forEach(f=>{if(!f?.data||!f?.name)return;const l=E("a","",`📎 ${f.name}`);l.href=f.data;l.download=f.name;l.target="_blank";l.rel="noopener noreferrer";l.style.cssText="display:block;margin-top:6px;color:var(--bleu);overflow-wrap:anywhere";c.append(l)})};
+const readTicketAttachments=files=>Promise.all([...files].map(file=>{if(file.size>1024*1024)throw new Error("Chaque pièce jointe doit faire 1 Mo maximum.");if(!["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","image/jpeg","image/png","image/webp","text/plain"].includes(file.type))throw new Error("Format de pièce jointe non accepté.");return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res({name:file.name,type:file.type,size:file.size,data:r.result});r.onerror=()=>rej(new Error("Impossible de lire une pièce jointe."));r.readAsDataURL(file)})})).then(items=>{if(items.reduce((s,i)=>s+i.size,0)>2.5*1024*1024)throw new Error("La taille totale des pièces jointes ne peut pas dépasser 2,5 Mo.");return items});
+const procedureName=t=>{const p="Démarche en ligne — ";if(t.subject?.startsWith(p))return t.subject.slice(p.length).replace(/ \[TEST\]$/," ").trim()||"Autres démarches";if(t.subject?.startsWith("Création d'entreprise —"))return "Création d'entreprise";return "Autres démarches"};
+const ticketCard=(ticket,{call,reload})=>{
+  const card=E("details","ticket"),summary=E("summary"),main=E("div","ticket-summary-main");
+  const meta=E("div","ticket-summary-meta");
+  meta.append(E("span","","Réf. "+(ticket.reference||"—")),E("span","",ticket.requester_name||"Demandeur inconnu"),E("span","",ticket.discord_username||""),E("span","",new Date(ticket.created_at||Date.now()).toLocaleString("fr-FR")));
+  main.append(E("strong","",ticket.subject?.replace(/^Démarche en ligne — /,"Démarche : ")||"Demande sans objet"),meta);summary.append(main);
+  if(ticket.is_test)summary.append(E("span","demo-badge","TEST"));
+  summary.append(E("span","ticket-status"+(ticket.status==="Fermé"?" closed":""),ticket.status||"Ouvert"));card.append(summary);
+  const body=E("div","ticket-content");
+  body.append(E("div","ticket-head",ticket.motif+" · "+(ticket.phone?"Téléphone : "+ticket.phone:"Aucun téléphone renseigné")));
+  (ticket.messages||[]).forEach(m=>{const staff=m.sender==="prefecture",r=E("div","ticket-message"+(staff?" staff":"")),h=E("div","ticket-message-head");
+    h.append(E("span","",(staff?"Réponse de la Préfecture":"Message du demandeur")+(m.author?" · "+m.author:"")),E("span","",m.createdAt?new Date(m.createdAt).toLocaleString("fr-FR"):""));
+    r.append(h,E("div","ticket-message-text",m.text||"(Message vide)"));showTicketAttachments(r,m.attachments);body.append(r)});
+  if(ticket.status==="Ouvert"){
+    const area=E("textarea");area.placeholder="Rédige une réponse claire…";area.setAttribute("aria-label","Réponse au demandeur");
+    const picker=E("input");picker.type="file";picker.multiple=true;picker.accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.txt";
+    const hint=E("small","","Pièces jointes : PDF, Word, JPG, PNG, WebP ou TXT — 1 Mo par fichier, 2,5 Mo au total.");
+    const actions=E("div","ticket-tools"),send=E("button","b p","Envoyer la réponse");send.type="button";
+    send.onclick=async()=>{if(!area.value.trim()&&!picker.files.length)return;send.disabled=true;try{const attachments=await readTicketAttachments(picker.files);const r=await call("POST",{reference:ticket.reference,text:area.value,attachments});if(!r.discordNotified)alert("Réponse enregistrée sur le site. Discord n’a pas reçu sa notification.");await reload()}catch(e){alert("Impossible d’enregistrer la réponse : "+e.message);send.disabled=false}};
+    const close=E("button","b","Clôturer cette demande");close.type="button";close.onclick=async()=>{if(!confirm("Clôturer la demande "+ticket.reference+" ?"))return;close.disabled=true;try{await call("PATCH",{reference:ticket.reference});await reload()}catch(e){alert("Impossible de clôturer : "+e.message);close.disabled=false}};
+    actions.append(send,close);body.append(area,hint,picker,actions);
+  }
+  const del=E("button","b danger","Supprimer cette demande");del.type="button";
+  del.onclick=async()=>{if(!confirm("Supprimer définitivement la demande "+ticket.reference+" ? Elle disparaîtra aussi de « Mes démarches » chez le demandeur. Action irréversible."))return;del.disabled=true;try{await call("DELETE",{reference:ticket.reference});await reload()}catch(e){alert("Impossible de supprimer : "+e.message);del.disabled=false}};
+  const wrap=E("div","ticket-tools");wrap.append(del);body.append(wrap);
+  if(!ticket.discord_notified)body.append(E("p","bad","Notification Discord non délivrée. La demande reste conservée sur le site."));
+  card.append(body);return card;
+};
+const drawTickets=(p,ticketType)=>{
+  const procedures=ticketType==="procedure",title=procedures?"Démarches en ligne":"Demandes de contact",root=E("div");p.append(root);
+  const call=async(method,body)=>{const r=await fetch("/api/admin/tickets",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||String(r.status));return d};
+  const run=async()=>{
+    root.textContent="";
+    root.append(E("p","sub",procedures?"Les déclarations et formulaires de démarches sont regroupés ici par type.":"Les demandes générales sont séparées des démarches administratives. Ouvre une fiche pour lire la conversation et répondre."));
+    const controls=E("div","ticket-tools"),refresh=E("button","b","Actualiser"),expand=E("button","b","Tout développer"),collapse=E("button","b","Tout replier"),closeAll=E("button","b danger","Clôturer toutes les demandes ouvertes de cet onglet"),deleteAll=E("button","b danger","Supprimer toutes les demandes de cet onglet"),box=E("div");
+    refresh.type=expand.type=collapse.type=closeAll.type=deleteAll.type="button";refresh.onclick=run;
+    expand.onclick=()=>box.querySelectorAll("details").forEach(i=>i.open=true);collapse.onclick=()=>box.querySelectorAll("details").forEach(i=>i.open=false);
+    closeAll.onclick=async()=>{if(!confirm("Clôturer toutes les demandes ouvertes de l’onglet « "+title+" » ?"))return;closeAll.disabled=true;try{const r=await call("PATCH",{closeAll:true,ticketType});alert(r.closed+" demande(s) clôturée(s).");await run()}catch(e){alert("Impossible de clôturer les demandes : "+e.message);closeAll.disabled=false}};
+    deleteAll.onclick=async()=>{if(!confirm("Supprimer DÉFINITIVEMENT toutes les demandes de l’onglet « "+title+" » (ouvertes et clôturées) ? Action irréversible."))return;if(prompt("Pour confirmer, tape SUPPRIMER")!=="SUPPRIMER")return;deleteAll.disabled=true;try{const r=await call("DELETE",{all:true,ticketType});alert(r.deleted+" demande(s) supprimée(s).");await run()}catch(e){alert("Impossible de supprimer les demandes : "+e.message);deleteAll.disabled=false}};
+    controls.append(refresh,expand,collapse,closeAll,deleteAll);root.append(controls,box);
+    box.append(E("p","sub","Chargement des demandes…"));
+    try{
+      const all=await call("GET"),tickets=all.filter(t=>procedures?t.motif==="Déclaration / démarche":t.motif!=="Déclaration / démarche");box.textContent="";
+      if(!tickets.length){box.append(E("p","sub","Aucune demande ouverte ou archivée dans cette rubrique."));return}
+      if(procedures){
+        const cats=new Map();tickets.forEach(t=>{const n=procedureName(t);if(!cats.has(n))cats.set(n,[]);cats.get(n).push(t)});
+        [...cats.entries()].sort(([a],[b])=>a.localeCompare(b,"fr")).forEach(([name,items])=>{
+          const g=E("details","ticket-category"),l=E("summary"),oc=items.filter(t=>t.status==="Ouvert").length;
+          l.append(E("span","",name),E("span","ticket-status",`${items.length} demande(s) · ${oc} ouverte(s)`));g.append(l);
+          items.forEach(t=>g.append(ticketCard(t,{call,reload:run})));box.append(g)});
+      }else tickets.forEach(t=>box.append(ticketCard(t,{call,reload:run})));
+    }catch(e){box.textContent=e.message==="admin_required"?"Ton compte n’a pas l’autorisation d’accéder aux demandes.":e.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessaie dans un instant.":e.message==="database_not_configured"?"La base de données n’est pas encore reliée au projet Vercel.":"Impossible de charger les demandes. Vérifie le stockage Vercel et réessaie."}
+  };
+  run();
+};
+const drawFinances=async p=>{
+  p.append(E("p","sub","Les déclarations de création d’entreprise reçues sont ajoutées automatiquement. Tu peux aussi créer une fiche manuellement. Tout est sauvegardé automatiquement dans la base du site."));
+  const tools=E("div","finance-head-tools"),add=E("button","b p","Ajouter une entreprise"),status=E("span","finance-save","Chargement des dossiers…"),list=E("div");
+  add.type="button";tools.append(add,status);p.append(tools,list);
+  const api=async(method,body)=>{const r=await fetch("/api/admin/finances",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||String(r.status));return d};
+  const showError=e=>status.textContent=e.message==="database_not_configured"?"Stockage de la base non configuré dans Vercel.":"Erreur de sauvegarde ou de chargement. Réessaie.";
+  const renderCompany=company=>{
+    const details=E("details","finance-company"),summary=E("summary"),sName=E("span","",company.company_name),sStatus=E("span","ticket-status",company.tax_status);
+    summary.append(sName,sStatus);details.append(summary);
+    const form=E("div","finance-form"),saveState=E("span","finance-save","Enregistré");
+    const mk=(label,value,{kind="input",full=false,options=[]}={})=>{
+      const w=E("div","finance-field"+(full?" full":"")),cap=E("label","",label);let i;
+      if(kind==="select"){i=E("select");options.forEach(o=>i.add(new Option(o,o)));i.value=value||options[0]}
+      else if(kind==="area"){i=E("textarea");i.value=value||""}
+      else{i=E("input");i.type="text";i.value=value||""}
+      w.append(cap,i);form.append(w);return i};
+    const name=mk("Entreprise",company.company_name),taxStatus=mk("Statut des impôts",company.tax_status,{kind:"select",options:["Non renseigné","À jour","À régulariser","En attente","En contrôle"]}),period=mk("Période fiscale suivie",company.tax_period),taxDetails=mk("Déclarations, montants ou échéances",company.tax_details,{kind:"area",full:true}),investigation=mk("Enquête ou contrôle potentiel",company.investigation,{kind:"area",full:true}),notes=mk("Notes internes",company.notes,{kind:"area",full:true});
+    const meta=E("div","finance-meta");meta.append(saveState);if(company.source_reference)meta.append(E("span",""," · Déclaration initiale : "+company.source_reference));form.append(meta);
+    const remove=E("button","b danger","Supprimer cette fiche");remove.type="button";remove.style.margin="0 18px 18px";
+    remove.onclick=async()=>{if(!confirm("Supprimer la fiche de "+company.company_name+" ?"))return;remove.disabled=true;try{await api("DELETE",{id:company.id});details.remove();if(!list.children.length)list.append(E("p","sub","Aucune entreprise enregistrée."));status.textContent="Fiche supprimée."}catch(e){showError(e);remove.disabled=false}};
+    details.append(form,remove);
+    let timer,saving=Promise.resolve();
+    const schedule=()=>{clearTimeout(timer);saveState.textContent="Modification en attente…";status.textContent="Modifications en cours…";
+      timer=setTimeout(()=>{const payload={id:company.id,company_name:name.value,tax_status:taxStatus.value,tax_period:period.value,tax_details:taxDetails.value,investigation:investigation.value,notes:notes.value};
+        saving=saving.then(()=>api("PATCH",payload)).then(up=>{Object.assign(company,up);sName.textContent=up.company_name;sStatus.textContent=up.tax_status;saveState.textContent="Enregistré automatiquement · "+new Date(up.updated_at).toLocaleTimeString("fr-FR");status.textContent="Toutes les modifications sont enregistrées."}).catch(e=>{saveState.textContent="Échec — modification non enregistrée";showError(e)})},650)};
+    [name,taxStatus,period,taxDetails,investigation,notes].forEach(i=>{i.addEventListener("input",schedule);i.addEventListener("change",schedule)});
+    return details};
+  add.onclick=async()=>{const n=prompt("Nom de l'entreprise à ajouter :");if(!n?.trim())return;add.disabled=true;try{const c=await api("POST",{company_name:n});if(list.querySelector("p"))list.textContent="";const card=renderCompany(c);card.open=true;list.prepend(card);status.textContent="Entreprise ajoutée et enregistrée."}catch(e){showError(e)}finally{add.disabled=false}};
+  try{const cs=await api("GET");list.textContent="";if(!cs.length)list.append(E("p","sub","Aucune entreprise enregistrée. Ajoute une fiche pour commencer."));cs.forEach(c=>list.append(renderCompany(c)));status.textContent=cs.length+" entreprise(s) · sauvegarde automatique activée."}catch(e){list.textContent="";showError(e)}
+};
+const drawServiceAdmin=async p=>{
+  if(!isSiteAdmin(u)){p.append(E("p","bad","Cette rubrique est réservée aux membres du rôle Staff (administrateurs)."));return}
+  if(!document.getElementById("svc-css")){const st=document.createElement("style");st.id="svc-css";st.textContent=`
+.svc-k{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+.svc-k div{border:1px solid var(--ligne);border-radius:10px;padding:14px 16px;background:var(--carte)}
+.svc-k b{display:block;font-size:1.5rem;line-height:1.2}.svc-k span{font-size:.75rem;color:var(--gris);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.svc-h{font-size:1.05rem;margin:26px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--ligne)}
+.svc-r{display:flex;align-items:center;gap:12px;border:1px solid var(--ligne);border-radius:10px;padding:10px 14px;margin-bottom:8px;background:var(--carte)}
+.svc-r .x{flex:1;min-width:0}.svc-r small{color:var(--gris);display:block}
+.svc-rk{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.85rem;background:var(--fond);color:var(--gris);flex:none}
+.svc-r.t1 .svc-rk{background:#f5c542;color:#4a3500}.svc-r.t2 .svc-rk{background:#c9ced6;color:#2b2f36}.svc-r.t3 .svc-rk{background:#d99a6c;color:#3d2410}
+.svc-bar{height:7px;border-radius:99px;background:var(--fond);overflow:hidden;margin-top:6px}.svc-bar i{display:block;height:100%;background:var(--bleu)}
+.svc-av{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--bleu);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.8rem;flex:none}`;document.head.append(st)}
+  p.append(E("p","sub","Classement, statistiques et gestion des prises de service. Un service oublié est clôturé automatiquement au bout de 12 h."));
+  const tools=E("div","ticket-tools"),per=E("select"),rf=E("button","b","Actualiser"),stopAll=E("button","b danger","Clôturer tous les services en cours"),reset=E("button","b danger","Remettre les statistiques à zéro"),box=E("div");
+  [["week","Cette semaine"],["month","Ce mois-ci"],["all","Depuis toujours"]].forEach(([v,l])=>per.add(new Option(l,v)));
+  per.style.width="auto";per.setAttribute("aria-label","Période du classement");rf.type=stopAll.type=reset.type="button";
+  tools.append(per,rf,stopAll,reset);p.append(tools,box);
+  const api=async(method,body,qs="")=>{const r=await fetch("/api/prefecture?module=service_admin"+qs,{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||String(r.status));return d};
+  const dur=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?h+" h "+String(m).padStart(2,"0"):m+" min"};
+  const when=d=>new Date(d).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"});
+  const ini2=n=>E("span","svc-av",(String(n||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("")||"?").toUpperCase());
+  const pic=(n,url)=>{if(/^https:\/\/cdn\.discordapp\.com\//.test(url||"")){const i=E("img","svc-av");i.src=url;i.alt="";i.onerror=()=>i.replaceWith(ini2(n));return i}return ini2(n)};
+  const FIN={agent:"Terminé par l'agent",admin:"Clôturé par un administrateur",auto:"Fin automatique (oubli)"};
+  const load=async()=>{
+    box.textContent="Chargement…";
+    try{
+      const d=await api("GET",null,"&period="+per.value),t=d.totals;box.textContent="";
+      const k=E("div","svc-k");
+      [["En service maintenant",d.on_duty.length],["Heures de service",dur(t.seconds)],["Services effectués",t.sessions],["Durée moyenne",t.sessions?dur(t.seconds/t.sessions):"—"],["Agents actifs",t.agents]].forEach(([l,v])=>{const e=E("div");e.append(E("b","",String(v)),E("span","",l));k.append(e)});
+      box.append(k,E("h3","svc-h","Classement"));
+      if(!d.board.length)box.append(E("p","sub","Aucun service sur cette période."));
+      const top=d.board[0]?d.board[0].seconds||1:1;
+      d.board.forEach((a,i)=>{const r=E("div","svc-r"+(i<3?" t"+(i+1):"")),x=E("div","x"),bar=E("div","svc-bar"),f=E("i");f.style.width=Math.max(2,a.seconds/top*100)+"%";bar.append(f);
+        x.append(E("strong","",a.name||"Agent"),E("small","",a.sessions+" service(s) · moyenne "+dur(a.seconds/a.sessions)+" · dernier : "+when(a.last_seen)),bar);
+        r.append(E("span","svc-rk",String(i+1)),pic(a.name,a.avatar),x,E("strong","",dur(a.seconds)));box.append(r)});
+      box.append(E("h3","svc-h","En service actuellement"));
+      if(!d.on_duty.length)box.append(E("p","sub","Aucun agent en service."));
+      d.on_duty.forEach(s=>{const r=E("div","svc-r"),x=E("div","x"),b=E("button","b danger","Forcer la fin");b.type="button";
+        x.append(E("strong","",s.name||"Agent"),E("small","","Depuis "+when(s.started_at)+" ("+dur(s.seconds)+")"+(s.note?" · "+s.note:"")));
+        b.onclick=async()=>{if(!confirm("Mettre fin au service de "+(s.name||"cet agent")+" ?"))return;try{await api("PATCH",{id:s.id});await load()}catch(e){alert("Impossible : "+e.message)}};
+        r.append(pic(s.name,s.avatar),x,b);box.append(r)});
+      box.append(E("h3","svc-h","Derniers services"));
+      if(!d.recent.length)box.append(E("p","sub","Aucun service enregistré."));
+      d.recent.forEach(s=>{const r=E("div","svc-r"),x=E("div","x"),b=E("button","b","Supprimer");b.type="button";
+        x.append(E("strong","",(s.name||"Agent")+" · "+dur(s.seconds)),E("small","",when(s.started_at)+(s.ended_at?" → "+when(s.ended_at):"")+" · "+(s.ended_at?(FIN[s.ended_by]||"Terminé"):"En cours")));
+        b.onclick=async()=>{if(!confirm("Supprimer ce service des statistiques ?"))return;try{await api("DELETE",{id:s.id});await load()}catch(e){alert("Impossible : "+e.message)}};
+        r.append(pic(s.name,s.avatar),x,b);box.append(r)});
+    }catch(e){box.textContent=e.message==="admin_required"?"Ton compte n'a pas le rôle Discord Staff.":"Impossible de charger les services. Vérifie que api/prefecture.js est à jour et déployé."}
+  };
+  per.onchange=load;rf.onclick=load;
+  stopAll.onclick=async()=>{if(!confirm("Clôturer tous les services en cours ?"))return;try{const r=await api("PATCH",{all:true});alert(r.closed+" service(s) clôturé(s).");await load()}catch(e){alert("Impossible : "+e.message)}};
+  reset.onclick=async()=>{if(!confirm("Supprimer DÉFINITIVEMENT tous les services et remettre le classement à zéro ? Action irréversible."))return;if(prompt("Pour confirmer, tape RESET")!=="RESET")return;try{const r=await api("DELETE",{all:true});alert(r.deleted+" service(s) supprimé(s).");await load()}catch(e){alert("Impossible : "+e.message)}};
+  await load();
+};
+
 function start(){
   $("#app").hidden=false;
   if(isSiteAdmin(u))$("#lk-admin").hidden=false;
@@ -229,7 +382,7 @@ function start(){
 
   const nav=()=>{const n=$("#nav");n.textContent="";
     GROUPS.forEach(([title,ids])=>{const g=E("section","nav-group");g.append(E("h2","nav-group-title",title));
-      ids.forEach(id=>{const b=E("button","nv"+(id===view?" on":""));b.append(ico(MODS[id].i,18),document.createTextNode(MODS[id].n));b.type="button";b.onclick=()=>{view=id;nav();draw()};g.append(b)});n.append(g)})};
+      ids.filter(id=>!MODS[id].admin||isSiteAdmin(u)).forEach(id=>{const b=E("button","nv"+(id===view?" on":""));b.append(ico(MODS[id].i,18),document.createTextNode(MODS[id].n));b.type="button";b.onclick=()=>{view=id;nav();draw()};g.append(b)});n.append(g)})};
 
   /* --- briques communes --- */
   const delB=(it,c)=>{const b=E("button","b danger sm","Supprimer");b.type="button";
@@ -352,6 +505,9 @@ function start(){
     if(RELAY[mod]){const dc=E("span","dchip");dc.append(ico("send",13),document.createTextNode("Envoyé sur Discord"));hero.insertBefore(dc,cnt)}
     p.append(hero);
     if(RELAY[mod]){const rl=E("div","relay"),t=E("div");rl.append(ico("send",20));t.append(E("b","","Relais Discord actif"),E("span","","Chaque entrée enregistrée ici est aussi publiée automatiquement sur Discord, dans le salon des "+RELAY[mod]+", sous forme de message mis en forme avec ton nom."));rl.append(t);p.append(rl)}
+    if(mod==="contact"||mod==="procedures"){cnt.hidden=true;return drawTickets(p,mod==="procedures"?"procedure":"contact")}
+    if(mod==="finances"){cnt.hidden=true;return drawFinances(p)}
+    if(mod==="svcadmin"){cnt.hidden=true;return drawServiceAdmin(p)}
     if(mod==="discussion"){cnt.hidden=true;return drawChat(p)}
     if(mod==="service"){cnt.hidden=true;return drawService(p)}
     const add=E("details","finance-company"),form=E("form","finance-form"),inputs={};
@@ -386,4 +542,3 @@ function start(){
 <script src="assets/js/reveal.js"></script>
 </body>
 </html>
-

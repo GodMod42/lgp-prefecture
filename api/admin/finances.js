@@ -51,7 +51,7 @@ async function syncSubmittedCompanies(sql) {
 }
 
 export default async function handler(req, res) {
-  const identity = await discordUser(req, true).catch(() => ({ error: "discord_auth_unavailable", status: 502 }));
+  const identity = await discordUser(req, "prefecture").catch(() => ({ error: "discord_auth_unavailable", status: 502 }));
   if (identity.error) return sendJson(res, identity.status, { error: identity.error });
 
   try {
@@ -122,4 +122,3 @@ export default async function handler(req, res) {
     return sendJson(res, 500, { error: "finance_records_unavailable" });
   }
 }
-

@@ -1,5 +1,5 @@
 import {
-  db, discordUser, ensureSchema, isKnownMotif, notifyDiscord, parseAttachments, sendJson,
+  ADMIN_ROLE_ID, db, discordUser, ensureSchema, isKnownMotif, notifyDiscord, parseAttachments, sendJson,
 } from "../../lib/contact-data.js";
 import { randomUUID } from "node:crypto";
 
@@ -28,7 +28,7 @@ async function notifyRdv(embed, threadName) {
 }
 
 export default async function handler(req, res) {
-  const identity = await discordUser(req, true).catch(() => ({ error: "discord_auth_unavailable", status: 502 }));
+  const identity = await discordUser(req, "prefecture").catch(() => ({ error: "discord_auth_unavailable", status: 502 }));
   if (identity.error) return sendJson(res, identity.status, { error: identity.error });
 
   try {
@@ -42,6 +42,9 @@ export default async function handler(req, res) {
 
     const payload = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
     if (req.method === "POST" && payload.testForm) {
+      /* Les envois de test restent réservés au Staff (panel admin) */
+      if (!(identity.member?.roles || []).includes(ADMIN_ROLE_ID))
+        return sendJson(res, 403, { error: "admin_required" });
       const testForm = String(payload.testForm);
       let motif, subject, formLabel, useRdv = false;
       if (testForm === "contact") {
