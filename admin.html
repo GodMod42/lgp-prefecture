@@ -518,7 +518,6 @@ async function start(){
   };
   const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="tickets"?drawTickets(p,"contact"):view==="procedures"?drawTickets(p,"procedure"):view==="finances"?drawFinances(p):   view==="testForms"?drawFormTests(p):view==="service"?drawService(p):drawFields(p,view)};
 
-  $("#pv").onclick=()=>{save();window.open("index.html?preview=1","_blank")};
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
   $("#im").onclick=()=>$("#fi").click();
   $("#fi").onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());localStorage.setItem("lgp_admin_draft",JSON.stringify(d));location.reload()}catch(x){alert("Fichier invalide.")}};
