@@ -63,7 +63,6 @@ input[type=search]{margin-bottom:16px}
     <a class="b" href="dashboard.html">← Mon espace</a>
     <button class="b" id="rf" type="button">Actualiser</button>
     <button class="b" id="im">Importer</button>
-    <button class="b" id="rs">Abandonner le brouillon</button>
     <button class="b p" id="ex">Télécharger content.json</button>
     <input type="file" id="fi" accept=".json,application/json" hidden>
   </div>
@@ -521,7 +520,6 @@ async function start(){
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
   $("#im").onclick=()=>$("#fi").click();
   $("#fi").onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());localStorage.setItem("lgp_admin_draft",JSON.stringify(d));location.reload()}catch(x){alert("Fichier invalide.")}};
-  $("#rs").onclick=()=>{if(confirm("Abandonner le brouillon et revenir à la version publiée ?")){localStorage.removeItem("lgp_admin_draft");location.reload()}};
   nav();draw();
 }
 </script>
