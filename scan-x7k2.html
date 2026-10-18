@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
@@ -29,6 +29,7 @@
   button:hover{border-color:var(--mute)}
   button:focus-visible{outline:2px solid var(--live);outline-offset:2px}
 </style>
+<link rel="stylesheet" href="assets/css/site-refresh.css">
 </head>
 <body>
 <div class="banner" id="banner">Analyse en cours…</div>
@@ -272,7 +273,9 @@ document.getElementById('copy').onclick = async e => {
   setTimeout(() => e.target.textContent = 'Copier le rapport (JSON)', 1800);
 };
 </script>
-<script src="/tracker.js" defer></script>`r`n</body>
+<script src="/tracker.js" defer></script>`r`n<script src="assets/js/reveal.js"></script>
+</body>
 </html>
+
 
 

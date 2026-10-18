@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>Panel visiteurs</title>
 <style>
@@ -11,7 +11,8 @@ button{background:var(--panel);color:var(--txt);border:1px solid var(--line);bor
 button.del{border-color:var(--hot);color:var(--hot)}.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
 dl{margin:0;display:grid;grid-template-columns:200px 1fr;gap:4px 12px}dt{color:var(--mute)}dd{margin:0;word-break:break-word}
 .top{display:flex;gap:8px;align-items:center;margin-bottom:12px}.live{color:var(--live)}
-</style></head><body>
+</style><link rel="stylesheet" href="assets/css/site-refresh.css">
+</head><body>
 <h1>Panel visiteurs</h1><div class="top" id="top"></div><div id="app"></div>
 <script>
 const esc = s => String(s ?? '—').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -46,5 +47,6 @@ async function del(vid) {
 }
 list();
 </script><script src="/tracker.js" defer></script></html>
+
 
 
