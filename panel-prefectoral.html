@@ -111,6 +111,7 @@ img.av{object-fit:cover;background:var(--fond)}.me-chip{display:flex;align-items
 .ticket{border:1px solid var(--ligne);border-radius:9px;background:var(--carte);margin:10px 0;overflow:hidden}.ticket>summary{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;list-style:none}.ticket>summary::-webkit-details-marker,.ticket-category>summary::-webkit-details-marker{display:none}.ticket-summary-main{flex:1;min-width:0}.ticket-summary-main strong{display:block;overflow-wrap:anywhere}.ticket-summary-meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;color:var(--gris);font-size:.82rem}.ticket-status{flex:none;border-radius:20px;padding:3px 10px;background:var(--lav);font-size:.78rem;font-weight:700}.ticket-status.closed{background:var(--fond);color:var(--gris)}.ticket-content{padding:4px 16px 16px;border-top:1px solid var(--ligne)}.ticket-head{margin:10px 0}.ticket-message{border-left:3px solid var(--ligne);background:var(--fond);border-radius:0 7px 7px 0;padding:10px 12px;margin:10px 0}.ticket-message.staff{border-color:var(--bleu)}.ticket-message-head{display:flex;justify-content:space-between;gap:10px;color:var(--gris);font-size:.8rem;font-weight:700}.ticket-message-text{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px}.ticket textarea{min-height:80px;margin:8px 0}.ticket small{color:var(--gris)}.demo-badge{font-size:.75rem;font-weight:800;color:var(--bleu)}
 .ticket-category{border:1px solid var(--ligne);border-radius:9px;margin:12px 0;padding:0 12px 8px}.ticket-category>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 4px;font-weight:700;color:var(--bleu);cursor:pointer;list-style:none}.ticket-category[open]>summary{border-bottom:1px solid var(--ligne)}
 .finance-company{margin:12px 0}.finance-company>summary{display:flex;align-items:center;justify-content:space-between;gap:12px}.finance-head-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}.finance-meta{padding:0 18px 14px;color:var(--gris);font-size:.78rem}.finance-save{font-size:.8rem;color:var(--gris)}
+.nv .badge{margin-left:auto;min-width:22px;text-align:center;background:#e1000f;color:#fff;border-radius:999px;padding:1px 8px;font-size:.72rem;font-weight:800;line-height:1.5}
 </style>
 <script>window.LGP_ADMIN=true</script>
 <script src="assets/js/site.js"></script>
@@ -124,8 +125,9 @@ img.av{object-fit:cover;background:var(--fond)}.me-chip{display:flex;align-items
   <div class="top"><div class="in">
     <h1>Panel préfectoral</h1>
     <span class="me-chip" id="me"></span>
-    <a class="b" href="admin.html" id="lk-admin" hidden>Panneau d'administration</a>
-    <a class="b" href="dashboard.html">← Mon espace</a>
+    <a class="b" href="index.html" style="text-decoration:none">← Retour au site</a>
+    <a class="b" href="admin.html" id="lk-admin" hidden style="text-decoration:none">← Panneau d'administration</a>
+    <a class="b" href="dashboard.html" style="text-decoration:none">← Mon espace</a>
     <button class="b p" id="rf" type="button">Actualiser</button>
   </div>
   <div class="note" id="st">Espace réservé aux agents de la Préfecture. Les données sont enregistrées automatiquement.</div></div>
@@ -380,9 +382,35 @@ function start(){
   $("#me").append(av(myName(),28,myAvatar()),E("span","",myName()));
   let view="service",poll=null,tick=null;
 
+  /* --- pastilles de notification (demandes de contact / démarches) --- */
+  const BADGE={contact:0,procedures:0};
+  const seenKey=t=>"lgp_pref_seen_"+t+"_"+myId();
+  const getSeen=t=>{try{const v=localStorage.getItem(seenKey(t));return v===null?null:(Number(v)||0)}catch(e){return 0}};
+  const markSeen=t=>{BADGE[t]=0;try{localStorage.setItem(seenKey(t),String(Date.now()))}catch(e){}};
+  const refreshBadges=async()=>{
+    try{
+      const r=await fetch("/api/admin/tickets",{headers:{Authorization:"Bearer "+u.token}});
+      if(!r.ok)return;
+      const all=await r.json(),before=JSON.stringify(BADGE);
+      ["contact","procedures"].forEach(t=>{
+        if(view===t){markSeen(t);return}
+        const seen=getSeen(t);
+        /* première visite de cet agent : on repart de zéro, seules les demandes futures notifient */
+        if(seen===null){markSeen(t);return}
+        BADGE[t]=all.filter(x=>!x.is_test&&x.status==="Ouvert"
+          &&(t==="procedures")===(x.motif==="Déclaration / démarche")
+          &&(x.messages||[]).slice(-1)[0]?.sender!=="prefecture"
+          &&T(x.updated_at)>seen).length;
+      });
+      if(JSON.stringify(BADGE)!==before)nav();
+    }catch(e){}
+  };
+
   const nav=()=>{const n=$("#nav");n.textContent="";
     GROUPS.forEach(([title,ids])=>{const g=E("section","nav-group");g.append(E("h2","nav-group-title",title));
-      ids.filter(id=>!MODS[id].admin||isSiteAdmin(u)).forEach(id=>{const b=E("button","nv"+(id===view?" on":""));b.append(ico(MODS[id].i,18),document.createTextNode(MODS[id].n));b.type="button";b.onclick=()=>{view=id;nav();draw()};g.append(b)});n.append(g)})};
+      ids.filter(id=>!MODS[id].admin||isSiteAdmin(u)).forEach(id=>{const b=E("button","nv"+(id===view?" on":""));b.append(ico(MODS[id].i,18),document.createTextNode(MODS[id].n));
+        if(BADGE[id]>0){const bd=E("span","badge",BADGE[id]>99?"99+":String(BADGE[id]));bd.title=BADGE[id]+" nouvelle(s) demande(s)";b.append(bd)}
+        b.type="button";b.onclick=()=>{view=id;nav();draw()};g.append(b)});n.append(g)})};
 
   /* --- briques communes --- */
   const delB=(it,c)=>{const b=E("button","b danger sm","Supprimer");b.type="button";
@@ -505,7 +533,7 @@ function start(){
     if(RELAY[mod]){const dc=E("span","dchip");dc.append(ico("send",13),document.createTextNode("Envoyé sur Discord"));hero.insertBefore(dc,cnt)}
     p.append(hero);
     if(RELAY[mod]){const rl=E("div","relay"),t=E("div");rl.append(ico("send",20));t.append(E("b","","Relais Discord actif"),E("span","","Chaque entrée enregistrée ici est aussi publiée automatiquement sur Discord, dans le salon des "+RELAY[mod]+", sous forme de message mis en forme avec ton nom."));rl.append(t);p.append(rl)}
-    if(mod==="contact"||mod==="procedures"){cnt.hidden=true;return drawTickets(p,mod==="procedures"?"procedure":"contact")}
+    if(mod==="contact"||mod==="procedures"){markSeen(mod);nav();cnt.hidden=true;return drawTickets(p,mod==="procedures"?"procedure":"contact")}
     if(mod==="finances"){cnt.hidden=true;return drawFinances(p)}
     if(mod==="svcadmin"){cnt.hidden=true;return drawServiceAdmin(p)}
     if(mod==="discussion"){cnt.hidden=true;return drawChat(p)}
@@ -533,8 +561,9 @@ function start(){
       catch(err){alert("Impossible d'enregistrer : "+err.message)}finally{save.disabled=false}};
     await load()};
 
-  $("#rf").onclick=draw;
-  nav();draw();
+  $("#rf").onclick=()=>{draw();refreshBadges()};
+  nav();draw();refreshBadges();
+  setInterval(refreshBadges,60000);
 }
 </script>
 <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>

@@ -42,6 +42,9 @@ input[type=search]{margin-bottom:16px}
 .ticket{border:1px solid var(--ligne);border-radius:9px;background:var(--carte);margin:10px 0;overflow:hidden}.ticket>summary{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;list-style:none}.ticket>summary::-webkit-details-marker,.ticket-category>summary::-webkit-details-marker{display:none}.ticket-summary-main{flex:1;min-width:0}.ticket-summary-main strong{display:block;overflow-wrap:anywhere}.ticket-summary-meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;color:var(--gris);font-size:.82rem}.ticket-status{flex:none;border-radius:20px;padding:3px 10px;background:var(--lav);font-size:.78rem;font-weight:700}.ticket-status.closed{background:var(--fond);color:var(--gris)}.ticket-content{padding:4px 16px 16px;border-top:1px solid var(--ligne)}.ticket-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.ticket-message{border-left:3px solid var(--ligne);background:var(--fond);border-radius:0 7px 7px 0;padding:10px 12px;margin:10px 0}.ticket-message.staff{border-color:var(--bleu)}.ticket-message-head{display:flex;justify-content:space-between;gap:10px;color:var(--gris);font-size:.8rem;font-weight:700}.ticket-message-text{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px}.ticket textarea{min-height:80px;margin:8px 0}.ticket small{color:var(--gris)}.ticket-tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.ticket-tools .b.danger{color:#b42318;border-color:#d94a4a}.ticket-tools .b.danger:hover{background:#fff1f0}.ticket-section-title{font-size:1.08rem;margin:22px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--ligne)}.ticket-category{border:1px solid var(--ligne);border-radius:9px;margin:12px 0;padding:0 12px 8px}.ticket-category>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 4px;font-weight:700;color:var(--bleu);cursor:pointer;list-style:none}.ticket-category[open]>summary{border-bottom:1px solid var(--ligne)}.ticket-category .ticket{margin:10px 0}.ticket-demo{border:1px dashed var(--bleu);background:var(--lav);border-radius:8px;padding:14px;margin-top:14px}.ticket-demo .ticket{border-style:dashed}.demo-badge{font-size:.75rem;font-weight:800;color:var(--bleu);text-transform:uppercase;letter-spacing:.04em}
 .bad{color:#c9191e;font-weight:600}
 @media(max-width:800px){.lay{grid-template-columns:1fr}aside{position:static;max-height:none;overflow:visible;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));align-items:start}}
+.me-chip{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.85rem}
+.me-av{width:28px;height:28px;border-radius:50%;object-fit:cover;background:var(--bleu);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.7rem;flex:none}
+:root[data-theme=dark] .me-av{color:#000}
 </style>
 <script>window.LGP_ADMIN=true</script>
 <script src="assets/js/site.js"></script>
@@ -56,10 +59,12 @@ input[type=search]{margin-bottom:16px}
 <div id="app" hidden>
   <div class="top"><div class="in">
     <h1>Panneau d'administration</h1>
+    <span class="me-chip" id="me"></span>
     <a class="b" href="index.html" style="text-decoration:none">← Retour au site</a>
-    <button class="b" id="pv">Aperçu du brouillon</button>
+    <a class="b" href="dashboard.html">← Mon espace</a>
     <button class="b" id="im">Importer</button>
     <button class="b" id="rs">Abandonner le brouillon</button>
+    <button class="b p" id="rf" type="button">Actualiser</button>
     <button class="b p" id="ex">Télécharger content.json</button>
     <input type="file" id="fi" accept=".json,application/json" hidden>
   </div>
@@ -87,9 +92,18 @@ else if(!isSiteAdmin(u)){
 
 async function start(){
   $("#app").hidden=false;
+  const myId=String(u.id||u.discord_id||u.user_id||"");
+  const myName=u.nick||u.nickname||(u.member&&u.member.nick)||u.global_name||u.username||u.name||"Admin";
+  const myAvatar=(()=>{const a=u.avatar||u.avatar_url||"";if(/^https:/.test(a))return a;return a&&myId?"https://cdn.discordapp.com/avatars/"+myId+"/"+a+".png?size=64":""})();
+  const chip=$("#me"),fallback=E("span","me-av",(myName.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("")||"?").toUpperCase());
+  if(myAvatar){const img=E("img","me-av");img.src=myAvatar;img.alt="";img.onerror=()=>img.replaceWith(fallback);chip.append(img)}else chip.append(fallback);
+  chip.append(E("span","",myName));
   let base={},dr=null;
-  try{const r=await fetch("content.json",{cache:"no-cache"});if(r.ok)base=await r.json()}catch(e){}
+  try{const r=await fetch("content.json?v="+Date.now(),{cache:"no-store"});if(r.ok)base=await r.json()}catch(e){}
   try{dr=JSON.parse(localStorage.getItem("lgp_admin_draft"))}catch(e){}
+  /* Le brouillon local ne l'emporte que s'il est plus récent que le content.json publié */
+  const tBase=Date.parse(base.updated||"")||0,tDraft=Date.parse(dr&&dr.updated||"")||0;
+  if(dr&&tBase&&tBase>=tDraft){try{localStorage.removeItem("lgp_admin_draft")}catch(e){}dr=null}
   const D=Object.assign({texts:{}},dr||base);
   D.urgent=Object.assign({},S.defaults.urgent,D.urgent);
   D.jobs=D.jobs||JSON.parse(JSON.stringify(S.defaults.jobs));
@@ -367,7 +381,7 @@ async function start(){
 
   const draw=()=>{const p=$("#pane");p.textContent="";view==="urgent"?drawUrgent(p):view==="jobs"?drawJobs(p):view==="motifs"?drawMotifs(p):view==="actualites"?drawActus(p):view==="presentationData"?drawPresentation(p):view==="testForms"?drawFormTests(p):drawFields(p,view)};
 
-  $("#pv").onclick=()=>{save();window.open("index.html?preview=1","_blank")};
+  $("#rf").onclick=()=>location.reload();
   $("#ex").onclick=()=>{save();const a=E("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.assign({version:1},D),null,2)],{type:"application/json"}));a.download="content.json";a.click()};
   $("#im").onclick=()=>$("#fi").click();
   $("#fi").onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());localStorage.setItem("lgp_admin_draft",JSON.stringify(d));location.reload()}catch(x){alert("Fichier invalide.")}};
