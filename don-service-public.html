@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(() => {
+  let user = null;
+  try { user = JSON.parse(localStorage.getItem("lgp_user") || "null"); } catch {}
+  if (!user || !user.token || !(user.exp > Date.now())) {
+    try { sessionStorage.setItem("lgp_after_login", "don-service-public.html"); } catch {}
+    location.replace("connexion.html");
+  }
+})();
+</script>
+<title>Préfecture de LGP — Donation service public</title>
+<meta name="description" content="Établissez le reçu d'un don ou d'un versement effectué au profit d'un service public.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/img/favicon2.png">
+<style>
+:root{--ink:#161616;--paper:#fff;--muted:#666;--line:#ddd;--blue:#000091;--pale:#e8e8fb;--font:Marianne,"Public Sans","Segoe UI",system-ui,Arial,sans-serif;--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;--sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+:root[data-theme=dark]{--ink:#f0f0f0;--paper:#1e1e1e;--muted:#b5b5b5;--line:#3a3a3a;--blue:#8b8bff;--pale:#202d4a;--bleu:#8b8bff;--bleu-f:#a5a5ff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a;--nav:#1b1b1f}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 var(--font)}a{color:var(--blue)}
+.wrap,.foot{max-width:1240px;margin:auto;padding:16px 24px}.w{max-width:1360px;margin:0 auto;padding:0 24px}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+header a{text-decoration:none}
+header{background:var(--nav);border-top:5px solid;border-image:linear-gradient(90deg,var(--bleu) 33.3%,#999 33.3% 66.6%,var(--rouge) 66.6%) 1;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--ligne)}
+header .w{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px;max-width:none}
+.logo{display:flex;align-items:center;gap:16px}.logo img{height:68px;width:auto;display:block}
+nav{display:flex;gap:6px;flex-wrap:wrap}nav a{padding:8px 16px;font-size:.95rem;font-weight:500}nav a:hover,nav a[aria-current]{color:var(--bleu);box-shadow:inset 0 -2px var(--bleu)}
+.actions{display:flex;align-items:center;gap:16px}#theme{width:38px;height:38px;border-radius:50%;border:1px solid var(--ligne);background:var(--carte);color:var(--texte);cursor:pointer;display:grid;place-items:center}
+.btn-co{background:var(--bleu);color:#fff;font-weight:700;padding:12px 24px;border-radius:999px}:root[data-theme=dark] .btn-co{color:#000}
+:root[data-theme=dark] .logo img{background:#fff;padding:4px 10px}
+.band{height:38px;background:var(--blue)}main{padding-bottom:50px}.wrap{max-width:1060px;padding-top:34px}.back{display:inline-block;margin-bottom:14px;font-weight:700}.intro{margin:0 0 24px}.intro h1{font-size:clamp(1.7rem,4vw,2.5rem);margin:6px 0}.eyebrow{color:var(--blue);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem}.intro p:last-child{color:var(--muted)}
+.notice{padding:16px 20px;background:var(--pale);border-left:4px solid var(--blue);margin:24px 0 28px}.notice strong{display:block}.card{border:1px solid var(--line);border-radius:8px;padding:20px 22px;margin:18px 0;background:var(--paper)}.card legend{font-weight:800;font-size:1.05rem;padding:0 6px}.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:6px;margin:7px 0 12px;min-width:0}.field label,.choice legend{font-weight:700;font-size:.88rem}.field input,.field select,.field textarea{width:100%;min-height:42px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);padding:9px 11px;font:inherit}.field textarea{resize:vertical}.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c9{grid-column:span 9}.c12{grid-column:span 12}
+.choice{border:0;padding:0;margin:8px 0 16px;min-width:0}.choice legend{margin-bottom:8px}.inline{display:flex;flex-wrap:wrap;gap:10px 22px}.inline label,.checks label{display:flex;align-items:flex-start;gap:8px;cursor:pointer}.inline input,.checks input{accent-color:var(--blue);margin-top:5px;flex:none}.hint,.muted{color:var(--muted);font-size:.87rem}.amounts{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}.amount-row{display:grid;grid-template-columns:minmax(0,1fr) 2fr;gap:8px}.amount-row label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.vertical{display:grid;gap:8px}
+.form-actions{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:24px}.btn{display:inline-block;border:1px solid var(--blue);background:var(--blue);color:#fff;padding:11px 18px;font:700 .92rem var(--font);text-decoration:none;cursor:pointer}.btn.secondary{background:transparent;color:var(--blue)}.btn:disabled{opacity:.6;cursor:wait}.status{min-height:1.5em}.status.ok{color:#16803c}.status.err{color:#b42318}
+footer{background:#1e1e1e;color:#ddd}.cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding:54px 24px 42px;max-width:1240px;margin:auto}.cols h4{color:#fff;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}.cols li{list-style:none;margin-bottom:9px}.cols ul{padding:0}.cols a{color:inherit}.flogo{background:#fff;display:inline-block;padding:12px 18px;margin-bottom:16px}.bas{max-width:1192px;margin:auto;border-top:1px solid #333;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:22px 0;font-size:.85rem}.bas nav a{padding:0 0 0 18px;color:#ddd;font-size:.85rem}.bas nav a:hover{color:#fff;box-shadow:none;text-decoration:underline}
+:focus-visible{outline:3px solid #0a76f6;outline-offset:2px}
+@media(max-width:1000px){.cols{grid-template-columns:1fr 1fr}header .w{flex-wrap:wrap;padding-top:10px;padding-bottom:10px}}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.grid>*{grid-column:1/-1}.amounts{grid-template-columns:1fr}.card{padding:16px}.form-actions{flex-direction:column-reverse;align-items:stretch}.form-actions .btn{text-align:center}.bas{padding:18px 24px}.cols{grid-template-columns:1fr}.legal{text-align:left}}
+</style>
+<script src="assets/js/site.js"></script>
+  <link rel="stylesheet" href="assets/css/site-refresh.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></symbol>
+</svg>
+<header>
+  <div class="w">
+    <a class="logo" href="index.html" aria-label="Préfecture de LGP — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP"></a>
+    <nav aria-label="Navigation principale">
+      <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html" aria-current="page">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
+    </nav>
+    <div class="actions"><button id="theme" aria-label="Changer de thème"><svg class="i" style="width:18px;height:18px"><use href="#icon-sun"/></svg></button><a class="btn-co" href="connexion.html">Se connecter</a></div>
+  </div>
+</header>
+<div class="band" aria-hidden="true"></div>
+<main><div class="wrap">
+  <a class="back" href="demarche.html">← Retour aux démarches en ligne</a>
+  <div class="intro"><p class="eyebrow">Démarches en ligne · Services publics</p><h1>Donation service public</h1><p>Établissez le reçu d'un don ou d'un versement effectué au profit d'un service public et transmettez votre demande aux services concernés.</p></div>
+  <div class="notice"><strong>Avant de commencer</strong>Cette demande est reçue par les services du portail et suivie dans votre espace « Mes démarches ». Elle n’est pas transmise à un organisme public. Après l’envoi, vous pourrez joindre le justificatif du versement ou tout document utile, et échanger avec un agent dans la conversation de votre demande.</div>
+
+  <form id="grant-form">
+    <fieldset class="card"><legend>Votre demande</legend><div class="grid">
+      <fieldset class="choice c4"><legend>Nature du versement</legend><div class="vertical"><label><input type="radio" name="gift_kind" value="Don financier" required> Don financier</label><label><input type="radio" name="gift_kind" value="Don en nature (matériel, fournitures)"> Don en nature (matériel, fournitures)</label><label><input type="radio" name="gift_kind" value="Versement exceptionnel"> Versement exceptionnel</label></div></fieldset>
+      <fieldset class="choice c4"><legend>Qualité du donateur</legend><div class="vertical"><label><input type="radio" name="donor_kind" value="Particulier" required> Particulier</label><label><input type="radio" name="donor_kind" value="Entreprise"> Entreprise</label><label><input type="radio" name="donor_kind" value="Association"> Association</label></div></fieldset>
+      <fieldset class="choice c4"><legend>Fréquence</legend><div class="vertical"><label><input type="radio" name="frequency" value="Don ponctuel" required> Don ponctuel</label><label><input type="radio" name="frequency" value="Don régulier"> Don régulier</label></div></fieldset>
+    </div></fieldset>
+
+    <fieldset class="card"><legend>1. Identification du donateur</legend><div class="grid">
+      <div class="field c12"><label for="donor-name">1.1 Nom — Dénomination du donateur</label><input id="donor-name" name="donor_name" maxlength="120" required autocomplete="organization"></div>
+      <div class="field c12"><label for="donor-siret">1.2 Numéro SIRET <span class="hint">(entreprise ou association, si disponible)</span></label><input id="donor-siret" name="donor_siret" maxlength="20" inputmode="numeric"></div>
+      <div class="field c6"><label for="donor-address">1.3 Adresse</label><input id="donor-address" name="donor_address" maxlength="180" autocomplete="street-address" required></div>
+      <div class="field c3"><label for="donor-postal">Code postal</label><input id="donor-postal" name="donor_postal" maxlength="15" autocomplete="postal-code" required></div>
+      <div class="field c3"><label for="donor-town">Commune</label><input id="donor-town" name="donor_town" maxlength="100" autocomplete="address-level2" required></div>
+      <div class="field c4"><label for="legal-lastname">1.4 Personne à contacter — Nom</label><input id="legal-lastname" name="legal_lastname" maxlength="100" required autocomplete="family-name"></div>
+      <div class="field c4"><label for="legal-firstname">Prénom</label><input id="legal-firstname" name="legal_firstname" maxlength="100" required autocomplete="given-name"></div>
+      <div class="field c4"><label for="legal-function">Fonction <span class="hint">(si entreprise ou association)</span></label><input id="legal-function" name="legal_function" maxlength="100"></div>
+      <div class="field c4"><label for="legal-phone">Téléphone</label><input id="legal-phone" name="legal_phone" type="tel" maxlength="30" required autocomplete="tel"></div>
+      <div class="field c8"><label for="legal-email">Courriel <span class="hint">(facultatif)</span></label><input id="legal-email" name="legal_email" type="email" maxlength="140" autocomplete="email"></div>
+    </div></fieldset>
+
+    <fieldset class="card"><legend>2. Service public bénéficiaire</legend><div class="grid">
+      <div class="field c12"><label for="beneficiary-service">Service public bénéficiaire du don</label><input id="beneficiary-service" name="beneficiary_service" maxlength="160" required placeholder="Ex. : hôpital, police, pompiers, éducation…"></div>
+      <div class="field c12"><label for="beneficiary-purpose">Affectation souhaitée du don <span class="hint">(facultatif)</span></label><textarea id="beneficiary-purpose" name="beneficiary_purpose" rows="3" maxlength="600"></textarea></div>
+    </div></fieldset>
+
+    <fieldset class="card"><legend>3. Don ou versement</legend><div class="grid">
+      <div class="field c4"><label for="gift-date">Date du don ou du versement</label><input id="gift-date" name="gift_date" type="date" required></div>
+      <div class="field c4"><label for="amount-gift">Montant ou valeur estimée (€)</label><input id="amount-gift" name="amount_gift" type="number" min="0.01" step="0.01" required></div>
+      <div class="field c4"><label for="gift-reference">Référence du versement <span class="hint">(facultatif)</span></label><input id="gift-reference" name="gift_reference" maxlength="100" placeholder="Ex. : numéro de chèque ou de virement"></div>
+      <fieldset class="choice c12"><legend>Mode de versement</legend><div class="inline"><label><input type="radio" name="payment_mode" value="Virement" required> Virement</label><label><input type="radio" name="payment_mode" value="Chèque"> Chèque</label><label><input type="radio" name="payment_mode" value="Espèces"> Espèces</label><label><input type="radio" name="payment_mode" value="Autre"> Autre</label></div></fieldset>
+      <div class="field c12"><label for="gift-description">Description du don <span class="hint">(obligatoire pour un don en nature)</span></label><textarea id="gift-description" name="gift_description" rows="4" maxlength="800"></textarea></div>
+      <fieldset class="choice c12"><legend>Le donateur souhaite-t-il rester anonyme dans les communications publiques ?</legend><div class="inline"><label><input type="radio" name="anonymous" value="Oui" required> Oui</label><label><input type="radio" name="anonymous" value="Non"> Non</label></div></fieldset>
+      <div class="field c12"><label for="gift-notes">Observations complémentaires</label><textarea id="gift-notes" name="gift_notes" rows="3" maxlength="600"></textarea></div>
+    </div></fieldset>
+
+    <fieldset class="card"><legend>4. Documents complémentaires</legend><p class="muted">Après l'envoi, ajoutez dans la conversation de votre demande les pièces nécessaires à son instruction : justificatif du versement (relevé, copie du chèque, bordereau), description ou facture pour un don en nature, mandat ou pouvoir du signataire et tout document utile. Les pièces jointes peuvent être ajoutées depuis « Mes démarches ».</p></fieldset>
+
+    <fieldset class="card"><legend>5. Attestations</legend><div class="grid">
+      <div class="field c12"><label for="signer-name">Je soussigné(e), nom et prénom — donateur ou représentant(e) du donateur</label><input id="signer-name" name="signer_name" maxlength="180" required></div>
+      <p class="hint c12">Si le signataire n'est pas le donateur ou son représentant légal, joignez le pouvoir ou le mandat dans la conversation après l'envoi.</p>
+      <div class="checks c12"><label><input type="checkbox" name="certification" value="Acceptée" required> Je déclare que les informations communiquées sont exactes et que ce don est effectué librement, sans contrepartie.</label></div>
+      <div class="field c6"><label for="signed-date">Fait, le</label><input id="signed-date" name="signed_date" type="date" required></div>
+      <div class="field c6"><label for="signed-place">À (lieu)</label><input id="signed-place" name="signed_place" maxlength="100" required></div>
+    </div></fieldset>
+    <div class="form-actions"><a class="btn secondary" href="demarche.html">Annuler</a><button class="btn" type="submit" id="submit-form">Envoyer la demande</button></div>
+    <p class="status" id="form-status" role="status" aria-live="polite"></p>
+  </form>
+</div></main>
+<footer><div class="cols">
+  <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
+  <div><h4>Coordonnées</h4><p><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l'équipe</a></p></div>
+  <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
+  <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
+  <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
+</div><div class="bas"><span>© 2026 Préfecture de Grand Paname — Portail de services communautaires.</span><nav class="legal" aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="plan-du-site.html">Plan du site</a></nav></div></footer>
+<script src="assets/js/auth.js"></script>
+<script>
+try{const saved=localStorage.getItem("theme");if(saved)document.documentElement.dataset.theme=saved}catch{}
+document.getElementById("theme").onclick=()=>{const dark=document.documentElement.dataset.theme==="dark";document.documentElement.dataset.theme=dark?"light":"dark";try{localStorage.setItem("theme",dark?"light":"dark")}catch{}};
+const form=document.getElementById("grant-form"),status=document.getElementById("form-status"),submit=document.getElementById("submit-form");
+let user=getUser();
+if(!user||!user.token){try{sessionStorage.setItem("lgp_after_login","don-service-public.html")}catch{}location.replace("connexion.html")}
+
+// Libellés plus clairs (sinon : texte du label ou titre du groupe de choix)
+const LABELS={
+  donor_siret:"Numéro SIRET",
+  legal_lastname:"Personne à contacter — Nom",
+  legal_firstname:"Personne à contacter — Prénom",
+  legal_function:"Personne à contacter — Fonction",
+  legal_phone:"Personne à contacter — Téléphone",
+  legal_email:"Personne à contacter — Courriel",
+  beneficiary_service:"Service public bénéficiaire",
+  beneficiary_purpose:"Affectation souhaitée",
+  gift_date:"Date du don ou du versement",
+  amount_gift:"Montant ou valeur estimée",
+  gift_reference:"Référence du versement",
+  gift_description:"Description du don",
+  anonymous:"Anonymat dans les communications publiques",
+  gift_notes:"Observations complémentaires",
+  signer_name:"Signataire",
+  certification:"Attestation sur l'honneur",
+  signed_date:"Fait le",
+  signed_place:"Fait à"
+};
+const MONEY=/^amount_/;
+
+// Texte envoyé à l'API : une section par cadre du formulaire, une ligne "Question → Réponse"
+function summary(){
+  const clean=s=>String(s||"").replace(/\s+/g," ").replace(/^\d+(\.\d+)?\s+/,"").trim();
+  const entries=[];
+  for(const control of form.elements){
+    const name=control.name;
+    if(!name||control.disabled||["submit","button","reset"].includes(control.type)||(["radio","checkbox"].includes(control.type)&&!control.checked))continue;
+    const value=String(control.value||"").trim();if(!value)continue;
+    const choice=control.closest("fieldset.choice");
+    let label=LABELS[name]||(choice?choice.querySelector("legend")?.textContent:control.labels?.[0]?.textContent)||control.getAttribute("aria-label")||name.replaceAll("_"," ");
+    label=clean(label);
+    const section=clean(control.closest("fieldset.card")?.querySelector(":scope > legend")?.textContent);
+    entries.push({section,label,value:MONEY.test(name)?value+" €":value});
+  }
+  const rows=["DONATION SERVICE PUBLIC"];
+  let lastSection="";
+  for(const e of entries){
+    if(e.section&&e.section!==lastSection){rows.push("","— "+e.section+" —");lastSection=e.section}
+    rows.push(e.label+" → "+e.value);
+  }
+  return rows.join("\n");
+}
+
+form.addEventListener("submit",async event=>{
+  event.preventDefault();if(!form.reportValidity())return;
+  const day=form.elements.gift_date.value;
+  if(day&&day>new Date().toISOString().slice(0,10)){status.className="status err";status.textContent="La date du don ne peut pas être dans le futur.";return}
+  if(form.elements.gift_kind.value.startsWith("Don en nature")&&!form.elements.gift_description.value.trim()){status.className="status err";status.textContent="Décris le don en nature (section 3).";return}
+  const text=summary();if(text.length>3700){status.className="status err";status.textContent="La demande est trop longue. Raccourcis la description ou les observations.";return}
+  const legalName=form.elements.donor_name.value.trim();
+  const phone=form.elements.legal_phone.value.trim();
+  submit.disabled=true;status.className="status";status.textContent="Envoi de la demande…";
+  try{
+    const response=await fetch("/api/contact",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+user.token},body:JSON.stringify({nom:legalName, tel:phone, motif:"Déclaration / démarche", objet:"Démarche en ligne — Donation service public", txt:text})});
+    const data=await response.json().catch(()=>({}));
+    if(response.status===401){try{sessionStorage.setItem("lgp_after_login","don-service-public.html")}catch{}logout();return}
+    if(!response.ok)throw new Error(data.error||"send_failed");
+    status.className="status ok";status.textContent="Demande envoyée. Référence : "+data.reference+". Vous pourrez joindre les statuts et les pièces justificatives et suivre les échanges depuis « Mes démarches ».";
+    form.reset();const link=document.createElement("a");link.href="mes-demarches.html";link.textContent="Voir mes démarches";status.append(document.createElement("br"),link);
+  }catch(error){status.className="status err";status.textContent=error.message==="database_not_configured"?"Le stockage des demandes n'est pas configuré sur le site.":error.message==="discord_auth_unavailable"?"Discord ne répond pas pour le moment. Réessaie dans un instant.":"L'envoi a échoué. Réessaie plus tard.";submit.disabled=false}
+});
+</script>
+<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
+<script src="/tracker.js" defer></script>
+</html>
+<script src="assets/js/reveal.js"></script>
+</body>
+</html>
