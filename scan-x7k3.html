@@ -1,52 +1,577 @@
+
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>Panel visiteurs</title>
-<style>
-:root{--bg:#0e1014;--panel:#161920;--line:#262a33;--txt:#c9ced8;--mute:#8a91a0;--hot:#ff5a5f;--live:#3ddc97}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.5 system-ui,sans-serif;padding:20px}
-h1{font-size:18px;margin:0 0 16px}table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:10px;overflow:hidden}
-th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--mute);font-size:12px;text-transform:uppercase}
-tr.row{cursor:pointer}tr.row:hover{background:#1c2029}.wrap{overflow-x:auto}
-button{background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font:inherit;cursor:pointer}
-button.del{border-color:var(--hot);color:var(--hot)}.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
-dl{margin:0;display:grid;grid-template-columns:200px 1fr;gap:4px 12px}dt{color:var(--mute)}dd{margin:0;word-break:break-word}
-.top{display:flex;gap:8px;align-items:center;margin-bottom:12px}.live{color:var(--live)}
-</style><link rel="stylesheet" href="assets/css/site-refresh.css">
-</head><body>
-<h1>Panel visiteurs</h1><div class="top" id="top"></div><div id="app"></div>
-<script>
-const esc = s => String(s ?? '—').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmt = d => d ? new Date(d).toLocaleString('fr-FR') : '—';
-let token = sessionStorage.getItem('tk');
-async function api(q = '', method = 'GET') {
-  if (!token) { token = prompt('Token admin'); if (!token) return null; sessionStorage.setItem('tk', token); }
-  const r = await fetch('/api/admin' + q, { method, headers: { Authorization: 'Bearer ' + token } });
-  if (r.status === 401) { sessionStorage.removeItem('tk'); token = null; alert('Token invalide'); return null; }
-  return r.status === 204 ? true : r.json();
-}
-async function list() {
-  document.getElementById('top').innerHTML = '<button onclick="list()">Rafraîchir</button>';
-  const rows = await api(); if (!rows) return;
-  document.getElementById('app').innerHTML = '<div class="wrap"><table><tr><th>Visiteur</th><th>Visites</th><th>IP</th><th>Ville</th><th>Pays</th><th>OS</th><th>Navigateur</th><th>Dernière activité</th></tr>' +
-    rows.map(r => `<tr class="row" onclick="detail('${esc(r.vid)}')"><td>${esc(r.vid.slice(0,8))}</td><td>${r.visits}</td><td>${esc(r.ip)}</td><td>${esc(r.city)}</td><td>${esc(r.country)}</td><td>${esc(r.os)}</td><td>${esc(r.browser)}</td><td>${fmt(r.last_seen)}</td></tr>`).join('') + '</table></div>';
-}
-async function detail(vid) {
-  document.getElementById('top').innerHTML = `<button onclick="list()">← Retour</button><button class="del" onclick="del('${esc(vid)}')">Supprimer ce visiteur</button>`;
-  const rows = await api('?vid=' + encodeURIComponent(vid)); if (!rows) return;
-  document.getElementById('app').innerHTML = rows.map(r => {
-    const d = r.device || {}, l = r.live || {};
-    const kv = o => Object.entries(o).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(typeof v === 'object' ? JSON.stringify(v) : v)}</dd>`).join('');
-    return `<div class="card"><b>${esc(r.path)}</b> — ${fmt(r.ts)} <span class="live">(${l.seconds ?? 0}s)</span><dl>
-      <dt>IP</dt><dd>${esc(r.ip)}</dd><dt>Localisation</dt><dd>${esc(r.city)}, ${esc(r.region)}, ${esc(r.country)} (${esc(r.lat)}, ${esc(r.lon)})</dd>
-      <dt>Venu depuis</dt><dd>${esc(r.referrer || 'accès direct')}</dd><dt>Empreinte</dt><dd>${esc(r.fp)}</dd>${kv(d)}${kv(l)}</dl></div>`;
-  }).join('');
-}
-async function del(vid) {
-  if (!confirm('Supprimer définitivement toutes les données de ce visiteur ?')) return;
-  if (await api('?vid=' + encodeURIComponent(vid), 'DELETE')) list();
-}
-list();
-</script><script src="/tracker.js" defer></script></html>
-<script src="assets/js/reveal.js"></script>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Panel visiteurs</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0e1014;
+      --panel: #161920;
+      --line: #262a33;
+      --txt: #c9ced8;
+      --mute: #8a91a0;
+      --hot: #ff5a5f;
+      --live: #3ddc97;
+      --hover: #1c2029;
+      --button-bg: #161920;
+      --header-bg: #12151b;
+    }
+
+    body.light {
+      color-scheme: light;
+      --bg: #f3f5f9;
+      --panel: #ffffff;
+      --line: #d8dee8;
+      --txt: #202938;
+      --mute: #5d687a;
+      --hot: #d92d3a;
+      --live: #087f5b;
+      --hover: #e9eef6;
+      --button-bg: #ffffff;
+      --header-bg: #edf1f7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: var(--bg);
+      color: var(--txt);
+      font: 14px/1.5 system-ui, sans-serif;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0;
+      font-weight: 650;
+    }
+
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      background: var(--button-bg);
+      color: var(--txt);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+
+    button:hover {
+      background: var(--hover);
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--live);
+      outline-offset: 2px;
+    }
+
+    button.del {
+      border-color: var(--hot);
+      color: var(--hot);
+    }
+
+    .wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+    }
+
+    th, td {
+      padding: 11px 13px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    th {
+      background: var(--header-bg);
+      color: var(--mute);
+      font-size: 11px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    tr.row {
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    tr.row:hover {
+      background: var(--hover);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 12px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .card-title {
+      margin-bottom: 12px;
+      font-weight: 650;
+    }
+
+    dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: minmax(130px, 200px) minmax(0, 1fr);
+      gap: 6px 14px;
+    }
+
+    dt {
+      color: var(--mute);
+    }
+
+    dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .live {
+      color: var(--live);
+      font-weight: 600;
+    }
+
+    .empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--mute);
+    }
+
+    .status {
+      color: var(--mute);
+      font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      .heading {
+        align-items: flex-start;
+      }
+
+      dl {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      dd {
+        margin-bottom: 8px;
+      }
+
+      th, td {
+        padding: 9px 10px;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="assets/css/site-refresh.css">
+</head>
+
+<body>
+  <header class="heading">
+    <h1>Panel visiteurs</h1>
+
+    <button
+      id="themeToggle"
+      type="button"
+      aria-pressed="false"
+      onclick="toggleTheme()"
+    >
+      ☀️ Mode jour
+    </button>
+  </header>
+
+  <div class="top" id="top">
+    <button type="button" onclick="list()">↻ Rafraîchir</button>
+    <span class="status" id="status"></span>
+  </div>
+
+  <main id="app" aria-live="polite">
+    <div class="empty">Chargement des visiteurs...</div>
+  </main>
+
+  <script>
+    // --------------------------------------------------
+    // MODE JOUR / NUIT
+    // --------------------------------------------------
+
+    const THEME_KEY = 'visitors-panel-theme';
+
+    function applyTheme(theme) {
+      const light = theme === 'light';
+
+      document.body.classList.toggle('light', light);
+
+      const button = document.getElementById('themeToggle');
+
+      button.textContent = light
+        ? '🌙 Mode nuit'
+        : '☀️ Mode jour';
+
+      button.setAttribute('aria-pressed', String(light));
+    }
+
+    function toggleTheme() {
+      const current = document.body.classList.contains('light')
+        ? 'light'
+        : 'dark';
+
+      const next = current === 'dark' ? 'light' : 'dark';
+
+      try {
+        sessionStorage.setItem(THEME_KEY, next);
+      } catch {}
+
+      applyTheme(next);
+    }
+
+    let savedTheme = 'dark';
+
+    try {
+      savedTheme = sessionStorage.getItem(THEME_KEY) || 'dark';
+    } catch {}
+
+    applyTheme(savedTheme);
+
+    // --------------------------------------------------
+    // UTILITAIRES
+    // --------------------------------------------------
+
+    const esc = value =>
+      String(value ?? '—').replace(/[&<>"']/g, c => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[c]);
+
+    const fmt = value => {
+      if (!value) return '—';
+
+      const date = new Date(value);
+
+      return Number.isNaN(date.getTime())
+        ? '—'
+        : date.toLocaleString('fr-FR');
+    };
+
+    let token = null;
+
+    try {
+      token = sessionStorage.getItem('tk');
+    } catch {}
+
+    let requestVersion = 0;
+
+    // --------------------------------------------------
+    // API ADMIN
+    // --------------------------------------------------
+
+    async function api(query = '', method = 'GET') {
+      if (!token) {
+        token = prompt('Token admin');
+
+        if (!token) return null;
+
+        try {
+          sessionStorage.setItem('tk', token);
+        } catch {}
+      }
+
+      const response = await fetch('/api/admin' + query, {
+        method,
+        headers: {
+          Authorization: 'Bearer ' + token
+        },
+        cache: 'no-store'
+      });
+
+      if (response.status === 401) {
+        try {
+          sessionStorage.removeItem('tk');
+        } catch {}
+
+        token = null;
+
+        alert('Token invalide ou accès refusé.');
+        return null;
+      }
+
+      if (response.status === 204) return true;
+
+      if (!response.ok) {
+        throw new Error('Erreur serveur HTTP ' + response.status);
+      }
+
+      return response.json();
+    }
+
+    function setStatus(message) {
+      document.getElementById('status').textContent = message;
+    }
+
+    function showError(error) {
+      console.error(error);
+
+      document.getElementById('app').innerHTML =
+        '<div class="empty">Impossible de charger les données. Vérifie la connexion au serveur puis réessaie.</div>';
+
+      setStatus('Erreur de chargement');
+    }
+
+    // --------------------------------------------------
+    // LISTE DES VISITEURS
+    // --------------------------------------------------
+
+    async function list() {
+      const version = ++requestVersion;
+      const app = document.getElementById('app');
+
+      document.getElementById('top').innerHTML =
+        '<button type="button" onclick="list()">↻ Rafraîchir</button>' +
+        '<span class="status" id="status">Chargement...</span>';
+
+      app.innerHTML = '<div class="empty">Chargement des visiteurs...</div>';
+
+      try {
+        const rows = await api();
+
+        if (version !== requestVersion) return;
+        if (!rows) return;
+
+        if (!Array.isArray(rows)) {
+          throw new Error('Réponse API inattendue');
+        }
+
+        setStatus(rows.length + ' visiteur(s)');
+
+        if (rows.length === 0) {
+          app.innerHTML = '<div class="empty">Aucun visiteur enregistré.</div>';
+          return;
+        }
+
+        app.innerHTML = `
+          <div class="wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Visiteur</th>
+                  <th>Visites</th>
+                  <th>IP</th>
+                  <th>Ville</th>
+                  <th>Pays</th>
+                  <th>OS</th>
+                  <th>Navigateur</th>
+                  <th>Dernière activité</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map((row, index) => `
+                  <tr class="row" data-index="${index}" tabindex="0">
+                    <td title="${esc(row.vid)}">${esc(String(row.vid ?? '').slice(0, 8))}</td>
+                    <td>${esc(row.visits)}</td>
+                    <td>${esc(row.ip)}</td>
+                    <td>${esc(row.city)}</td>
+                    <td>${esc(row.country)}</td>
+                    <td>${esc(row.os)}</td>
+                    <td>${esc(row.browser)}</td>
+                    <td>${esc(fmt(row.last_seen))}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        // Évite d'insérer un identifiant non fiable dans du code JavaScript.
+        app.querySelectorAll('tr[data-index]').forEach(row => {
+          const openDetails = () => {
+            const selected = rows[Number(row.dataset.index)];
+
+            if (selected && selected.vid) {
+              detail(selected.vid);
+            }
+          };
+
+          row.addEventListener('click', openDetails);
+
+          row.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              openDetails();
+            }
+          });
+        });
+      } catch (error) {
+        if (version === requestVersion) showError(error);
+      }
+    }
+
+    // --------------------------------------------------
+    // DÉTAILS D'UN VISITEUR
+    // --------------------------------------------------
+
+    async function detail(vid) {
+      const version = ++requestVersion;
+      const top = document.getElementById('top');
+      const app = document.getElementById('app');
+
+      top.innerHTML = `
+        <button type="button" id="backButton">← Retour</button>
+        <button type="button" class="del" id="deleteButton">
+          Supprimer ce visiteur
+        </button>
+        <span class="status" id="status">Chargement...</span>
+      `;
+
+      document.getElementById('backButton').addEventListener('click', list);
+
+      document.getElementById('deleteButton').addEventListener('click', () => {
+        del(vid);
+      });
+
+      app.innerHTML = '<div class="empty">Chargement des détails...</div>';
+
+      try {
+        const rows = await api('?vid=' + encodeURIComponent(vid));
+
+        if (version !== requestVersion) return;
+        if (!rows) return;
+
+        if (!Array.isArray(rows)) {
+          throw new Error('Réponse API inattendue');
+        }
+
+        setStatus(rows.length + ' enregistrement(s)');
+
+        if (rows.length === 0) {
+          app.innerHTML = '<div class="empty">Aucun enregistrement trouvé pour ce visiteur.</div>';
+          return;
+        }
+
+        app.innerHTML = rows.map(row => {
+          const device = row.device || {};
+          const live = row.live || {};
+
+          const details = object => Object.entries(object)
+            .map(([key, value]) => `
+              <dt>${esc(key)}</dt>
+              <dd>${esc(
+                value !== null && typeof value === 'object'
+                  ? JSON.stringify(value)
+                  : value
+              )}</dd>
+            `).join('');
+
+          return `
+            <section class="card">
+              <div class="card-title">
+                ${esc(row.path)}
+                — ${esc(fmt(row.ts))}
+                <span class="live">(${esc(live.seconds ?? 0)} s)</span>
+              </div>
+
+              <dl>
+                <dt>IP</dt>
+                <dd>${esc(row.ip)}</dd>
+
+                <dt>Localisation</dt>
+                <dd>${esc(row.city)}, ${esc(row.region)}, ${esc(row.country)}
+                  (${esc(row.lat)}, ${esc(row.lon)})</dd>
+
+                <dt>Venu depuis</dt>
+                <dd>${esc(row.referrer || 'accès direct')}</dd>
+
+                <dt>Empreinte</dt>
+                <dd>${esc(row.fp)}</dd>
+
+                ${details(device)}
+                ${details(live)}
+              </dl>
+            </section>
+          `;
+        }).join('');
+      } catch (error) {
+        if (version === requestVersion) showError(error);
+      }
+    }
+
+    // --------------------------------------------------
+    // SUPPRESSION D'UN VISITEUR
+    // --------------------------------------------------
+
+    async function del(vid) {
+      if (!confirm(
+        'Supprimer définitivement toutes les données de ce visiteur ?'
+      )) return;
+
+      try {
+        const result = await api(
+          '?vid=' + encodeURIComponent(vid),
+          'DELETE'
+        );
+
+        if (result) await list();
+      } catch (error) {
+        console.error(error);
+        alert('La suppression a échoué. Réessaie ultérieurement.');
+      }
+    }
+
+    // --------------------------------------------------
+    // INITIALISATION
+    // --------------------------------------------------
+
+    list();
+  </script>
+
+  <script src="/tracker.js" defer></script>
+  <script src="assets/js/reveal.js" defer></script>
 </body>
 </html>
