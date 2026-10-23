@@ -325,3 +325,19 @@ aside { padding: 8px; border: 1px solid var(--ligne); border-radius: var(--rayon
 .js .rv{opacity:0;translate:0 40px;transition:opacity .7s ease,translate .7s ease;transition-delay:var(--d,0ms)}
 .js .rv.visible{opacity:1;translate:0 0}
 @media(prefers-reduced-motion:reduce){.js .rv{opacity:1;translate:none;transition:none}}
+
+/* ===== Cartes : effet 3D au survol (activé par assets/js/tilt.js) =====
+   Ce bloc doit rester en fin de fichier : les règles ci-dessus (hover des cartes,
+   décalage des cartes paires) définissent aussi un transform, que celui-ci reprend (!important). */
+.home .val:nth-child(even){--ty:18px}
+@media(max-width:720px){.home .val:nth-child(even){--ty:0px}}
+:root .tilt{--rx:0deg;--ry:0deg;--gx:50%;--gy:50%;position:relative;transform:translateY(calc(var(--ty,0px) + var(--lift,0px))) perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) !important;transform-style:preserve-3d;will-change:transform;transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease,border-color .3s ease}
+.js .tilt.rv{transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease,border-color .3s ease,opacity .7s ease var(--d,0ms),translate .7s ease var(--d,0ms)}
+:root .tilt.over,.js .tilt.rv.over{--lift:-6px;z-index:2;transition:transform .12s ease-out,box-shadow .4s ease,border-color .3s ease,opacity .7s ease,translate .7s ease;box-shadow:0 24px 44px -20px rgba(0,0,145,.45),0 0 0 1px rgba(139,92,246,.4)}
+.tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s ease;background:radial-gradient(240px circle at var(--gx) var(--gy),rgba(160,90,255,.16),transparent 65%)}
+:root[data-theme=dark] .tilt::after{background:radial-gradient(240px circle at var(--gx) var(--gy),rgba(255,255,255,.12),transparent 65%)}
+.tilt.over::after{opacity:1}
+.tilt .ic{transform:translateZ(30px)}
+.tilt h3{transform:translateZ(20px)}
+.tilt p,.tilt time{transform:translateZ(10px)}
+.quick a.tilt svg{transform:translateZ(28px)}
