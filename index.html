@@ -94,6 +94,26 @@ nav a:hover,nav a[aria-current]{color:var(--bleu);box-shadow:inset 0 -2px var(--
   .hero::before,.hero::after,.hero .eyebrow::before{transition:none}
 }
 
+/* Hero : aura rose/violet, particules et parallaxe */
+.hero{--px:0;--py:0}
+.aura{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.aura i{position:absolute;display:block;border-radius:50%;filter:blur(70px);opacity:.55;will-change:transform;transition:opacity .8s ease,scale .8s ease,left .6s cubic-bezier(.2,.7,.2,1),top .6s cubic-bezier(.2,.7,.2,1)}
+.aura i:nth-child(1){width:min(46vw,620px);height:min(46vw,620px);right:-8%;top:8%;background:radial-gradient(circle,rgba(255,40,140,.75),transparent 65%);animation:aura1 16s ease-in-out infinite alternate}
+.aura i:nth-child(2){width:min(38vw,520px);height:min(38vw,520px);right:16%;bottom:-30%;background:radial-gradient(circle,rgba(140,80,255,.75),transparent 65%);animation:aura2 20s ease-in-out infinite alternate}
+.aura i:nth-child(3){width:340px;height:340px;left:var(--mx);top:var(--my);translate:-50% -50%;background:radial-gradient(circle,rgba(210,80,255,.6),rgba(255,60,150,.25) 45%,transparent 70%);opacity:0}
+.hero:hover .aura i{opacity:.9;scale:1.18}
+.hero:hover .aura i:nth-child(3){opacity:.8;scale:1}
+@keyframes aura1{to{transform:translate3d(-9vw,6vh,0) scale(1.1)}}
+@keyframes aura2{to{transform:translate3d(8vw,-8vh,0) scale(.92)}}
+#hero-fx{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:.55;transition:opacity .6s ease}
+.hero:hover #hero-fx{opacity:1}
+.hero h1,.hero p.lead,.hero .stats{transition:transform .35s ease-out,text-shadow .5s ease}
+.hero h1{transform:translate3d(calc(var(--px)*-10px),calc(var(--py)*-7px),0)}
+.hero p.lead{transform:translate3d(calc(var(--px)*-5px),calc(var(--py)*-3.5px),0)}
+.hero .stats{transform:translate3d(calc(var(--px)*4px),calc(var(--py)*3px),0)}
+.hero:hover h1{text-shadow:0 0 38px rgba(255,90,180,.45)}
+@media(prefers-reduced-motion:reduce){.aura i{animation:none;transition:none}#hero-fx{display:none}.hero h1,.hero p.lead,.hero .stats{transition:none}}
+
 /* Sections */
 section{padding:88px 0}
 h2{font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.2;font-weight:800;margin:12px 0 22px}
@@ -105,7 +125,8 @@ h2{font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.2;font-weight:800;margin:12p
 .vals{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .val{background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:24px;min-height:244px}
 .val.t{background:var(--lav);border-color:var(--lav)}
-.val:nth-child(even){transform:translateY(32px)}
+.val{transform:translateY(var(--ty,0px))}
+.val:nth-child(even){--ty:32px}
 .ic{width:52px;height:52px;display:grid;place-items:center;background:var(--lav);color:var(--bleu);margin-bottom:14px}
 .val.t .ic{background:var(--carte)}
 .val h3{font-size:1.05rem;margin-bottom:6px}.val p{font-size:.92rem;color:var(--gris)}
@@ -130,6 +151,18 @@ h2{font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.2;font-weight:800;margin:12p
 .quick a svg{color:var(--bleu-f)}
 .quick a:hover{box-shadow:0 0 0 3px rgba(255,255,255,.4)}
 
+/* Cartes : effet 3D au survol */
+.tilt{--rx:0deg;--ry:0deg;--gx:50%;--gy:50%;position:relative;transform:translateY(var(--ty,0px)) perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));transform-style:preserve-3d;will-change:transform;transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease}
+.js .tilt.rv{transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease,opacity .7s ease var(--d,0ms),translate .7s ease var(--d,0ms)}
+.tilt.over,.js .tilt.rv.over{z-index:2;transition:transform .12s ease-out,box-shadow .4s ease,opacity .7s ease,translate .7s ease;box-shadow:0 24px 44px -20px rgba(0,0,145,.45),0 0 0 1px rgba(139,92,246,.4)}
+.tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s ease;background:radial-gradient(240px circle at var(--gx) var(--gy),rgba(160,90,255,.16),transparent 65%)}
+:root[data-theme=dark] .tilt::after{background:radial-gradient(240px circle at var(--gx) var(--gy),rgba(255,255,255,.12),transparent 65%)}
+.tilt.over::after{opacity:1}
+.tilt .ic{transform:translateZ(30px)}
+.tilt h3{transform:translateZ(20px)}
+.tilt p,.tilt time{transform:translateZ(10px)}
+.quick a.tilt svg{transform:translateZ(28px)}
+
 /* Pied de page */
 footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding:64px 0 48px}
@@ -145,7 +178,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 
 :root[data-theme=dark] .logo img{background:#fff;padding:4px 10px}
 @media(max-width:960px){.pres,.cols{grid-template-columns:1fr}.dirs{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(3){border-left:0}header .w{flex-wrap:wrap;padding-top:10px;padding-bottom:10px}}
-@media(max-width:600px){.dirs,.vals{grid-template-columns:1fr}.val:nth-child(even){transform:none}.aide{display:none}}
+@media(max-width:600px){.dirs,.vals{grid-template-columns:1fr}.val:nth-child(even){--ty:0px}.aide{display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 /* Apparition au scroll */
@@ -195,13 +228,15 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 
 <main>
   <div class="hero">
+    <div class="aura" aria-hidden="true"><i></i><i></i><i></i></div>
+    <canvas id="hero-fx" aria-hidden="true"></canvas>
     <div class="w">
       <p class="eyebrow">Portail officiel · Le Grand Paname</p>
       <h1>Préfecture de  LGP</h1>
       <p class="lead">Au service des citoyens de Paris.<br>Sécurité, démarches administratives et information publique, réunies en un seul portail.</p>
       <div class="btns"><a class="btn o" href="presentation.html">Découvrir la Préfecture</a><a class="btn p" href="demarche.html#units">Services publics</a></div>
       <div class="stats">
-        <div><strong>6</strong><span>Directions actives</span></div>
+        <div><strong>8</strong><span>Directions actives</span></div>
         <div><strong>24/7</strong><span>Astreinte citoyenne</span></div>
         <div><strong id="s-m">…</strong><span>Membres Discord</span></div>
         <div><strong id="s-o">…</strong><span>En ligne maintenant</span></div>
@@ -215,7 +250,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
         <p class="eyebrow">La Préfecture</p>
         <h2>Une institution au cœur de Paris</h2>
         <p>La Préfecture de  du Grand Paname (LGP) coordonne l'ensemble des forces de sécurité et des services publics de l'agglomération. Elle veille au maintien de l'ordre, à la protection des citoyens et à la qualité du service rendu au public.</p>
-        <p class="n">Rattachée aux institutions de la ville, elle organise ses missions autour de six directions opérationnelles et d'un accueil citoyen ouvert toute la semaine.</p>
+        <p class="n">Rattachée aux institutions de la ville, elle organise ses missions autour de huit directions opérationnelles et d'un accueil citoyen ouvert toute la semaine.</p>
         <a class="btn c" href="presentation.html">Voir la présentation complète</a>
       </div>
       <div class="vals">
@@ -300,15 +335,107 @@ document.getElementById("theme").onclick=()=>{
   document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}
 };
 
-/* Hero : la lueur suit la souris */
+/* Hero : lueur, parallaxe et particules */
 (()=>{
   const hero=document.querySelector(".hero");
   if(!hero)return;
+  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  let mx=-9999,my=-9999;
   hero.addEventListener("pointermove",e=>{
     const r=hero.getBoundingClientRect();
-    hero.style.setProperty("--mx",(e.clientX-r.left)+"px");
-    hero.style.setProperty("--my",(e.clientY-r.top)+"px");
+    mx=e.clientX-r.left;my=e.clientY-r.top;
+    hero.style.setProperty("--mx",mx+"px");
+    hero.style.setProperty("--my",my+"px");
+    if(!reduce){
+      hero.style.setProperty("--px",((mx/r.width-.5)*2).toFixed(3));
+      hero.style.setProperty("--py",((my/r.height-.5)*2).toFixed(3));
+    }
   });
+  hero.addEventListener("pointerleave",()=>{
+    mx=my=-9999;
+    hero.style.setProperty("--px",0);
+    hero.style.setProperty("--py",0);
+  });
+
+  /* Particules : constellation rose/violet qui réagit au curseur */
+  const cv=document.getElementById("hero-fx");
+  if(!cv||reduce)return;
+  const ctx=cv.getContext("2d");
+  const COLORS=["255,90,175","170,110,255","255,255,255"];
+  let W=0,H=0,P=[],raf=0,vis=true;
+  function size(){
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    W=hero.clientWidth;H=hero.clientHeight;
+    cv.width=W*dpr;cv.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const n=Math.max(18,Math.min(70,Math.round(W*H/16000)));
+    P=Array.from({length:n},()=>({
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+      r:Math.random()*1.6+.6,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      a:Math.random()*.5+.3
+    }));
+  }
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<P.length;i++){
+      const p=P[i];
+      const dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy);
+      if(d>0&&d<60){const f=(60-d)/60*1.5;p.x+=dx/d*f;p.y+=dy/d*f}
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<-10)p.x=W+10;else if(p.x>W+10)p.x=-10;
+      if(p.y<-10)p.y=H+10;else if(p.y>H+10)p.y=-10;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.2832);
+      ctx.fillStyle="rgba("+p.c+","+p.a+")";ctx.fill();
+      for(let j=i+1;j<P.length;j++){
+        const q=P[j],ex=p.x-q.x,ey=p.y-q.y,dd=ex*ex+ey*ey;
+        if(dd<9000){
+          ctx.strokeStyle="rgba(200,140,255,"+(0.22*(1-dd/9000)).toFixed(3)+")";
+          ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
+        }
+      }
+      if(d<170){
+        ctx.strokeStyle="rgba(255,110,190,"+(0.5*(1-d/170)).toFixed(3)+")";
+        ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(mx,my);ctx.stroke();
+      }
+    }
+    raf=requestAnimationFrame(frame);
+  }
+  function start(){if(!raf&&vis&&!document.hidden)raf=requestAnimationFrame(frame)}
+  function stop(){cancelAnimationFrame(raf);raf=0}
+  new IntersectionObserver(en=>{vis=en[0].isIntersecting;vis?start():stop()}).observe(hero);
+  document.addEventListener("visibilitychange",()=>document.hidden?stop():start());
+  let t;
+  new ResizeObserver(()=>{clearTimeout(t);t=setTimeout(size,150)}).observe(hero);
+  size();start();
+})();
+
+/* Cartes : inclinaison 3D au survol */
+(()=>{
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches||!matchMedia("(hover:hover)").matches)return;
+  const SEL=".val,.dir,.actu,.quick a",MAX=9;
+  let cur=null;
+  const reset=el=>{
+    el.classList.remove("over");
+    el.style.setProperty("--rx","0deg");
+    el.style.setProperty("--ry","0deg");
+  };
+  document.addEventListener("pointermove",e=>{
+    if(e.pointerType&&e.pointerType!=="mouse")return;
+    const el=e.target.closest?e.target.closest(SEL):null;
+    if(cur&&cur!==el){reset(cur);cur=null}
+    if(!el)return;
+    el.classList.add("tilt","over");
+    const r=el.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    el.style.setProperty("--ry",((x-.5)*2*MAX).toFixed(2)+"deg");
+    el.style.setProperty("--rx",((.5-y)*2*MAX).toFixed(2)+"deg");
+    el.style.setProperty("--gx",(x*100).toFixed(1)+"%");
+    el.style.setProperty("--gy",(y*100).toFixed(1)+"%");
+    cur=el;
+  });
+  document.documentElement.addEventListener("mouseleave",()=>{if(cur){reset(cur);cur=null}});
 })();
 
 /* Stats Discord : l'invitation donne membres + en ligne, le widget sert de secours */
