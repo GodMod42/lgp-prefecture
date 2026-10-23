@@ -2,576 +2,849 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Panel visiteurs</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Administration — Visiteurs</title>
 
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0e1014;
-      --panel: #161920;
-      --line: #262a33;
-      --txt: #c9ced8;
-      --mute: #8a91a0;
-      --hot: #ff5a5f;
-      --live: #3ddc97;
-      --hover: #1c2029;
-      --button-bg: #161920;
-      --header-bg: #12151b;
-    }
-
-    body.light {
-      color-scheme: light;
-      --bg: #f3f5f9;
-      --panel: #ffffff;
-      --line: #d8dee8;
-      --txt: #202938;
-      --mute: #5d687a;
-      --hot: #d92d3a;
-      --live: #087f5b;
-      --hover: #e9eef6;
-      --button-bg: #ffffff;
-      --header-bg: #edf1f7;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 20px;
-      background: var(--bg);
-      color: var(--txt);
-      font: 14px/1.5 system-ui, sans-serif;
-      transition: background .2s ease, color .2s ease;
-    }
-
-    h1 {
-      font-size: 20px;
-      margin: 0;
-      font-weight: 650;
-    }
-
-    .heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .top {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    button {
-      background: var(--button-bg);
-      color: var(--txt);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font: inherit;
-      cursor: pointer;
-      transition: background .2s, border-color .2s;
-    }
-
-    button:hover {
-      background: var(--hover);
-    }
-
-    button:focus-visible {
-      outline: 2px solid var(--live);
-      outline-offset: 2px;
-    }
-
-    button.del {
-      border-color: var(--hot);
-      color: var(--hot);
-    }
-
-    .wrap {
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--panel);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--panel);
-    }
-
-    th, td {
-      padding: 11px 13px;
-      text-align: left;
-      border-bottom: 1px solid var(--line);
-      white-space: nowrap;
-    }
-
-    th {
-      background: var(--header-bg);
-      color: var(--mute);
-      font-size: 11px;
-      font-weight: 650;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-    }
-
-    tr.row {
-      cursor: pointer;
-      transition: background .15s;
-    }
-
-    tr.row:hover {
-      background: var(--hover);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 16px;
-      margin: 12px 0;
-      overflow-wrap: anywhere;
-    }
-
-    .card-title {
-      margin-bottom: 12px;
-      font-weight: 650;
-    }
-
-    dl {
-      margin: 0;
-      display: grid;
-      grid-template-columns: minmax(130px, 200px) minmax(0, 1fr);
-      gap: 6px 14px;
-    }
-
-    dt {
-      color: var(--mute);
-    }
-
-    dd {
-      margin: 0;
-      overflow-wrap: anywhere;
-    }
-
-    .live {
-      color: var(--live);
-      font-weight: 600;
-    }
-
-    .empty {
-      padding: 24px;
-      text-align: center;
-      color: var(--mute);
-    }
-
-    .status {
-      color: var(--mute);
-      font-size: 12px;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 12px;
-      }
-
-      .heading {
-        align-items: flex-start;
-      }
-
-      dl {
-        grid-template-columns: 1fr;
-        gap: 2px;
-      }
-
-      dd {
-        margin-bottom: 8px;
-      }
-
-      th, td {
-        padding: 9px 10px;
-      }
-    }
-  </style>
-
-  <link rel="stylesheet" href="assets/css/site-refresh.css">
+<style>
+:root {
+  color-scheme: dark;
+  --bg:#0b0e14; --panel:#131824; --panel2:#191f2d;
+  --line:#293247; --txt:#e7ebf4; --mute:#929db2;
+  --accent:#7c8cff; --accent2:#a5adff;
+  --green:#36d6a0; --red:#ff6577; --orange:#ffbd69;
+  --hover:#20283a; --shadow:0 8px 30px #0002;
+}
+body.light {
+  color-scheme:light;
+  --bg:#f3f5fa; --panel:#fff; --panel2:#f6f8fc;
+  --line:#dce2ed; --txt:#202a3b; --mute:#637087;
+  --accent:#495bd5; --accent2:#3548c6;
+  --green:#07835d; --red:#cf354a; --orange:#a96100;
+  --hover:#edf1fa; --shadow:0 8px 25px #2330500d;
+}
+* {box-sizing:border-box}
+body {
+  margin:0; padding:26px; background:var(--bg); color:var(--txt);
+  font:14px/1.55 system-ui,-apple-system,sans-serif;
+  transition:background .2s,color .2s;
+}
+button,input,select {font:inherit}
+button,select,input {
+  background:var(--panel); color:var(--txt);
+  border:1px solid var(--line); border-radius:9px; padding:9px 12px;
+}
+button {cursor:pointer;transition:.15s}
+button:hover {background:var(--hover)}
+button:focus-visible,input:focus-visible,select:focus-visible {
+  outline:2px solid var(--accent);outline-offset:2px
+}
+button:disabled {opacity:.5;cursor:not-allowed}
+h1,h2,h3,p {margin-top:0}
+h1 {font-size:25px;letter-spacing:-.7px;margin-bottom:4px}
+h2 {font-size:17px;margin-bottom:4px}
+h3 {font-size:14px;margin-bottom:12px}
+small,.muted {color:var(--mute)}
+.page {max-width:1600px;margin:auto}
+.header {
+  display:flex;justify-content:space-between;align-items:center;
+  gap:16px;flex-wrap:wrap;margin-bottom:24px
+}
+.brand {display:flex;align-items:center;gap:12px}
+.brand-icon {
+  display:grid;place-items:center;width:46px;height:46px;
+  background:var(--panel2);border:1px solid var(--line);
+  border-radius:14px;font-size:23px
+}
+.actions,.toolbar,.filters {display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.btn-primary {background:var(--accent);color:white;border-color:var(--accent)}
+.btn-primary:hover {filter:brightness(1.08);background:var(--accent)}
+.btn-danger {color:var(--red);border-color:var(--red)}
+.section-head {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;margin-bottom:15px
+}
+.toolbar {margin-bottom:14px}
+.toolbar input {flex:1;min-width:190px}
+select {max-width:100%;cursor:pointer}
+.grid {display:grid;gap:15px}
+.stats {grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:20px}
+.stat,.panel,.chart-card,.profile-card {
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:15px;box-shadow:var(--shadow)
+}
+.stat {padding:18px;min-width:0}
+.stat-top {display:flex;justify-content:space-between;gap:8px;color:var(--mute);font-size:12px}
+.stat-icon {
+  width:33px;height:33px;border-radius:10px;display:grid;
+  place-items:center;background:var(--panel2);font-size:16px
+}
+.stat-value {font-size:27px;font-weight:750;letter-spacing:-.8px;margin:12px 0 2px;overflow-wrap:anywhere}
+.stat-note {font-size:12px;color:var(--mute)}
+.panel {overflow:hidden}
+.panel-head {padding:17px 18px;border-bottom:1px solid var(--line)}
+.table-wrap {overflow:auto}
+table {border-collapse:collapse;width:100%;min-width:950px}
+th,td {padding:13px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th {font-size:11px;text-transform:uppercase;letter-spacing:.045em;color:var(--mute);background:var(--panel2)}
+th button {
+  padding:0;border:0;background:transparent;color:inherit;
+  text-transform:inherit;letter-spacing:inherit;font-size:inherit
+}
+th button:hover {color:var(--accent);background:transparent}
+tbody tr {transition:background .12s}
+tbody tr:hover {background:var(--hover)}
+tbody tr:last-child td {border-bottom:0}
+.visitor-row {cursor:pointer}
+.visitor-row:focus-visible {outline:2px solid var(--accent);outline-offset:-2px}
+.id-cell {display:flex;align-items:center;gap:10px}
+.avatar {
+  display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;
+  border-radius:10px;background:var(--panel2);color:var(--accent);
+  font-weight:750
+}
+.id-main {font-weight:650}
+.id-sub {font-size:11px;color:var(--mute)}
+.pill {
+  display:inline-flex;align-items:center;gap:6px;padding:4px 9px;
+  border-radius:20px;background:var(--panel2);font-size:12px
+}
+.dot {width:7px;height:7px;border-radius:50%;background:var(--green)}
+.table-foot {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;padding:13px 16px;border-top:1px solid var(--line)
+}
+.empty {padding:35px 15px;text-align:center;color:var(--mute)}
+.profile-head {
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px
+}
+.profile-avatar {
+  width:58px;height:58px;display:grid;place-items:center;
+  background:var(--panel2);border:1px solid var(--line);
+  border-radius:16px;font-size:26px
+}
+.profile-title {flex:1;min-width:150px}
+.profile-title h2 {font-size:22px;margin-bottom:2px}
+.profile-actions {display:flex;gap:8px;flex-wrap:wrap}
+.profile-grid {grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px}
+.profile-stat {padding:17px}
+.profile-stat .stat-value {font-size:24px}
+.charts-grid {grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:16px}
+.chart-card {padding:18px;min-width:0;overflow:hidden}
+.chart-sub {color:var(--mute);font-size:12px;margin-bottom:12px}
+.chart {width:100%;display:block;overflow:visible}
+.chart text {fill:var(--mute);font-family:system-ui,sans-serif;font-size:11px}
+.chart .gridline {stroke:var(--line);stroke-width:1}
+.chart .bar {fill:var(--accent)}
+.chart .bar:hover {fill:var(--green)}
+.chart .line {fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.chart .point {fill:var(--accent);stroke:var(--panel);stroke-width:2}
+.info-grid {grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:16px}
+.info-card {padding:18px}
+.info-list {display:grid;grid-template-columns:minmax(120px,180px) minmax(0,1fr);gap:10px 14px}
+.info-list dt {color:var(--mute)}
+.info-list dd {margin:0;overflow-wrap:anywhere}
+.page-list {display:grid;gap:10px}
+.page-row {display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+.page-path {overflow-wrap:anywhere}
+.track {height:7px;background:var(--panel2);border-radius:10px;overflow:hidden;margin-top:5px}
+.track span {height:100%;display:block;background:var(--accent);border-radius:10px}
+.history-table {min-width:700px}
+.history-table td {white-space:normal;overflow-wrap:anywhere}
+.history-path {font-weight:650}
+.history-sub {font-size:12px;color:var(--mute)}
+.pagination {display:flex;align-items:center;gap:8px}
+.footer-note {font-size:12px;color:var(--mute);margin-top:14px}
+[hidden] {display:none!important}
+@media(max-width:1000px) {
+  .stats,.profile-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px) {
+  body {padding:13px}
+  h1 {font-size:22px}
+  .charts-grid,.info-grid {grid-template-columns:1fr}
+  .stat {padding:13px}
+  .stat-value {font-size:23px}
+  .info-list {grid-template-columns:1fr;gap:3px}
+  .info-list dd {margin-bottom:9px}
+  .chart-card {padding:13px}
+}
+</style>
+<link rel="stylesheet" href="assets/css/site-refresh.css">
 </head>
-
 <body>
-  <header class="heading">
-    <h1>Panel visiteurs</h1>
+<div class="page">
 
-    <button
-      id="themeToggle"
-      type="button"
-      aria-pressed="false"
-      onclick="toggleTheme()"
-    >
-      ☀️ Mode jour
-    </button>
-  </header>
+<header class="header">
+  <div class="brand">
+    <div class="brand-icon">⌁</div>
+    <div>
+      <h1>Centre visiteurs</h1>
+      <div class="muted">Administration · Analyse de fréquentation</div>
+    </div>
+  </div>
+  <div class="actions">
+    <button id="themeToggle" type="button">☀️ Mode jour</button>
+    <button id="refreshBtn" type="button">↻ Actualiser</button>
+  </div>
+</header>
 
-  <div class="top" id="top">
-    <button type="button" onclick="list()">↻ Rafraîchir</button>
-    <span class="status" id="status"></span>
+<section id="listView">
+  <div class="grid stats">
+    <article class="stat">
+      <div class="stat-top"><span>Visiteurs enregistrés</span><span class="stat-icon">♙</span></div>
+      <div class="stat-value" id="totalVisitors">—</div>
+      <div class="stat-note">Identifiants distincts retournés par l'API</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top"><span>Visites cumulées</span><span class="stat-icon">↗</span></div>
+      <div class="stat-value" id="totalVisits">—</div>
+      <div class="stat-note">Nombre d'enregistrements associés</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top"><span>Dernière activité</span><span class="stat-icon">◷</span></div>
+      <div class="stat-value" id="lastActivity" style="font-size:17px">—</div>
+      <div class="stat-note">Parmi les visiteurs chargés</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top"><span>Navigateur principal</span><span class="stat-icon">▣</span></div>
+      <div class="stat-value" id="topBrowser" style="font-size:20px">—</div>
+      <div class="stat-note">Le plus fréquent dans la liste chargée</div>
+    </article>
   </div>
 
-  <main id="app" aria-live="polite">
-    <div class="empty">Chargement des visiteurs...</div>
-  </main>
+  <div class="section-head">
+    <div>
+      <h2>Visiteurs</h2>
+      <div class="muted">Clique sur un en-tête pour trier. Clique sur un visiteur pour analyser son activité.</div>
+    </div>
+    <span class="pill" id="resultCount">Chargement…</span>
+  </div>
 
-  <script>
-    // --------------------------------------------------
-    // MODE JOUR / NUIT
-    // --------------------------------------------------
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Rechercher IP, identifiant, ville, pays, navigateur…" aria-label="Rechercher un visiteur">
+    <select id="sortSelect" aria-label="Trier les visiteurs">
+      <option value="last_seen:desc">Dernière activité : récente</option>
+      <option value="last_seen:asc">Dernière activité : ancienne</option>
+      <option value="visits:desc">Nombre de visites : décroissant</option>
+      <option value="visits:asc">Nombre de visites : croissant</option>
+      <option value="first_seen:desc">Première visite : récente</option>
+      <option value="first_seen:asc">Première visite : ancienne</option>
+      <option value="city:asc">Ville : A → Z</option>
+      <option value="country:asc">Pays : A → Z</option>
+      <option value="browser:asc">Navigateur : A → Z</option>
+      <option value="os:asc">Système : A → Z</option>
+    </select>
+  </div>
 
-    const THEME_KEY = 'visitors-panel-theme';
+  <div class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><button data-sort="vid">Visiteur ↕</button></th>
+            <th><button data-sort="visits">Visites ↕</button></th>
+            <th>Adresse IP</th>
+            <th><button data-sort="city">Ville ↕</button></th>
+            <th><button data-sort="country">Pays ↕</button></th>
+            <th><button data-sort="os">Système ↕</button></th>
+            <th><button data-sort="browser">Navigateur ↕</button></th>
+            <th><button data-sort="last_seen">Dernière activité ↕</button></th>
+          </tr>
+        </thead>
+        <tbody id="visitorRows"></tbody>
+      </table>
+    </div>
+    <div class="table-foot">
+      <span class="muted" id="tableInfo">—</span>
+      <div class="pagination">
+        <button id="prevPage" type="button">←</button>
+        <span id="pageInfo">1 / 1</span>
+        <button id="nextPage" type="button">→</button>
+      </div>
+    </div>
+  </div>
+  <p class="footer-note">La liste est limitée aux 300 groupes de visiteurs renvoyés par l'API. Les statistiques présentées portent sur ces données chargées, pas nécessairement sur la totalité de la base.</p>
+</section>
 
-    function applyTheme(theme) {
-      const light = theme === 'light';
+<section id="detailView" hidden>
+  <div class="section-head">
+    <button id="backBtn" type="button">← Retour aux visiteurs</button>
+    <span class="pill" id="detailRecordCount">—</span>
+  </div>
 
-      document.body.classList.toggle('light', light);
+  <div class="profile-head">
+    <div class="profile-avatar">♙</div>
+    <div class="profile-title">
+      <h2 id="profileTitle">Fiche visiteur</h2>
+      <div class="muted" id="profileSubtitle">Analyse des enregistrements disponibles</div>
+    </div>
+    <div class="profile-actions">
+      <button id="detailRefreshBtn" type="button">↻ Actualiser</button>
+      <button class="btn-danger" id="deleteBtn" type="button">Supprimer les données</button>
+    </div>
+  </div>
 
-      const button = document.getElementById('themeToggle');
+  <div class="grid profile-grid">
+    <article class="stat profile-stat">
+      <div class="stat-top"><span>Enregistrements</span><span class="stat-icon">▤</span></div>
+      <div class="stat-value" id="dRecords">—</div>
+      <div class="stat-note">Maximum 500 retournés par l'API</div>
+    </article>
+    <article class="stat profile-stat">
+      <div class="stat-top"><span>Temps cumulé déclaré</span><span class="stat-icon">◷</span></div>
+      <div class="stat-value" id="dTime">—</div>
+      <div class="stat-note">Somme des durées reçues, non dédupliquées</div>
+    </article>
+    <article class="stat profile-stat">
+      <div class="stat-top"><span>Clics comptabilisés</span><span class="stat-icon">⌖</span></div>
+      <div class="stat-value" id="dClicks">—</div>
+      <div class="stat-note">Somme des compteurs présents</div>
+    </article>
+    <article class="stat profile-stat">
+      <div class="stat-top"><span>Défilement maximal moyen</span><span class="stat-icon">↕</span></div>
+      <div class="stat-value" id="dScroll">—</div>
+      <div class="stat-note">Moyenne des valeurs reçues, en %</div>
+    </article>
+  </div>
 
-      button.textContent = light
-        ? '🌙 Mode nuit'
-        : '☀️ Mode jour';
+  <div class="grid charts-grid">
+    <article class="chart-card">
+      <h3>Pages consultées</h3>
+      <div class="chart-sub">Nombre d'enregistrements par chemin de page</div>
+      <div id="pagesChart"></div>
+    </article>
+    <article class="chart-card">
+      <h3>Activité dans le temps</h3>
+      <div class="chart-sub">Enregistrements regroupés par date selon l'horodatage disponible</div>
+      <div id="activityChart"></div>
+    </article>
+    <article class="chart-card">
+      <h3>Interactions enregistrées</h3>
+      <div class="chart-sub">Somme des compteurs présents dans les données reçues</div>
+      <div id="interactionsChart"></div>
+    </article>
+    <article class="chart-card">
+      <h3>Provenance des visites</h3>
+      <div class="chart-sub">Référents distincts dans les enregistrements chargés</div>
+      <div id="referrerChart"></div>
+    </article>
+  </div>
 
-      button.setAttribute('aria-pressed', String(light));
+  <div class="grid info-grid">
+    <article class="panel info-card">
+      <h3>Localisation et navigation</h3>
+      <dl class="info-list" id="locationInfo"></dl>
+    </article>
+    <article class="panel info-card">
+      <h3>Empreinte et appareil</h3>
+      <dl class="info-list" id="deviceInfo"></dl>
+    </article>
+  </div>
+
+  <article class="panel" style="margin-bottom:16px">
+    <div class="panel-head">
+      <h2>Pages les plus consultées</h2>
+      <div class="muted">Classement calculé à partir des enregistrements reçus</div>
+    </div>
+    <div style="padding:17px" id="pageRanking"></div>
+  </article>
+
+  <article class="panel">
+    <div class="panel-head">
+      <h2>Historique des enregistrements</h2>
+      <div class="muted">Les 500 enregistrements les plus récents au maximum</div>
+    </div>
+    <div class="table-wrap">
+      <table class="history-table">
+        <thead>
+          <tr><th>Date</th><th>Page</th><th>Durée déclarée</th><th>Clics</th><th>Défilement</th><th>Provenance</th></tr>
+        </thead>
+        <tbody id="historyRows"></tbody>
+      </table>
+    </div>
+  </article>
+  <p class="footer-note">Les graphiques sont descriptifs : ils ne prouvent ni l'identité réelle d'une personne ni son attention. L'API ne fournit ici qu'un maximum de 500 enregistrements par visiteur.</p>
+</section>
+
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const $ = id => document.getElementById(id);
+  const esc = v => String(v ?? '—').replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  })[c]);
+
+  const dateValue = v => {
+    if (!v) return 0;
+    const n = new Date(v).getTime();
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const fmtDate = v => {
+    const n = dateValue(v);
+    return n ? new Date(n).toLocaleString('fr-FR') : '—';
+  };
+
+  const fmtNumber = n => Number(n || 0).toLocaleString('fr-FR');
+  const num = v => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const duration = seconds => {
+    seconds = Math.max(0, Math.round(num(seconds)));
+    if (seconds < 60) return seconds + ' s';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' min ' + (seconds % 60) + ' s';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return h + ' h ' + m + ' min';
+  };
+
+  // Thème
+  const THEME_KEY = 'visitors-panel-theme';
+  function applyTheme(theme) {
+    const light = theme === 'light';
+    document.body.classList.toggle('light', light);
+    $('themeToggle').textContent = light ? '🌙 Mode nuit' : '☀️ Mode jour';
+    $('themeToggle').setAttribute('aria-pressed', String(light));
+  }
+  let theme = 'dark';
+  try { theme = sessionStorage.getItem(THEME_KEY) || 'dark'; } catch {}
+  applyTheme(theme);
+  $('themeToggle').addEventListener('click', () => {
+    theme = document.body.classList.contains('light') ? 'dark' : 'light';
+    try { sessionStorage.setItem(THEME_KEY, theme); } catch {}
+    applyTheme(theme);
+  });
+
+  // Authentification et API
+  let token = null;
+  try { token = sessionStorage.getItem('tk'); } catch {}
+  let requestVersion = 0;
+  let visitors = [];
+  let selectedVid = null;
+  let detailRows = [];
+  let sortKey = 'last_seen';
+  let sortDir = 'desc';
+  let page = 1;
+  const pageSize = 25;
+
+  async function api(query = '', method = 'GET') {
+    if (!token) {
+      token = prompt('Token admin');
+      if (!token) return null;
+      try { sessionStorage.setItem('tk', token); } catch {}
     }
-
-    function toggleTheme() {
-      const current = document.body.classList.contains('light')
-        ? 'light'
-        : 'dark';
-
-      const next = current === 'dark' ? 'light' : 'dark';
-
-      try {
-        sessionStorage.setItem(THEME_KEY, next);
-      } catch {}
-
-      applyTheme(next);
+    const r = await fetch('/api/admin' + query, {
+      method,
+      headers: { Authorization: 'Bearer ' + token },
+      cache: 'no-store'
+    });
+    if (r.status === 401) {
+      token = null;
+      try { sessionStorage.removeItem('tk'); } catch {}
+      alert('Token invalide ou accès refusé.');
+      return null;
     }
+    if (r.status === 204) return true;
+    if (!r.ok) throw new Error('Erreur HTTP ' + r.status);
+    return r.json();
+  }
 
-    let savedTheme = 'dark';
+  function errorBox(message) {
+    $('visitorRows').innerHTML = `<tr><td colspan="8" class="empty">${esc(message)}</td></tr>`;
+  }
 
-    try {
-      savedTheme = sessionStorage.getItem(THEME_KEY) || 'dark';
-    } catch {}
+  function latest(a, b) {
+    return dateValue(a.last_seen) - dateValue(b.last_seen);
+  }
 
-    applyTheme(savedTheme);
+  // Tableau et tri
+  function filteredVisitors() {
+    const q = $('search').value.trim().toLocaleLowerCase('fr-FR');
+    return visitors.filter(v => [
+      v.vid, v.ip, v.city, v.country, v.os, v.browser
+    ].some(x => String(x ?? '').toLocaleLowerCase('fr-FR').includes(q)));
+  }
 
-    // --------------------------------------------------
-    // UTILITAIRES
-    // --------------------------------------------------
-
-    const esc = value =>
-      String(value ?? '—').replace(/[&<>"']/g, c => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      })[c]);
-
-    const fmt = value => {
-      if (!value) return '—';
-
-      const date = new Date(value);
-
-      return Number.isNaN(date.getTime())
-        ? '—'
-        : date.toLocaleString('fr-FR');
-    };
-
-    let token = null;
-
-    try {
-      token = sessionStorage.getItem('tk');
-    } catch {}
-
-    let requestVersion = 0;
-
-    // --------------------------------------------------
-    // API ADMIN
-    // --------------------------------------------------
-
-    async function api(query = '', method = 'GET') {
-      if (!token) {
-        token = prompt('Token admin');
-
-        if (!token) return null;
-
-        try {
-          sessionStorage.setItem('tk', token);
-        } catch {}
+  function sortVisitors(rows) {
+    return [...rows].sort((a, b) => {
+      let av = a[sortKey], bv = b[sortKey];
+      if (sortKey === 'visits') {
+        av = num(av); bv = num(bv);
+      } else if (sortKey === 'last_seen' || sortKey === 'first_seen') {
+        av = dateValue(av); bv = dateValue(bv);
+      } else {
+        av = String(av ?? '').toLocaleLowerCase('fr-FR');
+        bv = String(bv ?? '').toLocaleLowerCase('fr-FR');
       }
+      let result = av < bv ? -1 : av > bv ? 1 : 0;
+      if (sortDir === 'desc') result *= -1;
+      return result;
+    });
+  }
 
-      const response = await fetch('/api/admin' + query, {
-        method,
-        headers: {
-          Authorization: 'Bearer ' + token
-        },
-        cache: 'no-store'
+  function updateOverview() {
+    $('totalVisitors').textContent = fmtNumber(visitors.length);
+    $('totalVisits').textContent = fmtNumber(visitors.reduce((n, v) => n + num(v.visits), 0));
+
+    const last = visitors.reduce((best, v) =>
+      dateValue(v.last_seen) > dateValue(best) ? v.last_seen : best, null);
+    $('lastActivity').textContent = last ? fmtDate(last) : '—';
+
+    const counts = {};
+    visitors.forEach(v => {
+      if (v.browser) counts[v.browser] = (counts[v.browser] || 0) + 1;
+    });
+    const browser = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+    $('topBrowser').textContent = browser ? browser[0] : '—';
+  }
+
+  function renderTable() {
+    const all = sortVisitors(filteredVisitors());
+    const pages = Math.max(1, Math.ceil(all.length / pageSize));
+    page = Math.min(page, pages);
+    const start = (page - 1) * pageSize;
+    const visible = all.slice(start, start + pageSize);
+
+    $('resultCount').textContent = fmtNumber(all.length) + ' résultat(s)';
+    $('tableInfo').textContent = all.length
+      ? `Affichage ${start + 1}–${Math.min(start + pageSize, all.length)} sur ${all.length}`
+      : 'Aucun résultat';
+    $('pageInfo').textContent = `${page} / ${pages}`;
+    $('prevPage').disabled = page <= 1;
+    $('nextPage').disabled = page >= pages;
+
+    $('visitorRows').innerHTML = visible.map(v => {
+      const id = String(v.vid ?? '');
+      return `<tr class="visitor-row" tabindex="0" data-vid="${esc(id)}">
+        <td><div class="id-cell">
+          <div class="avatar">${esc(id.slice(0, 1).toUpperCase() || '?')}</div>
+          <div><div class="id-main">${esc(id.slice(0, 8) || 'Inconnu')}</div>
+          <div class="id-sub">${esc(id)}</div></div>
+        </div></td>
+        <td><span class="pill">${fmtNumber(v.visits)}</span></td>
+        <td>${esc(v.ip)}</td><td>${esc(v.city)}</td><td>${esc(v.country)}</td>
+        <td>${esc(v.os)}</td><td>${esc(v.browser)}</td><td>${esc(fmtDate(v.last_seen))}</td>
+      </tr>`;
+    }).join('');
+
+    if (!visible.length) errorBox('Aucun visiteur ne correspond à la recherche.');
+
+    $('visitorRows').querySelectorAll('[data-vid]').forEach(row => {
+      const open = () => openDetail(row.dataset.vid);
+      row.addEventListener('click', open);
+      row.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault(); open();
+        }
       });
+    });
 
-      if (response.status === 401) {
-        try {
-          sessionStorage.removeItem('tk');
-        } catch {}
+    document.querySelectorAll('[data-sort]').forEach(btn => {
+      const key = btn.dataset.sort;
+      const arrow = sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ' ↕';
+      btn.textContent = ({
+        vid:'Visiteur', visits:'Visites', city:'Ville', country:'Pays',
+        os:'Système', browser:'Navigateur', last_seen:'Dernière activité'
+      })[key] + arrow;
+    });
+  }
 
-        token = null;
+  async function loadVisitors() {
+    const version = ++requestVersion;
+    $('refreshBtn').disabled = true;
+    $('visitorRows').innerHTML = '<tr><td colspan="8" class="empty">Chargement des données…</td></tr>';
+    try {
+      const data = await api();
+      if (version !== requestVersion) return;
+      if (!data) return;
+      if (!Array.isArray(data)) throw new Error('Format de réponse inattendu');
+      visitors = data;
+      page = 1;
+      updateOverview();
+      renderTable();
+    } catch (e) {
+      console.error(e);
+      errorBox('Impossible de charger les visiteurs. Vérifie le serveur et réessaie.');
+    } finally {
+      $('refreshBtn').disabled = false;
+    }
+  }
 
-        alert('Token invalide ou accès refusé.');
-        return null;
+  $('refreshBtn').addEventListener('click', () => {
+    if (!$('detailView').hidden && selectedVid) openDetail(selectedVid);
+    else loadVisitors();
+  });
+  $('search').addEventListener('input', () => { page = 1; renderTable(); });
+  $('sortSelect').addEventListener('change', () => {
+    const [key, dir] = $('sortSelect').value.split(':');
+    sortKey = key; sortDir = dir; page = 1; renderTable();
+  });
+  document.querySelectorAll('[data-sort]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (sortKey === btn.dataset.sort) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+      else {
+        sortKey = btn.dataset.sort;
+        sortDir = sortKey === 'last_seen' || sortKey === 'visits' ? 'desc' : 'asc';
       }
+      $('sortSelect').value = `${sortKey}:${sortDir}`;
+      page = 1; renderTable();
+    });
+  });
+  $('prevPage').addEventListener('click', () => { page--; renderTable(); });
+  $('nextPage').addEventListener('click', () => { page++; renderTable(); });
 
-      if (response.status === 204) return true;
+  // Graphiques SVG sans dépendance externe
+  function svgWrap(content, height = 220) {
+    return `<svg class="chart" viewBox="0 0 520 ${height}" role="img" aria-label="Graphique statistique">${content}</svg>`;
+  }
+  function emptyChart(message = 'Pas assez de données disponibles') {
+    return `<div class="empty">${esc(message)}</div>`;
+  }
+  function barChart(entries, limit = 7) {
+    entries = entries.slice(0, limit);
+    if (!entries.length) return emptyChart();
+    const max = Math.max(1, ...entries.map(e => e.value));
+    const W = 520, H = 230, left = 12, right = 12, top = 10, bottom = 55;
+    const plotH = H - top - bottom, plotW = W - left - right;
+    const slot = plotW / entries.length, bw = Math.min(36, slot * .62);
+    let s = '';
+    for (let i = 0; i <= 4; i++) {
+      const y = top + plotH * i / 4;
+      s += `<line class="gridline" x1="${left}" y1="${y}" x2="${W-right}" y2="${y}"/>`;
+    }
+    entries.forEach((e, i) => {
+      const x = left + slot * i + (slot - bw) / 2;
+      const h = e.value / max * (plotH - 8);
+      const y = top + plotH - h;
+      const label = e.label.length > 13 ? e.label.slice(0, 12) + '…' : e.label;
+      s += `<rect class="bar" x="${x}" y="${y}" width="${bw}" height="${h}" rx="4"><title>${esc(e.label)} : ${e.value}</title></rect>`;
+      s += `<text x="${x+bw/2}" y="${Math.max(12,y-5)}" text-anchor="middle">${fmtNumber(e.value)}</text>`;
+      s += `<text x="${x+bw/2}" y="${H-29}" text-anchor="middle">${esc(label)}</text>`;
+    });
+    return svgWrap(s, H);
+  }
 
-      if (!response.ok) {
-        throw new Error('Erreur serveur HTTP ' + response.status);
+  function lineChart(entries) {
+    if (!entries.length) return emptyChart();
+    const W=520,H=230,left=34,right=12,top=12,bottom=42;
+    const pw=W-left-right, ph=H-top-bottom;
+    const max=Math.max(1,...entries.map(e=>e.value));
+    let s='';
+    for(let i=0;i<=4;i++){
+      const y=top+ph*i/4;
+      s+=`<line class="gridline" x1="${left}" y1="${y}" x2="${W-right}" y2="${y}"/>`;
+      s+=`<text x="${left-7}" y="${y+4}" text-anchor="end">${Math.round(max*(4-i)/4)}</text>`;
+    }
+    const pts=entries.map((e,i)=>({
+      x:left+(entries.length===1?pw/2:pw*i/(entries.length-1)),
+      y:top+ph-(e.value/max*ph), ...e
+    }));
+    if(pts.length>1) s+=`<polyline class="line" points="${pts.map(p=>`${p.x},${p.y}`).join(' ')}"/>`;
+    pts.forEach(p=>{
+      s+=`<circle class="point" cx="${p.x}" cy="${p.y}" r="4"><title>${esc(p.label)} : ${p.value}</title></circle>`;
+    });
+    const indices=[...new Set([0,Math.floor((pts.length-1)/2),pts.length-1])];
+    indices.forEach(i=>{
+      const p=pts[i];
+      s+=`<text x="${p.x}" y="${H-15}" text-anchor="middle">${esc(p.label.slice(0,12))}</text>`;
+    });
+    return svgWrap(s,H);
+  }
+
+  function renderList(container, entries) {
+    if(!entries.length){$(container).innerHTML=emptyChart();return;}
+    const max=Math.max(1,...entries.map(e=>e.value));
+    $(container).innerHTML=`<div class="page-list">${entries.map(e=>`
+      <div>
+        <div class="page-row"><span class="page-path">${esc(e.label)}</span><strong>${fmtNumber(e.value)}</strong></div>
+        <div class="track"><span style="width:${Math.max(0,Math.min(100,e.value/max*100))}%"></span></div>
+      </div>`).join('')}</div>`;
+  }
+
+  function setDl(container, entries) {
+    $(container).innerHTML = entries.map(([k,v]) =>
+      `<dt>${esc(k)}</dt><dd>${esc(v ?? '—')}</dd>`
+    ).join('');
+  }
+
+  function openDetail(vid) {
+    selectedVid = vid;
+    $('listView').hidden = true;
+    $('detailView').hidden = false;
+    $('profileTitle').textContent = 'Visiteur ' + String(vid).slice(0,8);
+    $('profileSubtitle').textContent = 'Chargement des informations…';
+    $('historyRows').innerHTML = '<tr><td colspan="6" class="empty">Chargement…</td></tr>';
+    loadDetail(vid);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  async function loadDetail(vid) {
+    const version = ++requestVersion;
+    $('detailRefreshBtn').disabled = true;
+    try {
+      const rows = await api('?vid=' + encodeURIComponent(vid));
+      if(version!==requestVersion || selectedVid!==vid) return;
+      if(!rows) return;
+      if(!Array.isArray(rows)) throw new Error('Format de réponse inattendu');
+      detailRows=rows;
+      renderDetail(vid, rows);
+    } catch(e) {
+      console.error(e);
+      $('historyRows').innerHTML='<tr><td colspan="6" class="empty">Impossible de charger les détails.</td></tr>';
+    } finally {
+      $('detailRefreshBtn').disabled=false;
+    }
+  }
+
+  function renderDetail(vid, rows) {
+    const sorted=[...rows].sort((a,b)=>dateValue(b.ts)-dateValue(a.ts));
+    const first=sorted.length?sorted[sorted.length-1]:{};
+    const last=sorted[0]||{};
+    const device=last.device||first.device||{};
+    const live=last.live||{};
+    const totalSeconds=rows.reduce((n,r)=>n+num(r.live?.seconds),0);
+    const totalClicks=rows.reduce((n,r)=>n+num(r.live?.clicks),0);
+    const scrolls=rows.filter(r=>r.live && r.live.scroll!=null).map(r=>num(r.live.scroll));
+    const avgScroll=scrolls.length?Math.round(scrolls.reduce((a,b)=>a+b,0)/scrolls.length):null;
+
+    $('profileTitle').textContent='Visiteur '+String(vid).slice(0,8);
+    $('profileSubtitle').textContent=`Identifiant : ${vid} · Dernière activité : ${fmtDate(last.ts)}`;
+    $('detailRecordCount').textContent=fmtNumber(rows.length)+' enregistrement(s)';
+    $('dRecords').textContent=fmtNumber(rows.length);
+    $('dTime').textContent=duration(totalSeconds);
+    $('dClicks').textContent=fmtNumber(totalClicks);
+    $('dScroll').textContent=avgScroll===null?'—':avgScroll+'%';
+
+    // Pages
+    const pageCounts={};
+    rows.forEach(r=>{
+      const path=String(r.path||'(chemin inconnu)');
+      pageCounts[path]=(pageCounts[path]||0)+1;
+    });
+    const pageEntries=Object.entries(pageCounts).map(([label,value])=>({label,value}))
+      .sort((a,b)=>b.value-a.value);
+    $('pagesChart').innerHTML=barChart(pageEntries);
+    renderList('pageRanking',pageEntries.slice(0,10));
+
+    // Activité quotidienne
+    const dayCounts={};
+    rows.forEach(r=>{
+      const t=dateValue(r.ts);
+      if(t){
+        const d=new Date(t);
+        const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        dayCounts[key]=(dayCounts[key]||0)+1;
       }
+    });
+    const activity=Object.entries(dayCounts).sort((a,b)=>a[0].localeCompare(b[0])).slice(-14)
+      .map(([label,value])=>({label:label.slice(5),value}));
+    $('activityChart').innerHTML=lineChart(activity);
 
-      return response.json();
+    // Interactions
+    const interactions=[
+      {label:'Clics',value:totalClicks},
+      {label:'Mouvements',value:rows.reduce((n,r)=>n+num(r.live?.moves),0)},
+      {label:'Frappes',value:rows.reduce((n,r)=>n+num(r.live?.keys),0)},
+      {label:'Onglet masqué',value:rows.reduce((n,r)=>n+num(r.live?.hidden),0)}
+    ];
+    $('interactionsChart').innerHTML=barChart(interactions,4);
+
+    // Référents
+    const refs={};
+    rows.forEach(r=>{
+      const label=r.referrer||'(accès direct ou référent absent)';
+      refs[label]=(refs[label]||0)+1;
+    });
+    $('referrerChart').innerHTML=barChart(
+      Object.entries(refs).map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value)
+    );
+
+    setDl('locationInfo',[
+      ['Adresse IP',last.ip??first.ip],
+      ['Ville',last.city??first.city],
+      ['Région',last.region??first.region],
+      ['Pays',last.country??first.country],
+      ['Latitude',last.lat??first.lat],
+      ['Longitude',last.lon??first.lon],
+      ['Première date reçue',fmtDate(first.ts)],
+      ['Dernière date reçue',fmtDate(last.ts)],
+      ['Pages distinctes',Object.keys(pageCounts).length]
+    ]);
+
+    setDl('deviceInfo',[
+      ['Navigateur',device.browser],
+      ['Système',device.os],
+      ['User-Agent',device.ua],
+      ['Fuseau horaire',device.tz],
+      ['Résolution écran',device.screen],
+      ['Fenêtre',device.win],
+      ['GPU',device.gpu],
+      ['Cœurs CPU',device.cpu],
+      ['Mémoire déclarée',device.ram==null?'—':device.ram+' Go'],
+      ['Langues',Array.isArray(device.langs)?device.langs.join(', '):device.langs],
+      ['Empreinte',last.fp??first.fp],
+      ['Référent récent',last.referrer||'Accès direct / absent']
+    ]);
+
+    $('historyRows').innerHTML=sorted.map(r=>`
+      <tr>
+        <td>${esc(fmtDate(r.ts))}</td>
+        <td><div class="history-path">${esc(r.path)}</div><div class="history-sub">${esc(r.ip)}</div></td>
+        <td>${duration(r.live?.seconds)}</td>
+        <td>${fmtNumber(r.live?.clicks)}</td>
+        <td>${r.live?.scroll==null?'—':esc(r.live.scroll)+'%'}</td>
+        <td>${esc(r.referrer||'Accès direct / absent')}</td>
+      </tr>
+    `).join('');
+
+    if(!sorted.length){
+      $('historyRows').innerHTML='<tr><td colspan="6" class="empty">Aucun enregistrement disponible.</td></tr>';
     }
+  }
 
-    function setStatus(message) {
-      document.getElementById('status').textContent = message;
-    }
-
-    function showError(error) {
-      console.error(error);
-
-      document.getElementById('app').innerHTML =
-        '<div class="empty">Impossible de charger les données. Vérifie la connexion au serveur puis réessaie.</div>';
-
-      setStatus('Erreur de chargement');
-    }
-
-    // --------------------------------------------------
-    // LISTE DES VISITEURS
-    // --------------------------------------------------
-
-    async function list() {
-      const version = ++requestVersion;
-      const app = document.getElementById('app');
-
-      document.getElementById('top').innerHTML =
-        '<button type="button" onclick="list()">↻ Rafraîchir</button>' +
-        '<span class="status" id="status">Chargement...</span>';
-
-      app.innerHTML = '<div class="empty">Chargement des visiteurs...</div>';
-
-      try {
-        const rows = await api();
-
-        if (version !== requestVersion) return;
-        if (!rows) return;
-
-        if (!Array.isArray(rows)) {
-          throw new Error('Réponse API inattendue');
-        }
-
-        setStatus(rows.length + ' visiteur(s)');
-
-        if (rows.length === 0) {
-          app.innerHTML = '<div class="empty">Aucun visiteur enregistré.</div>';
-          return;
-        }
-
-        app.innerHTML = `
-          <div class="wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Visiteur</th>
-                  <th>Visites</th>
-                  <th>IP</th>
-                  <th>Ville</th>
-                  <th>Pays</th>
-                  <th>OS</th>
-                  <th>Navigateur</th>
-                  <th>Dernière activité</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${rows.map((row, index) => `
-                  <tr class="row" data-index="${index}" tabindex="0">
-                    <td title="${esc(row.vid)}">${esc(String(row.vid ?? '').slice(0, 8))}</td>
-                    <td>${esc(row.visits)}</td>
-                    <td>${esc(row.ip)}</td>
-                    <td>${esc(row.city)}</td>
-                    <td>${esc(row.country)}</td>
-                    <td>${esc(row.os)}</td>
-                    <td>${esc(row.browser)}</td>
-                    <td>${esc(fmt(row.last_seen))}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-
-        // Évite d'insérer un identifiant non fiable dans du code JavaScript.
-        app.querySelectorAll('tr[data-index]').forEach(row => {
-          const openDetails = () => {
-            const selected = rows[Number(row.dataset.index)];
-
-            if (selected && selected.vid) {
-              detail(selected.vid);
-            }
-          };
-
-          row.addEventListener('click', openDetails);
-
-          row.addEventListener('keydown', event => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault();
-              openDetails();
-            }
-          });
-        });
-      } catch (error) {
-        if (version === requestVersion) showError(error);
+  $('backBtn').addEventListener('click',()=>{
+    ++requestVersion;
+    selectedVid=null;
+    $('detailView').hidden=true;
+    $('listView').hidden=false;
+    renderTable();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  $('detailRefreshBtn').addEventListener('click',()=>{
+    if(selectedVid) loadDetail(selectedVid);
+  });
+  $('deleteBtn').addEventListener('click',async()=>{
+    if(!selectedVid)return;
+    if(!confirm('Supprimer définitivement tous les enregistrements de ce visiteur ?'))return;
+    $('deleteBtn').disabled=true;
+    try{
+      const result=await api('?vid='+encodeURIComponent(selectedVid),'DELETE');
+      if(result){
+        selectedVid=null;
+        $('detailView').hidden=true;
+        $('listView').hidden=false;
+        await loadVisitors();
       }
+    }catch(e){
+      console.error(e);
+      alert('La suppression a échoué. Réessaie.');
+    }finally{
+      $('deleteBtn').disabled=false;
     }
+  });
 
-    // --------------------------------------------------
-    // DÉTAILS D'UN VISITEUR
-    // --------------------------------------------------
+  loadVisitors();
+})();
+</script>
 
-    async function detail(vid) {
-      const version = ++requestVersion;
-      const top = document.getElementById('top');
-      const app = document.getElementById('app');
-
-      top.innerHTML = `
-        <button type="button" id="backButton">← Retour</button>
-        <button type="button" class="del" id="deleteButton">
-          Supprimer ce visiteur
-        </button>
-        <span class="status" id="status">Chargement...</span>
-      `;
-
-      document.getElementById('backButton').addEventListener('click', list);
-
-      document.getElementById('deleteButton').addEventListener('click', () => {
-        del(vid);
-      });
-
-      app.innerHTML = '<div class="empty">Chargement des détails...</div>';
-
-      try {
-        const rows = await api('?vid=' + encodeURIComponent(vid));
-
-        if (version !== requestVersion) return;
-        if (!rows) return;
-
-        if (!Array.isArray(rows)) {
-          throw new Error('Réponse API inattendue');
-        }
-
-        setStatus(rows.length + ' enregistrement(s)');
-
-        if (rows.length === 0) {
-          app.innerHTML = '<div class="empty">Aucun enregistrement trouvé pour ce visiteur.</div>';
-          return;
-        }
-
-        app.innerHTML = rows.map(row => {
-          const device = row.device || {};
-          const live = row.live || {};
-
-          const details = object => Object.entries(object)
-            .map(([key, value]) => `
-              <dt>${esc(key)}</dt>
-              <dd>${esc(
-                value !== null && typeof value === 'object'
-                  ? JSON.stringify(value)
-                  : value
-              )}</dd>
-            `).join('');
-
-          return `
-            <section class="card">
-              <div class="card-title">
-                ${esc(row.path)}
-                — ${esc(fmt(row.ts))}
-                <span class="live">(${esc(live.seconds ?? 0)} s)</span>
-              </div>
-
-              <dl>
-                <dt>IP</dt>
-                <dd>${esc(row.ip)}</dd>
-
-                <dt>Localisation</dt>
-                <dd>${esc(row.city)}, ${esc(row.region)}, ${esc(row.country)}
-                  (${esc(row.lat)}, ${esc(row.lon)})</dd>
-
-                <dt>Venu depuis</dt>
-                <dd>${esc(row.referrer || 'accès direct')}</dd>
-
-                <dt>Empreinte</dt>
-                <dd>${esc(row.fp)}</dd>
-
-                ${details(device)}
-                ${details(live)}
-              </dl>
-            </section>
-          `;
-        }).join('');
-      } catch (error) {
-        if (version === requestVersion) showError(error);
-      }
-    }
-
-    // --------------------------------------------------
-    // SUPPRESSION D'UN VISITEUR
-    // --------------------------------------------------
-
-    async function del(vid) {
-      if (!confirm(
-        'Supprimer définitivement toutes les données de ce visiteur ?'
-      )) return;
-
-      try {
-        const result = await api(
-          '?vid=' + encodeURIComponent(vid),
-          'DELETE'
-        );
-
-        if (result) await list();
-      } catch (error) {
-        console.error(error);
-        alert('La suppression a échoué. Réessaie ultérieurement.');
-      }
-    }
-
-    // --------------------------------------------------
-    // INITIALISATION
-    // --------------------------------------------------
-
-    list();
-  </script>
-
-  <script src="/tracker.js" defer></script>
-  <script src="assets/js/reveal.js" defer></script>
+<script src="/tracker.js" defer></script>
+<script src="assets/js/reveal.js" defer></script>
 </body>
 </html>
