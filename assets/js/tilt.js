@@ -6,7 +6,7 @@
 /* Cartes : inclinaison 3D au survol */
 (()=>{
   if(matchMedia("(prefers-reduced-motion:reduce)").matches||!matchMedia("(hover:hover)").matches)return;
-  const SEL=".val,.dir,.actu,.quick a,.request-card,.unit-card,.news-card,[data-tilt]",MAX=9;
+  const SEL=".val,.dir,.actu,.quick a,.request-card,.unit-card,.news-card,.av,.value-card,.command-card,[data-tilt]",MAX=9;
   let cur=null;
   /* toutes les cartes présentes au chargement passent en mode 3D tout de suite */
   document.querySelectorAll(SEL).forEach(c=>c.classList.add("tilt"));
