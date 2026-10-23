@@ -125,7 +125,6 @@ h2{font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.2;font-weight:800;margin:12p
 .vals{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .val{background:var(--carte);border:1px solid var(--ligne);border-radius:8px;padding:24px;min-height:244px}
 .val.t{background:var(--lav);border-color:var(--lav)}
-.val:nth-child(even){--ty:18px}
 .ic{width:52px;height:52px;display:grid;place-items:center;background:var(--lav);color:var(--bleu);margin-bottom:14px}
 .val.t .ic{background:var(--carte)}
 .val h3{font-size:1.05rem;margin-bottom:6px}.val p{font-size:.92rem;color:var(--gris)}
@@ -150,19 +149,6 @@ h2{font-size:clamp(1.6rem,3vw,2.1rem);line-height:1.2;font-weight:800;margin:12p
 .quick a svg{color:var(--bleu-f)}
 .quick a:hover{box-shadow:0 0 0 3px rgba(255,255,255,.4)}
 
-/* Cartes : effet 3D au survol
-   assets/css/site-refresh.css est chargé APRÈS ce bloc et définit déjà un transform sur
-   .val:nth-child(even), .dir:hover et .quick a:hover : on le reprend donc avec !important. */
-:root .tilt{--rx:0deg;--ry:0deg;--gx:50%;--gy:50%;position:relative;transform:translateY(calc(var(--ty,0px) + var(--lift,0px))) perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) !important;transform-style:preserve-3d;will-change:transform;transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease,border-color .3s ease}
-.js .tilt.rv{transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease,border-color .3s ease,opacity .7s ease var(--d,0ms),translate .7s ease var(--d,0ms)}
-:root .tilt.over,.js .tilt.rv.over{--lift:-6px;z-index:2;transition:transform .12s ease-out,box-shadow .4s ease,border-color .3s ease,opacity .7s ease,translate .7s ease;box-shadow:0 24px 44px -20px rgba(0,0,145,.45),0 0 0 1px rgba(139,92,246,.4)}
-.tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s ease;background:radial-gradient(240px circle at var(--gx) var(--gy),rgba(160,90,255,.16),transparent 65%)}
-:root[data-theme=dark] .tilt::after{background:radial-gradient(240px circle at var(--gx) var(--gy),rgba(255,255,255,.12),transparent 65%)}
-.tilt.over::after{opacity:1}
-.tilt .ic{transform:translateZ(30px)}
-.tilt h3{transform:translateZ(20px)}
-.tilt p,.tilt time{transform:translateZ(10px)}
-.quick a.tilt svg{transform:translateZ(28px)}
 
 /* Pied de page */
 footer{background:var(--pied);color:#ddd;font-size:.92rem}
@@ -179,7 +165,6 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 
 :root[data-theme=dark] .logo img{background:#fff;padding:4px 10px}
 @media(max-width:960px){.pres,.cols{grid-template-columns:1fr}.dirs{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(3){border-left:0}header .w{flex-wrap:wrap;padding-top:10px;padding-bottom:10px}}
-@media(max-width:720px){.val:nth-child(even){--ty:0px}}
 @media(max-width:600px){.dirs,.vals{grid-template-columns:1fr}.aide{display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
@@ -251,7 +236,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
       <div>
         <p class="eyebrow">La Préfecture</p>
         <h2>Une institution au cœur de Paris</h2>
-        <p>La Préfecture de Paris coordonne l'ensemble des forces de sécurité et des services publics de l'agglomération. Elle veille au maintien de l'ordre, à la protection des citoyens et à la qualité du service rendu au public.</p>
+        <p>La Préfecture de  du Grand Paname (LGP) coordonne l'ensemble des forces de sécurité et des services publics de l'agglomération. Elle veille au maintien de l'ordre, à la protection des citoyens et à la qualité du service rendu au public.</p>
         <p class="n">Rattachée aux institutions de la ville, elle organise ses missions autour de huit directions opérationnelles et d'un accueil citoyen ouvert toute la semaine.</p>
         <a class="btn c" href="presentation.html">Voir la présentation complète</a>
       </div>
@@ -308,7 +293,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
     <div class="cols">
       <div>
         <div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP" style="height:84px;width:auto;display:block"></div>
-        <p>Portail de services de la Préfecture de Paris.</p>
+        <p>Portail de services de la Préfecture du Grand Paname.</p>
       </div>
       <div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
       <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
@@ -413,35 +398,6 @@ document.getElementById("theme").onclick=()=>{
   size();start();
 })();
 
-/* Cartes : inclinaison 3D au survol */
-(()=>{
-  if(matchMedia("(prefers-reduced-motion:reduce)").matches||!matchMedia("(hover:hover)").matches)return;
-  const SEL=".val,.dir,.actu,.quick a",MAX=9;
-  let cur=null;
-  /* toutes les cartes présentes au chargement passent en mode 3D tout de suite */
-  document.querySelectorAll(SEL).forEach(c=>c.classList.add("tilt"));
-  const reset=el=>{
-    el.classList.remove("over");
-    el.style.setProperty("--rx","0deg");
-    el.style.setProperty("--ry","0deg");
-  };
-  document.addEventListener("pointermove",e=>{
-    if(e.pointerType&&e.pointerType!=="mouse")return;
-    const el=e.target.closest?e.target.closest(SEL):null;
-    if(cur&&cur!==el){reset(cur);cur=null}
-    if(!el)return;
-    el.classList.add("tilt","over");
-    const r=el.getBoundingClientRect();
-    const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
-    el.style.setProperty("--ry",((x-.5)*2*MAX).toFixed(2)+"deg");
-    el.style.setProperty("--rx",((.5-y)*2*MAX).toFixed(2)+"deg");
-    el.style.setProperty("--gx",(x*100).toFixed(1)+"%");
-    el.style.setProperty("--gy",(y*100).toFixed(1)+"%");
-    cur=el;
-  });
-  document.documentElement.addEventListener("mouseleave",()=>{if(cur){reset(cur);cur=null}});
-})();
-
 /* Stats Discord : l'invitation donne membres + en ligne, le widget sert de secours */
 (async()=>{
   const m=document.getElementById("s-m"),o=document.getElementById("s-o");
@@ -474,5 +430,6 @@ SITE.ready.then(data=>{
 <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
 <script src="/tracker.js" defer></script>
 <script src="assets/js/reveal.js"></script>
+<script src="assets/js/tilt.js" defer></script>
 </body>
 </html>
