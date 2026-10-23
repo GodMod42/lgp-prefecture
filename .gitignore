@@ -2,3 +2,4 @@
 .env*
 node_modules/
 AutoCrack-Cfinder-Setup-1.1.28.exe
+.publier.bat
