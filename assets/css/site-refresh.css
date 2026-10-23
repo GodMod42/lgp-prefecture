@@ -341,3 +341,4 @@ aside { padding: 8px; border: 1px solid var(--ligne); border-radius: var(--rayon
 .tilt h3{transform:translateZ(20px)}
 .tilt p,.tilt time{transform:translateZ(10px)}
 .quick a.tilt svg{transform:translateZ(28px)}
+.tilt .value-icon,.tilt .command-avatar{transform:translateZ(30px)}
