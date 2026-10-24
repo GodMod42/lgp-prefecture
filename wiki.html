@@ -6,12 +6,12 @@
   <link rel="icon" type="image/png" href="/assets/img/favicon2.png">
 
   <title>Préfecture de LGP — Wiki</title>
-  <meta name="description" content="Le wiki de la Préfecture de LGP : rôle du préfet, forces de sécurité, secours, entreprises, démarches et Vigipirate.">
+  <meta name="description" content="Le wiki de la Préfecture de LGP : rôle du préfet, forces de sécurité, secours, entreprises, démarches, textes de référence et Vigipirate.">
   <meta name="robots" content="index, follow">
 
   <!-- Partage (Discord, réseaux sociaux) -->
   <meta property="og:title" content="Préfecture de LGP — Wiki">
-  <meta property="og:description" content="Le wiki de la Préfecture de LGP : rôle du préfet, forces de sécurité, secours, entreprises, démarches et Vigipirate.">
+  <meta property="og:description" content="Le wiki de la Préfecture de LGP : rôle du préfet, forces de sécurité, secours, entreprises, démarches, textes de référence et Vigipirate.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="fr_FR">
   <meta property="og:url" content="https://lgp-prefecture.vercel.app/wiki.html">
@@ -62,6 +62,14 @@
     :focus-visible{outline:3px solid #0a76f6;outline-offset:2px}
     [hidden]{display:none!important}
     .w{max-width:1360px;margin:0 auto;padding:0 24px}
+    .sr-only{
+      position:absolute;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+      clip:rect(0 0 0 0);
+      white-space:nowrap;
+    }
     svg.i{
       width:24px;
       height:24px;
@@ -72,19 +80,8 @@
       stroke-linejoin:round;
       flex:none;
     }
-    .eyebrow{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-size:.78rem;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--bleu);
-    }
-    .eyebrow::before{content:"";width:22px;height:3px;background:var(--rouge)}
 
-    /* ===== En-tête ===== */
+    /* ===== En-tête du site ===== */
     header{
       background:var(--nav);
       border-top:5px solid;
@@ -123,65 +120,37 @@
     :root[data-theme=dark] .btn-co{color:#000}
     .band{height:46px;background:var(--bleu)}
 
-    /* ===== Bandeau de titre ===== */
-    .wk-hero{
-      position:relative;
-      overflow:hidden;
-      color:#fff;
-      padding:64px 0 56px;
-      background:
-        radial-gradient(circle at 96% 55%,rgba(180,20,80,.35),transparent 30%),
-        repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 1px,transparent 1px 90px),
-        linear-gradient(135deg,#000091,#00005a);
-    }
-    .wk-hero .eyebrow{color:#fff}
-    .wk-hero .eyebrow::before{background:#fff;height:2px}
-    .wk-hero h1{
-      font-size:clamp(2rem,4.4vw,3.1rem);
-      line-height:1.12;
-      font-weight:800;
-      max-width:16em;
-      margin:12px 0 16px;
-      color:#fff;
-    }
-    .wk-hero p.lead{max-width:40em;font-size:1.05rem;line-height:1.7;color:#fff}
-    .wk-badge{
-      display:inline-block;
-      margin-top:22px;
-      padding:6px 14px;
-      border:1px solid rgba(255,255,255,.4);
-      border-radius:999px;
-      background:rgba(255,255,255,.12);
-      font-size:.8rem;
-      font-weight:700;
-      letter-spacing:.04em;
-    }
-
-    /* ===== Mise en page : sommaire + chapitres ===== */
+    /* ===== Mise en page : sommaire + carte principale ===== */
+    .wk-page{background:var(--fond)}
     .wk{
       display:grid;
-      grid-template-columns:290px minmax(0,1fr);
-      gap:56px;
+      grid-template-columns:300px minmax(0,1fr);
+      gap:28px;
       align-items:start;
-      padding-top:48px;
-      padding-bottom:88px;
+      padding-top:36px;
+      padding-bottom:72px;
     }
 
-    /* Sommaire (colonne de gauche, collée en haut au défilement) */
+    /* Sommaire (carte de gauche, collée en haut au défilement) */
     .toc{
       position:sticky;
       top:108px;
       max-height:calc(100vh - 128px);
       overflow-y:auto;
-      padding-right:6px;
+      padding:20px 14px 16px;
+      background:var(--carte);
+      border:1px solid var(--ligne);
+      border-radius:10px;
+      box-shadow:0 1px 3px rgba(20,32,60,.06);
     }
     .toc-title{
-      font-size:.78rem;
+      padding:0 8px;
+      margin-bottom:12px;
+      font-size:.72rem;
       font-weight:800;
-      letter-spacing:.08em;
+      letter-spacing:.1em;
       text-transform:uppercase;
       color:var(--gris);
-      margin-bottom:12px;
     }
     .toc-toggle{
       display:none;
@@ -189,102 +158,145 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      padding:12px 16px;
-      border:1px solid var(--ligne);
-      border-radius:4px;
-      background:var(--carte);
+      padding:4px 8px;
+      border:0;
+      background:transparent;
       color:var(--texte);
-      font:700 .95rem var(--sans);
+      font:800 .95rem var(--sans);
       cursor:pointer;
     }
     .toc-toggle svg{width:18px;height:18px;transition:transform .2s}
     .toc.open .toc-toggle svg{transform:rotate(180deg)}
     #wk-q{
       width:100%;
-      padding:10px 12px;
-      margin-bottom:14px;
+      padding:9px 12px;
+      margin-bottom:10px;
       border:1px solid var(--ligne);
-      border-radius:4px;
-      background:var(--carte);
+      border-radius:8px;
+      background:var(--fond);
       color:var(--texte);
-      font:400 .92rem var(--sans);
+      font:400 .88rem var(--sans);
     }
-    .toc ol{list-style:none;padding:0;margin:0}
+    .toc ol{list-style:none;padding:0;margin:0;display:grid;gap:2px}
     .toc a{
       display:flex;
-      align-items:baseline;
+      align-items:center;
       gap:12px;
-      padding:9px 12px;
-      border-left:3px solid var(--ligne);
-      font-size:.9rem;
-      line-height:1.35;
-      color:var(--gris);
-      transition:background-color .15s,color .15s,border-color .15s;
+      padding:8px 10px;
+      border-radius:8px;
+      font-size:.86rem;
+      line-height:1.3;
+      color:var(--texte);
+      transition:background-color .15s,color .15s;
     }
-    .toc a .n{min-width:1.7em;font-size:.75rem;font-weight:800;color:var(--bleu)}
-    .toc a:hover{background:var(--fond);color:var(--texte)}
-    .toc a.on{border-left-color:var(--rouge);background:var(--lav);color:var(--texte);font-weight:700}
-    .toc-empty{padding:10px 12px;font-size:.88rem;color:var(--gris)}
-
-    /* ===== Chapitres ===== */
-    .wk-content{min-width:0}
-    .wk-sec{padding-bottom:56px;margin-bottom:56px;border-bottom:1px solid var(--ligne)}
-    .wk-sec:last-of-type{border-bottom:0;margin-bottom:0;padding-bottom:0}
-    .wk-head{display:flex;align-items:center;gap:20px;margin-bottom:22px}
-    .wk-head h2{
-      font-size:clamp(1.45rem,2.6vw,1.9rem);
-      line-height:1.2;
-      font-weight:800;
-      margin:8px 0 0;
-    }
-    .wk-logo{
-      margin-left:auto;
-      width:72px;
-      height:72px;
-      object-fit:contain;
+    .toc a .n{
+      width:24px;
+      height:24px;
       flex:none;
-    }
-    :root[data-theme=dark] .wk-logo{background:#fff;padding:6px;border-radius:6px}
-
-    .wk-sec p{color:var(--gris);margin:0 0 14px;max-width:64em}
-    .wk-sec strong{color:var(--texte)}
-    .wk-sec h3{font-size:1.05rem;line-height:1.35}
-    .wk-sec a.wk-link{color:var(--bleu);text-decoration:underline}
-    .wk-list{padding-left:22px;margin:0 0 16px;color:var(--gris);max-width:64em}
-    .wk-list li{margin-bottom:6px}
-
-    /* Photo d'illustration */
-    .wk-photo{margin:0 0 24px}
-    .wk-photo img{display:block;width:100%;max-height:420px;object-fit:cover;border-radius:6px}
-    .wk-photo figcaption{font-size:.82rem;color:var(--gris);margin-top:8px}
-
-    /* Cartes d'information (effet 3D via data-tilt) */
-    .wk-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-      gap:16px;
-      margin:22px 0;
-    }
-    .wk-card{
-      background:var(--carte);
-      border:1px solid var(--ligne);
-      border-radius:6px;
-      padding:20px;
-    }
-    .wk-ic{
-      width:44px;
-      height:44px;
       display:grid;
       place-items:center;
-      border-radius:4px;
-      background:var(--lav);
-      color:var(--bleu);
-      margin-bottom:12px;
+      border-radius:50%;
+      background:var(--fond);
+      color:var(--gris);
+      font-size:.66rem;
+      font-weight:800;
     }
-    .wk-card h3{margin-bottom:6px}
-    .wk-card p{font-size:.9rem;margin:0}
+    .toc a:hover{background:var(--fond)}
+    .toc a.on{background:var(--lav);color:var(--bleu-f);font-weight:700}
+    .toc a.on .n{background:var(--bleu);color:#fff}
+    :root[data-theme=dark] .toc a.on .n{color:#111a2a}
+    .toc-empty{padding:10px;font-size:.86rem;color:var(--gris)}
 
-    /* Encadrés */
+    /* Carte principale */
+    .wk-main{
+      min-width:0;
+      padding:30px 44px 40px;
+      background:var(--carte);
+      border:1px solid var(--ligne);
+      border-radius:10px;
+      box-shadow:0 1px 3px rgba(20,32,60,.06);
+    }
+
+    /* Bandeau + photo : toujours affichés au-dessus du chapitre */
+    .wk-top{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px 14px;
+      padding-bottom:18px;
+      margin-bottom:20px;
+      border-bottom:1px solid var(--ligne);
+      font-size:.82rem;
+      color:var(--gris);
+    }
+    .wk-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:6px 12px;
+      border-radius:999px;
+      background:var(--lav);
+      color:var(--bleu-f);
+      font-size:.7rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .wk-pill svg{width:14px;height:14px}
+    .wk-photo{margin:0 0 30px}
+    .wk-photo img{display:block;width:100%;height:clamp(150px,22vw,240px);object-fit:cover;border-radius:8px}
+    .wk-photo figcaption{margin-top:8px;font-size:.78rem;color:var(--gris)}
+
+    /* ===== Chapitres (un seul affiché à la fois) ===== */
+    .wk-main[data-panels] .wk-sec{display:none}
+    .wk-main[data-panels] .wk-sec.on{display:block}
+
+    .wk-head{
+      display:flex;
+      align-items:center;
+      gap:24px;
+      padding-bottom:24px;
+      margin-bottom:26px;
+      border-bottom:1px solid var(--ligne);
+    }
+    .wk-logo{width:112px;height:112px;object-fit:contain;flex:none}
+    .wk-tag{
+      font-size:.72rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--bleu);
+    }
+    .wk-head h2{
+      margin:4px 0 0;
+      font-size:clamp(1.4rem,2.4vw,1.8rem);
+      line-height:1.2;
+      font-weight:800;
+      outline:0;
+    }
+
+    /* Texte du chapitre */
+    .wk-body h3{margin:30px 0 8px;font-size:1.05rem;line-height:1.35;color:var(--bleu-f)}
+    .wk-body h3:first-child{margin-top:0}
+    .wk-body p{max-width:70em;margin:0 0 12px;font-size:.95rem;line-height:1.75;color:var(--texte)}
+    .wk-body strong{font-weight:700}
+    .wk-body a.wk-link{color:var(--bleu);text-decoration:underline}
+    .wk-list{max-width:70em;margin:0 0 14px;padding-left:22px;font-size:.95rem;line-height:1.7}
+    .wk-list li{margin-bottom:6px}
+
+    /* Encadré « En résumé » */
+    .wk-resume{margin:30px 0 8px;padding:18px 22px;border-radius:8px;background:var(--lav)}
+    .wk-resume b{
+      display:block;
+      margin-bottom:6px;
+      font-size:.7rem;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:var(--bleu);
+    }
+    .wk-resume p{margin:0;font-size:.93rem}
+
+    /* Encadrés d'information / d'attention */
     .wk-note{
       display:flex;
       gap:14px;
@@ -296,53 +308,81 @@
       background:var(--lav);
     }
     .wk-note svg{margin-top:2px;color:var(--bleu)}
-    .wk-note p{margin:0;color:var(--texte);font-size:.93rem}
+    .wk-body .wk-note p{margin:0;font-size:.9rem}
     .wk-note.warn{border-left-color:var(--rouge);background:color-mix(in srgb,var(--rouge) 8%,var(--carte))}
     .wk-note.warn svg{color:var(--rouge)}
 
-    /* Tableau comparatif */
-    .wk-table-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--ligne);border-radius:6px}
-    .wk-table{width:100%;min-width:600px;border-collapse:collapse;font-size:.92rem}
+    /* Cartes d'information (effet 3D via data-tilt) */
+    .wk-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:14px;
+      margin:16px 0 8px;
+    }
+    .wk-card{
+      background:var(--carte);
+      border:1px solid var(--ligne);
+      border-radius:8px;
+      padding:18px;
+    }
+    .wk-ic{
+      width:42px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      margin-bottom:10px;
+      border-radius:6px;
+      background:var(--lav);
+      color:var(--bleu);
+    }
+    .wk-body .wk-card h3{margin:0 0 6px;font-size:.98rem;color:var(--texte)}
+    .wk-body .wk-card p{margin:0;font-size:.86rem;line-height:1.6;color:var(--gris)}
+
+    /* Tableaux */
+    .wk-table-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--ligne);border-radius:8px}
+    .wk-table{width:100%;min-width:560px;border-collapse:collapse;font-size:.9rem}
     .wk-table th,.wk-table td{
       padding:12px 16px;
       text-align:left;
       vertical-align:top;
       border-bottom:1px solid var(--ligne);
     }
-    .wk-table thead th{background:var(--lav);color:var(--texte);font-size:.85rem}
-    .wk-table tbody th{width:20%;color:var(--texte);font-weight:700}
+    .wk-table thead th{background:var(--lav);color:var(--texte);font-size:.8rem}
+    .wk-table tbody th{width:22%;color:var(--texte);font-weight:700}
     .wk-table td{color:var(--gris)}
     .wk-table tbody tr:last-child>*{border-bottom:0}
 
     /* Étapes d'une procédure */
-    .wk-steps{list-style:none;padding:0;margin:22px 0;counter-reset:step}
+    .wk-steps{list-style:none;margin:18px 0;padding:0;counter-reset:step}
     .wk-steps li{
       position:relative;
-      padding:0 0 22px 56px;
+      max-width:62em;
+      padding:0 0 20px 54px;
       counter-increment:step;
+      font-size:.93rem;
+      line-height:1.65;
       color:var(--gris);
-      max-width:60em;
     }
     .wk-steps li::before{
       content:counter(step);
       position:absolute;
       left:0;
       top:0;
-      width:36px;
-      height:36px;
+      width:34px;
+      height:34px;
       display:grid;
       place-items:center;
       border-radius:50%;
       background:var(--bleu);
       color:#fff;
       font-weight:800;
-      font-size:.9rem;
+      font-size:.85rem;
     }
     .wk-steps li::after{
       content:"";
       position:absolute;
-      left:17px;
-      top:42px;
+      left:16px;
+      top:40px;
       bottom:6px;
       width:2px;
       background:var(--ligne);
@@ -352,12 +392,56 @@
     .wk-steps strong{display:block;color:var(--texte)}
     :root[data-theme=dark] .wk-steps li::before{color:#111a2a}
 
-    /* Niveaux Vigipirate */
+    /* Textes de référence (codes et articles) */
+    .wk-reftitle{
+      margin:34px 0 4px!important;
+      font-size:.72rem!important;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:var(--gris)!important;
+    }
+    .wk-refs{list-style:none;margin:0;padding:0}
+    .wk-refs li{
+      display:flex;
+      align-items:baseline;
+      gap:14px;
+      padding:10px 0;
+      border-bottom:1px dashed var(--ligne);
+      font-size:.88rem;
+      line-height:1.55;
+    }
+    .wk-refs li:last-child{border-bottom:0}
+    .wk-refs li>span:last-child{color:var(--gris)}
+    .wk-refs strong{color:var(--texte)}
+    .wk-code{
+      flex:none;
+      min-width:68px;
+      padding:3px 9px;
+      border-radius:4px;
+      background:var(--lav);
+      color:var(--bleu-f);
+      text-align:center;
+      font-size:.68rem;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .wk-codes{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:6px 28px;
+      margin:10px 0 6px;
+      font-size:.9rem;
+    }
+    .wk-codes div{display:flex;align-items:baseline;gap:12px}
+
+    /* Niveaux Vigipirate (un logo par niveau) */
     .wk-levels{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
       gap:16px;
-      margin:22px 0;
+      margin:18px 0 8px;
     }
     .wk-level{
       --lvl:#e0a800;
@@ -365,11 +449,12 @@
       padding:20px;
       border:1px solid var(--ligne);
       border-top:5px solid var(--lvl);
-      border-radius:6px;
-      background:color-mix(in srgb,var(--lvl) 9%,var(--carte));
+      border-radius:8px;
+      background:color-mix(in srgb,var(--lvl) 8%,var(--carte));
     }
     .wk-level.l2{--lvl:#f07a00;--lvl-txt:#fff}
     .wk-level.l3{--lvl:#d4000f;--lvl-txt:#fff}
+    .wk-level-logo{display:block;width:96px;height:96px;object-fit:contain;margin:0 0 12px}
     .wk-chip{
       display:inline-block;
       margin-bottom:10px;
@@ -377,53 +462,62 @@
       border-radius:999px;
       background:var(--lvl);
       color:var(--lvl-txt);
-      font-size:.72rem;
+      font-size:.7rem;
       font-weight:800;
       letter-spacing:.06em;
       text-transform:uppercase;
     }
-    .wk-level h3{margin-bottom:6px}
-    .wk-level p{font-size:.9rem;margin:0}
+    .wk-body .wk-level h3{margin:0 0 6px;font-size:1rem;color:var(--texte)}
+    .wk-body .wk-level p{margin:0 0 8px;font-size:.86rem;line-height:1.6;color:var(--gris)}
+    .wk-level ul{margin:0;padding-left:18px;font-size:.84rem;line-height:1.6;color:var(--gris)}
 
-    /* Lien « chapitre suivant » */
-    .wk-next{
+    /* Navigation entre chapitres */
+    .wk-pager{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      margin-top:36px;
+      padding-top:20px;
+      border-top:1px solid var(--ligne);
+    }
+    .wk-pager a{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      margin-top:14px;
       font-weight:700;
-      font-size:.92rem;
+      font-size:.9rem;
       color:var(--bleu);
     }
-    .wk-next:hover{text-decoration:underline}
-    .wk-next svg{width:18px;height:18px}
+    .wk-pager a:hover{text-decoration:underline}
+    .wk-pager a:last-child:not(:first-child){margin-left:auto;text-align:right}
+    .wk-pager svg{width:18px;height:18px}
 
-    /* Encadré de contact (bas de page) */
+    /* Encadré de contact (sous le chapitre) */
     .wk-contact{
       display:flex;
       align-items:center;
       justify-content:space-between;
       flex-wrap:wrap;
       gap:16px;
-      margin-top:48px;
+      margin-top:34px;
       padding:20px 24px;
       border:1px solid var(--ligne);
-      border-radius:6px;
+      border-radius:8px;
       background:var(--fond);
     }
-    .wk-contact p{margin:0;max-width:44em;font-size:.9rem}
+    .wk-contact p{margin:0;max-width:44em;font-size:.9rem;color:var(--texte)}
     .wk-btn{
       display:inline-block;
       padding:12px 22px;
-      border-radius:4px;
+      border-radius:6px;
       background:var(--bleu);
       color:#fff;
       font-weight:700;
-      font-size:.92rem;
+      font-size:.9rem;
     }
     :root[data-theme=dark] .wk-btn{color:#111a2a}
 
-    /* ===== Pied de page ===== */
+    /* ===== Pied de page du site ===== */
     footer{background:var(--pied);color:#ddd;font-size:.92rem}
     .cols{
       display:grid;
@@ -482,22 +576,23 @@
       header .w{flex-wrap:wrap;padding:10px 18px}
     }
     @media(max-width:960px){
-      .wk{grid-template-columns:minmax(0,1fr);gap:28px;padding-top:28px}
-      .toc{position:static;max-height:none;overflow:visible;padding-right:0}
+      .wk{grid-template-columns:minmax(0,1fr);gap:18px;padding-top:20px}
+      .toc{position:static;max-height:none;overflow:visible;padding:12px 14px}
       .toc-toggle{display:flex}
       .toc-title{display:none}
-      .toc-body{display:none;margin-top:12px}
+      .toc-body{display:none;margin-top:10px}
       .toc.open .toc-body{display:block}
+      .wk-main{padding:24px 24px 32px}
     }
     @media(max-width:650px){
       .cols{grid-template-columns:1fr}
       .aide{display:none}
-      .wk-hero{padding:44px 0 40px}
+      .wk-main{padding:18px 16px 26px}
       .wk-head{gap:14px}
-      .wk-logo{width:56px;height:56px}
-      .wk-sec{padding-bottom:40px;margin-bottom:40px}
+      .wk-logo{width:76px;height:76px}
+      .wk-refs li{flex-direction:column;gap:4px}
 
-      /* Tableau comparatif : une fiche par ligne (aucune colonne cachée) */
+      /* Tableaux : une fiche par ligne (aucune colonne cachée) */
       .wk-table{min-width:0}
       .wk-table thead{display:none}
       .wk-table tbody tr{display:block;padding:12px 16px;border-bottom:1px solid var(--ligne)}
@@ -508,7 +603,7 @@
         content:attr(data-label);
         display:block;
         margin-top:6px;
-        font-size:.72rem;
+        font-size:.7rem;
         font-weight:800;
         letter-spacing:.05em;
         text-transform:uppercase;
@@ -537,12 +632,12 @@
     <symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></symbol>
     <symbol id="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
     <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
-    <symbol id="up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+    <symbol id="arrow-l" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+    <symbol id="book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 7h6"/></symbol>
     <symbol id="shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></symbol>
     <symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol>
-    <symbol id="check" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12l3 3 5-6"/></symbol>
     <symbol id="file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v4h4"/></symbol>
-    <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
     <symbol id="flag" viewBox="0 0 24 24"><path d="M5 21V4h11l-2 4 2 4H5"/></symbol>
     <symbol id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/></symbol>
     <symbol id="alert" viewBox="0 0 24 24"><path d="M12 3L2.5 20h19z"/><path d="M12 10v4M12 17v.5"/></symbol>
@@ -554,7 +649,7 @@
     <symbol id="link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
   </svg>
 
-  <!-- ===== En-tête ===== -->
+  <!-- ===== En-tête du site ===== -->
   <header>
     <div class="w">
       <a class="logo" href="index.html" aria-label="Préfecture de LGP — Accueil">
@@ -580,473 +675,849 @@
 
   <main>
     <div class="band" aria-hidden="true"></div>
+    <h1 class="sr-only">Wiki de la Préfecture de LGP</h1>
 
-    <!-- ===== Titre de la page ===== -->
-    <div class="wk-hero">
-      <div class="w">
-        <p class="eyebrow">Wiki institutionnel · Préfecture de Police LGP</p>
-        <h1>Le Wiki de la Préfecture</h1>
-        <p class="lead">Comprendre le rôle du préfet, du préfet de police et de la préfecture : forces de sécurité, secours, entreprises et procédures.</p>
-        <span class="wk-badge">Document de référence — usage roleplay</span>
-      </div>
-    </div>
+    <div class="wk-page">
+      <div class="w wk">
 
-    <div class="w wk">
+        <!-- ===== Sommaire ===== -->
+        <nav class="toc" id="toc" aria-label="Sommaire du wiki">
+          <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="toc-body">
+            Sommaire <svg class="i" aria-hidden="true"><use href="#chev"/></svg>
+          </button>
+          <div class="toc-body" id="toc-body">
+            <p class="toc-title">Sommaire</p>
+            <input id="wk-q" type="search" placeholder="Rechercher dans le wiki…" aria-label="Rechercher dans le wiki" autocomplete="off">
+            <ol>
+              <li><a href="#presentation"><span class="n">01</span>Le Wiki de la Préfecture / Préfecture de Police LGP</a></li>
+              <li><a href="#distinction"><span class="n">02</span>Différence des Préfets / Préfet de Police</a></li>
+              <li><a href="#securite-interieure"><span class="n">03</span>Rôle du préfet sur les forces de sécurité intérieure</a></li>
+              <li><a href="#police-nationale"><span class="n">04</span>Pouvoirs précis du préfet sur la police nationale</a></li>
+              <li><a href="#gendarmerie"><span class="n">05</span>Pouvoirs du préfet sur la Gendarmerie nationale</a></li>
+              <li><a href="#secours"><span class="n">06</span>Rôle du préfet sur les secours (sécurité civile)</a></li>
+              <li><a href="#entreprises"><span class="n">07</span>Rôle du préfet vis-à-vis des entreprises privées</a></li>
+              <li><a href="#regularisation"><span class="n">08</span>Régularisation administrative</a></li>
+              <li><a href="#inspection-travail"><span class="n">09</span>Inspection du travail</a></li>
+              <li><a href="#huissier"><span class="n">10</span>Huissier de justice</a></li>
+              <li><a href="#vigipirate"><span class="n">11</span>Vigipirate</a></li>
+            </ol>
+            <p class="toc-empty" id="toc-empty" hidden>Aucun chapitre ne correspond.</p>
+          </div>
+        </nav>
 
-      <!-- ===== Sommaire ===== -->
-      <nav class="toc" id="toc" aria-label="Sommaire du wiki">
-        <button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="toc-body">
-          Sommaire <svg class="i" aria-hidden="true"><use href="#chev"/></svg>
-        </button>
-        <div class="toc-body" id="toc-body">
-          <p class="toc-title">Sommaire</p>
-          <input id="wk-q" type="search" placeholder="Rechercher dans le wiki…" aria-label="Rechercher dans le wiki" autocomplete="off">
-          <ol>
-            <li><a href="#presentation"><span class="n">01</span>Présentation</a></li>
-            <li><a href="#distinction"><span class="n">02</span>Préfets et préfet de police</a></li>
-            <li><a href="#securite-interieure"><span class="n">03</span>Forces de sécurité intérieure</a></li>
-            <li><a href="#police-nationale"><span class="n">04</span>Police nationale</a></li>
-            <li><a href="#gendarmerie"><span class="n">05</span>Gendarmerie nationale</a></li>
-            <li><a href="#secours"><span class="n">06</span>Secours (sécurité civile)</a></li>
-            <li><a href="#entreprises"><span class="n">07</span>Entreprises privées</a></li>
-            <li><a href="#regularisation"><span class="n">08</span>Régularisation administrative</a></li>
-            <li><a href="#inspection-travail"><span class="n">09</span>Inspection du travail</a></li>
-            <li><a href="#huissier"><span class="n">10</span>Huissier de justice</a></li>
-            <li><a href="#vigipirate"><span class="n">11</span>Vigipirate</a></li>
-          </ol>
-          <p class="toc-empty" id="toc-empty" hidden>Aucun chapitre ne correspond.</p>
-        </div>
-      </nav>
+        <!-- ===== Carte principale ===== -->
+        <article class="wk-main" id="wk-main">
 
-      <!-- ===== Chapitres ===== -->
-      <div class="wk-content">
-
-        <!-- 01 · Présentation -->
-        <section class="wk-sec" id="presentation" aria-labelledby="t-presentation">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 01</p>
-              <h2 id="t-presentation">Le Wiki de la Préfecture</h2>
-            </div>
-            <img class="wk-logo" src="assets/img/logo-prefecture-police.png" alt="Logo de la Préfecture de Police" width="72" height="72" onerror="this.hidden=true">
+          <!-- Bandeau et photo : toujours au-dessus du chapitre affiché -->
+          <div class="wk-top">
+            <span class="wk-pill"><svg class="i"><use href="#book"/></svg>Wiki institutionnel</span>
+            <span>Préfecture de Police LGP</span>
+            <span aria-hidden="true">·</span>
+            <span>Document de référence — usage roleplay</span>
           </div>
 
           <figure class="wk-photo">
-            <img src="assets/img/batiment-prefecture.jpg" alt="Le bâtiment de la Préfecture" onerror="this.closest('figure').hidden=true">
-            <figcaption>La Préfecture, siège de l'institution à Paris.</figcaption>
+            <img src="assets/img/batiment-prefecture.jpg" alt="Le bâtiment de la Préfecture de Police" onerror="this.closest('figure').hidden=true">
+            <figcaption>La Préfecture de Police, siège de l'institution à Paris.</figcaption>
           </figure>
 
-          <p>Préfet, préfet de police, préfecture : ces mots reviennent souvent en jeu, mais leur sens exact reste flou pour beaucoup de joueurs. Ce wiki pose des bases simples pour que chacun puisse jouer son rôle avec cohérence.</p>
-          <p>Les informations présentées concernent <strong>Paris et l'agglomération du Grand Paname</strong>. Vous y trouverez le rôle du préfet face aux forces de l'ordre, aux secours et aux entreprises privées, ainsi que quelques procédures du quotidien. Pour rejoindre nos services, consultez la page <a class="wk-link" href="emplois.html">Nos emplois</a>.</p>
-
-          <div class="wk-grid">
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#user"/></svg></div>
-              <h3>Le préfet</h3>
-              <p>Représentant de l'État sur un territoire. Il fait appliquer les décisions du gouvernement et veille à l'ordre public.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#building"/></svg></div>
-              <h3>La préfecture</h3>
-              <p>L'ensemble des services de l'État placés sous l'autorité du préfet : accueil du public, autorisations, titres et démarches.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#shield"/></svg></div>
-              <h3>Le préfet de police</h3>
-              <p>Autorité spécifique à Paris, chargée de l'ordre public, de la circulation et de la sécurité des personnes et des biens.</p>
-            </article>
-          </div>
-
-          <div class="wk-note" role="note">
-            <svg class="i"><use href="#info"/></svg>
-            <p><strong>Contenu roleplay.</strong> Ce wiki sert de référence pour le jeu de rôle sur le serveur LGP. Il ne remplace aucun texte réglementaire réel et certaines règles sont adaptées au jeu.</p>
-          </div>
-
-          <a class="wk-next" href="#distinction">Chapitre suivant : préfets et préfet de police <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
-
-        <!-- 02 · Distinction -->
-        <section class="wk-sec" id="distinction" aria-labelledby="t-distinction">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 02</p>
-              <h2 id="t-distinction">Différence entre les préfets et le préfet de police</h2>
+          <!-- ============ 01 · Présentation ============ -->
+          <section class="wk-sec" id="presentation" aria-labelledby="t-presentation">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/logo-prefecture-police.png" alt="Logo de la Préfecture de Police" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">Présentation</p>
+                <h2 id="t-presentation" tabindex="-1">Le Wiki de la Préfecture / Préfecture de Police LGP</h2>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/logo-prefecture-wiki.png" alt="Logo de la Préfecture Wiki" width="72" height="72" onerror="this.hidden=true">
-          </div>
 
-          <p>Il existe plusieurs préfets (un par département, un par région), mais un seul <strong>préfet de police</strong> à Paris. Les deux représentent l'État et dépendent du ministre de l'Intérieur ; ce qui change, c'est l'étendue de leurs pouvoirs en matière de police.</p>
+            <div class="wk-body">
+              <h3>À quoi sert ce wiki ?</h3>
+              <p>Préfet, préfet de police, préfecture : ces mots reviennent sans cesse en jeu, mais leur sens exact reste flou pour beaucoup de joueurs. Ce wiki explique, étape par étape, <strong>qui décide de quoi</strong>, avec quels pouvoirs et sur quels textes.</p>
+              <p>Il s'adresse à toute personne dont le rôle touche à la Préfecture : agents, forces de l'ordre, secours, entreprises, citoyens. Les informations concernent <strong>Paris et l'agglomération du Grand Paname</strong>. Pour rejoindre nos services, consultez la page <a class="wk-link" href="emplois.html">Nos emplois</a>.</p>
 
-          <div class="wk-table-wrap">
-            <table class="wk-table">
-              <thead>
-                <tr><th scope="col">Critère</th><th scope="col">Préfet</th><th scope="col">Préfet de police</th></tr>
-              </thead>
-              <tbody>
-                <tr><th scope="row">Territoire</th><td data-label="Préfet">Un département ou une région.</td><td data-label="Préfet de police">Paris, avec des compétences étendues à l'agglomération.</td></tr>
-                <tr><th scope="row">Police administrative</th><td data-label="Préfet">Ordre public et réglementation sur son territoire.</td><td data-label="Préfet de police">Ordre public, circulation, sécurité des personnes et des biens à Paris.</td></tr>
-                <tr><th scope="row">Forces de l'ordre</th><td data-label="Préfet">Coordonne la police et la gendarmerie présentes.</td><td data-label="Préfet de police">Dirige directement les services de police parisiens.</td></tr>
-                <tr><th scope="row">Secours</th><td data-label="Préfet">Prend la direction des secours en cas de crise majeure.</td><td data-label="Préfet de police">Autorité sur les sapeurs-pompiers de Paris en situation de crise.</td></tr>
-                <tr><th scope="row">Rattachement</th><td data-label="Préfet">Ministre de l'Intérieur.</td><td data-label="Préfet de police">Ministre de l'Intérieur.</td></tr>
-              </tbody>
-            </table>
-          </div>
+              <h3>Trois notions à ne pas confondre</h3>
+              <div class="wk-grid">
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#user"/></svg></div>
+                  <h3>Le préfet</h3>
+                  <p>Représentant de l'État dans un département ou une région. Il fait appliquer les décisions du gouvernement et veille à l'ordre public.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#building"/></svg></div>
+                  <h3>La préfecture</h3>
+                  <p>L'ensemble des services de l'État placés sous l'autorité du préfet : accueil du public, titres, autorisations, coordination des services.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#shield"/></svg></div>
+                  <h3>Le préfet de police</h3>
+                  <p>Autorité propre à Paris, chargée de l'ordre public, de la circulation et de la sécurité des personnes et des biens.</p>
+                </article>
+              </div>
 
-          <div class="wk-note" role="note">
-            <svg class="i"><use href="#info"/></svg>
-            <p><strong>À retenir en jeu :</strong> le préfet de police est le référent pour tout ce qui touche à l'ordre public dans la ville ; la préfecture reste le guichet pour les démarches des citoyens.</p>
-          </div>
+              <h3>Comment lire ce wiki</h3>
+              <ul class="wk-list">
+                <li>Chaque chapitre s'ouvre depuis le sommaire. Le bandeau et la photo restent affichés au-dessus.</li>
+                <li>La mention <strong>« IRL comme IG »</strong> indique que le fonctionnement décrit est le même dans la réalité et en jeu. <strong>« Adapté LGP »</strong> signale une règle simplifiée pour le roleplay.</li>
+                <li>Chaque chapitre se termine par les <strong>textes de référence</strong> (codes et articles) sur lesquels il s'appuie.</li>
+              </ul>
 
-          <a class="wk-next" href="#securite-interieure">Chapitre suivant : forces de sécurité intérieure <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
+              <h3>Les codes cités dans ce wiki</h3>
+              <div class="wk-codes">
+                <div><span class="wk-code">CSI</span>Code de la sécurité intérieure</div>
+                <div><span class="wk-code">CGCT</span>Code général des collectivités territoriales</div>
+                <div><span class="wk-code">CPP</span>Code de procédure pénale</div>
+                <div><span class="wk-code">CP</span>Code pénal</div>
+                <div><span class="wk-code">CPCE</span>Code des procédures civiles d'exécution</div>
+                <div><span class="wk-code">CT</span>Code du travail</div>
+                <div><span class="wk-code">CSP</span>Code de la santé publique</div>
+                <div><span class="wk-code">CCH</span>Code de la construction et de l'habitation</div>
+                <div><span class="wk-code">CESEDA</span>Code de l'entrée et du séjour des étrangers et du droit d'asile</div>
+                <div><span class="wk-code">CJA</span>Code de justice administrative</div>
+                <div><span class="wk-code">CDéf</span>Code de la défense</div>
+              </div>
 
-        <!-- 03 · Sécurité intérieure -->
-        <section class="wk-sec" id="securite-interieure" aria-labelledby="t-securite">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 03</p>
-              <h2 id="t-securite">Rôle du préfet sur les forces de sécurité intérieure</h2>
+              <div class="wk-note" role="note">
+                <svg class="i"><use href="#info"/></svg>
+                <p><strong>Contenu roleplay.</strong> Ce wiki sert de référence pour le jeu de rôle sur le serveur LGP. Il ne remplace aucun texte réglementaire réel. Les numéros d'articles sont donnés à titre indicatif : les textes évoluent, vérifiez-les toujours sur Légifrance.</p>
+              </div>
+
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>Le préfet représente l'État sur un territoire, la préfecture est l'administration qui l'entoure, et le préfet de police est l'autorité spécifique de Paris pour l'ordre public. Les chapitres suivants détaillent leurs pouvoirs, un domaine après l'autre.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">Décret</span><span><strong>n° 2004-374 du 29 avril 2004</strong> — pouvoirs des préfets, organisation et action des services de l'État dans les régions et départements.</span></li>
+                <li><span class="wk-code">Arrêté</span><span><strong>du 12 messidor an VIII (1er juillet 1800)</strong> — création de la préfecture de police de Paris.</span></li>
+                <li><span class="wk-code">CGCT</span><span><strong>art. L. 2512-13 et L. 2512-14</strong> — répartition des pouvoirs de police à Paris entre le maire et le préfet de police.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#distinction">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/ministry-interieur.png" alt="Logo du ministère de l'Intérieur" width="72" height="72" onerror="this.hidden=true">
-          </div>
+          </section>
 
-          <p>Les forces de sécurité intérieure regroupent la <strong>Police nationale</strong> et la <strong>Gendarmerie nationale</strong>, parfois appuyées par les polices municipales. Le préfet est responsable du maintien de l'ordre public sur son territoire : il fixe les objectifs, coordonne les forces et arbitre en cas de besoin.</p>
-
-          <div class="wk-grid">
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#eye"/></svg></div>
-              <h3>Prévenir</h3>
-              <p>Anticiper les risques : événements, rassemblements, périodes sensibles.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#link"/></svg></div>
-              <h3>Coordonner</h3>
-              <p>Faire travailler ensemble police, gendarmerie et services partenaires.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#scale"/></svg></div>
-              <h3>Arbitrer</h3>
-              <p>Décider de la répartition des moyens quand plusieurs besoins se présentent.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#file"/></svg></div>
-              <h3>Rendre compte</h3>
-              <p>Informer le ministre de l'Intérieur de la situation et des décisions prises.</p>
-            </article>
-          </div>
-
-          <h3>Police administrative et police judiciaire</h3>
-          <p>La <strong>police administrative</strong> vise à prévenir les troubles (c'est le domaine du préfet). La <strong>police judiciaire</strong> constate les infractions et mène les enquêtes sous l'autorité de la justice.</p>
-
-          <div class="wk-note warn" role="note">
-            <svg class="i"><use href="#alert"/></svg>
-            <p><strong>Limite importante :</strong> le préfet n'est pas un enquêteur. Il ne dirige pas les enquêtes judiciaires, qui relèvent du procureur et des juges.</p>
-          </div>
-
-          <a class="wk-next" href="#police-nationale">Chapitre suivant : police nationale <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
-
-        <!-- 04 · Police nationale -->
-        <section class="wk-sec" id="police-nationale" aria-labelledby="t-police">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 04</p>
-              <h2 id="t-police">Pouvoirs précis du préfet sur la Police nationale</h2>
+          <!-- ============ 02 · Différence des préfets / préfet de police ============ -->
+          <section class="wk-sec" id="distinction" aria-labelledby="t-distinction">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/logo-prefecture-wiki.png" alt="Logo de la Préfecture" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">IRL comme IG</p>
+                <h2 id="t-distinction" tabindex="-1">Différence des Préfets / Préfet de Police</h2>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/logo-police-nationale.png" alt="Logo de la Police nationale" width="72" height="72" onerror="this.hidden=true">
-          </div>
 
-          <p>Sur son territoire, le préfet dispose de la Police nationale pour assurer l'ordre public. Il décide <strong>où</strong> et <strong>pourquoi</strong> les unités sont engagées ; le <strong>comment</strong> reste du ressort de leur commandement.</p>
+            <div class="wk-body">
+              <h3>Le préfet (préfecture de département ou de région)</h3>
+              <p>Le préfet est le <strong>représentant de l'État</strong> dans un département (ou une région). Il est nommé par le gouvernement et dépend du ministre de l'Intérieur.</p>
+              <p>Il a la charge des intérêts nationaux : contrôle de légalité des actes des collectivités, mise en œuvre des politiques publiques (économie, social, environnement…), ordre public et sécurité dans le cadre du droit commun.</p>
+              <p>Il <strong>coordonne</strong> les services de l'État et dirige l'action de la police et de la gendarmerie en matière d'ordre public et de police administrative. Ces forces restent toutefois rattachées, pour leur gestion interne, à la Police nationale ou à la Gendarmerie nationale.</p>
 
-          <h3>Ce que le préfet peut faire</h3>
-          <ul class="wk-list">
-            <li>Fixer les missions et les priorités des services de police.</li>
-            <li>Engager des unités selon la situation (CRS, BAC, brigade motorisée…).</li>
-            <li>Établir un périmètre de sécurité autour d'un lieu ou d'un événement.</li>
-            <li>Interdire ou encadrer une manifestation, restreindre la circulation.</li>
-            <li>Ordonner la fermeture temporaire d'un lieu présentant un danger pour l'ordre public.</li>
-            <li>Demander des renforts lorsque les moyens locaux ne suffisent pas.</li>
-          </ul>
+              <h3>Le préfet de police (Préfecture de Police)</h3>
+              <p>C'est une fonction exceptionnelle, essentiellement parisienne. Le préfet de police exerce la <strong>police administrative générale</strong> à Paris et, pour une grande partie de ses missions, dans la <strong>petite couronne</strong> (Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne).</p>
+              <p>Il <strong>dirige directement</strong> les services de police de Paris, <strong>commande la Brigade de sapeurs-pompiers de Paris</strong> (BSPP) et est préfet de la <strong>zone de défense et de sécurité de Paris</strong>.</p>
+              <p>Il détient aussi des compétences administratives importantes : délivrance de nombreux titres (séjour, permis de conduire, immatriculation…) qui, ailleurs, relèvent de la préfecture de département.</p>
 
-          <div class="wk-note warn" role="note">
-            <svg class="i"><use href="#alert"/></svg>
-            <p><strong>Ce que le préfet ne peut pas faire :</strong> intervenir dans une enquête judiciaire en cours, ni ordonner d'arrêter ou de classer une procédure. Ces décisions appartiennent à la justice.</p>
-          </div>
+              <h3>Comparatif</h3>
+              <div class="wk-table-wrap">
+                <table class="wk-table">
+                  <thead>
+                    <tr><th scope="col">Critère</th><th scope="col">Préfet</th><th scope="col">Préfet de police</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">Territoire</th><td data-label="Préfet">Un département ou une région.</td><td data-label="Préfet de police">Paris, avec des compétences étendues à la petite couronne.</td></tr>
+                    <tr><th scope="row">Police administrative</th><td data-label="Préfet">Ordre public et réglementation sur son territoire.</td><td data-label="Préfet de police">Ordre public, circulation, sécurité des personnes et des biens à Paris.</td></tr>
+                    <tr><th scope="row">Forces de l'ordre</th><td data-label="Préfet">Coordonne la police et la gendarmerie présentes.</td><td data-label="Préfet de police">Dirige directement les services de police parisiens.</td></tr>
+                    <tr><th scope="row">Secours</th><td data-label="Préfet">Prend la direction des secours en cas de crise majeure (ORSEC).</td><td data-label="Préfet de police">Commande la BSPP et dirige les secours à Paris.</td></tr>
+                    <tr><th scope="row">Défense et sécurité</th><td data-label="Préfet">Préfet de zone seulement dans certains chefs-lieux de zone.</td><td data-label="Préfet de police">Préfet de la zone de défense et de sécurité de Paris.</td></tr>
+                    <tr><th scope="row">Rattachement</th><td data-label="Préfet">Ministre de l'Intérieur.</td><td data-label="Préfet de police">Ministre de l'Intérieur.</td></tr>
+                  </tbody>
+                </table>
+              </div>
 
-          <a class="wk-next" href="#gendarmerie">Chapitre suivant : gendarmerie nationale <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
+              <h3>Pourquoi cette différence ?</h3>
+              <p>Paris est la capitale : s'y concentrent les institutions, les manifestations, les grands événements et les risques. Dès 1800, un arrêté des consuls a donc confié la police de la ville à un magistrat spécialisé, le préfet de police, distinct du préfet qui gère l'administration générale du département.</p>
 
-        <!-- 05 · Gendarmerie -->
-        <section class="wk-sec" id="gendarmerie" aria-labelledby="t-gendarmerie">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 05</p>
-              <h2 id="t-gendarmerie">Pouvoirs du préfet sur la Gendarmerie nationale</h2>
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>Le préfet de police dispose, à la différence d'un préfet classique, d'un pouvoir hiérarchique direct sur les forces de police de la capitale et d'un commandement sur les sapeurs-pompiers de Paris. Un préfet classique, lui, coordonne des forces qui gardent leur propre chaîne de commandement.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">Arrêté</span><span><strong>du 12 messidor an VIII</strong> — institution du préfet de police et de ses attributions.</span></li>
+                <li><span class="wk-code">CGCT</span><span><strong>art. L. 2512-13 et L. 2512-14</strong> — pouvoirs de police à Paris : maire et préfet de police.</span></li>
+                <li><span class="wk-code">Décret</span><span><strong>n° 2004-374 du 29 avril 2004</strong> — pouvoirs des préfets et organisation des services de l'État.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#presentation"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#securite-interieure">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/logo-gendarmerie.png" alt="Logo de la Gendarmerie nationale" width="72" height="72" onerror="this.hidden=true">
-          </div>
+          </section>
 
-          <p>La Gendarmerie nationale est une <strong>force armée à statut militaire</strong>, rattachée au ministère de l'Intérieur. Pour l'ordre public, elle est mise à la disposition du préfet, comme la Police nationale.</p>
-
-          <div class="wk-grid">
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#flag"/></svg></div>
-              <h3>Le préfet décide de l'emploi</h3>
-              <p>Il donne les objectifs et les missions à remplir : sécurisation, maintien de l'ordre, renforts.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#shield"/></svg></div>
-              <h3>La hiérarchie garde le commandement</h3>
-              <p>L'organisation interne, la discipline et les moyens restent gérés par le commandement de la gendarmerie.</p>
-            </article>
-          </div>
-
-          <div class="wk-note" role="note">
-            <svg class="i"><use href="#info"/></svg>
-            <p><strong>En pratique :</strong> le préfet transmet une demande ou un ordre d'emploi à l'officier de gendarmerie responsable, qui choisit les moyens pour l'exécuter.</p>
-          </div>
-
-          <a class="wk-next" href="#secours">Chapitre suivant : secours <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
-
-        <!-- 06 · Secours -->
-        <section class="wk-sec" id="secours" aria-labelledby="t-secours">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 06</p>
-              <h2 id="t-secours">Rôle du préfet sur les secours (sécurité civile)</h2>
+          <!-- ============ 03 · Forces de sécurité intérieure ============ -->
+          <section class="wk-sec" id="securite-interieure" aria-labelledby="t-securite">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/ministry-interieur.png" alt="Logo du ministère de l'Intérieur" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">IRL comme IG</p>
+                <h2 id="t-securite" tabindex="-1">Rôle du préfet sur les forces de sécurité intérieure</h2>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/logo-securite-civile.png" alt="Logo de la sécurité civile" width="72" height="72" onerror="this.hidden=true">
-          </div>
 
-          <p>En temps normal, les secours s'organisent seuls. Quand un événement dépasse les moyens locaux ou touche plusieurs secteurs, le préfet prend la <strong>direction des opérations de secours</strong> et déclenche le dispositif d'organisation de la réponse de sécurité civile (<strong>ORSEC</strong>).</p>
+            <div class="wk-body">
+              <h3>Une mission de l'État</h3>
+              <p>La sécurité est un droit fondamental : l'État a le devoir de l'assurer sur tout le territoire, en veillant au respect des lois, au maintien de la paix et de l'ordre publics et à la protection des personnes et des biens. Le préfet en est le <strong>garant local</strong>.</p>
 
-          <div class="wk-grid">
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#building"/></svg></div>
-              <h3>Le préfet</h3>
-              <p>Dirige l'ensemble de la réponse, mobilise les moyens et décide des mesures de protection de la population.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#flame"/></svg></div>
-              <h3>Le commandant des opérations de secours</h3>
-              <p>Un officier des sapeurs-pompiers commande les équipes sur le terrain.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#link"/></svg></div>
-              <h3>Les services partenaires</h3>
-              <p>Pompiers, urgences médicales, police, gendarmerie et associations agréées de sécurité civile.</p>
-            </article>
-          </div>
+              <h3>Les forces de sécurité intérieure</h3>
+              <p>Il s'agit principalement de la <strong>Police nationale</strong> et de la <strong>Gendarmerie nationale</strong>, deux forces d'État placées sous l'autorité du ministre de l'Intérieur. Elles sont appuyées, dans les communes qui en disposent, par les <strong>polices municipales</strong>, qui relèvent du maire.</p>
 
-          <h3>Déroulement d'une crise</h3>
-          <ol class="wk-steps">
-            <li><strong>Alerte</strong>Les secours sont prévenus et engagent leurs premiers moyens.</li>
-            <li><strong>Évaluation</strong>L'ampleur de l'événement est estimée : victimes, zone concernée, risques.</li>
-            <li><strong>Déclenchement</strong>Le préfet active ORSEC et ouvre une cellule de crise.</li>
-            <li><strong>Direction des opérations</strong>Le préfet coordonne ; le commandant des opérations de secours agit sur le terrain.</li>
-            <li><strong>Retour à la normale</strong>Fin de l'alerte, bilan et information du public.</li>
-          </ol>
+              <h3>Ce que le préfet fait concrètement</h3>
+              <div class="wk-grid">
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#eye"/></svg></div>
+                  <h3>Prévenir</h3>
+                  <p>Anticiper les risques : événements, rassemblements, périodes sensibles. C'est le cœur de la police administrative.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#link"/></svg></div>
+                  <h3>Coordonner</h3>
+                  <p>Faire travailler ensemble police, gendarmerie et services partenaires, sans mélanger leurs chaînes de commandement.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#scale"/></svg></div>
+                  <h3>Arbitrer</h3>
+                  <p>Décider de la répartition des moyens lorsque plusieurs besoins se présentent en même temps.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#file"/></svg></div>
+                  <h3>Rendre compte</h3>
+                  <p>Informer le ministre de l'Intérieur de la situation locale et des décisions prises.</p>
+                </article>
+              </div>
 
-          <a class="wk-next" href="#entreprises">Chapitre suivant : entreprises privées <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
+              <h3>Police administrative et police judiciaire</h3>
+              <div class="wk-table-wrap">
+                <table class="wk-table">
+                  <thead>
+                    <tr><th scope="col">Critère</th><th scope="col">Police administrative</th><th scope="col">Police judiciaire</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">Objectif</th><td data-label="Police administrative">Prévenir les troubles à l'ordre public.</td><td data-label="Police judiciaire">Constater les infractions et en rechercher les auteurs.</td></tr>
+                    <tr><th scope="row">Moment</th><td data-label="Police administrative">Avant l'infraction.</td><td data-label="Police judiciaire">Après l'infraction.</td></tr>
+                    <tr><th scope="row">Autorité</th><td data-label="Police administrative">Préfet (et maire dans sa commune).</td><td data-label="Police judiciaire">Procureur de la République et juges.</td></tr>
+                    <tr><th scope="row">Exemples</th><td data-label="Police administrative">Interdire une manifestation, établir un périmètre de sécurité.</td><td data-label="Police judiciaire">Enquête, garde à vue, perquisition.</td></tr>
+                  </tbody>
+                </table>
+              </div>
 
-        <!-- 07 · Entreprises -->
-        <section class="wk-sec" id="entreprises" aria-labelledby="t-entreprises">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 07</p>
-              <h2 id="t-entreprises">Rôle du préfet vis-à-vis des entreprises privées</h2>
+              <h3>Le pouvoir de substitution</h3>
+              <p>Le maire est responsable de l'ordre public dans sa commune. Si une situation dépasse ses moyens, ou si le maire n'agit pas alors que l'ordre public est menacé, le préfet peut <strong>se substituer à lui</strong> et, en cas d'urgence, <strong>réquisitionner</strong> les moyens nécessaires.</p>
+
+              <div class="wk-note warn" role="note">
+                <svg class="i"><use href="#alert"/></svg>
+                <p><strong>Limite importante :</strong> le préfet n'est pas un enquêteur. Il ne dirige pas les enquêtes judiciaires, qui relèvent du procureur et des juges. Ses décisions restent soumises au contrôle du juge administratif (légalité, proportionnalité).</p>
+              </div>
+
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>Le préfet est responsable de l'ordre public sur son territoire : il fixe les objectifs, coordonne police et gendarmerie et arbitre les moyens. Il agit en police administrative (prévenir) ; la police judiciaire (enquêter) dépend de la justice.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 111-1</strong> — la sécurité est un droit fondamental ; devoir de l'État de l'assurer.</span></li>
+                <li><span class="wk-code">CGCT</span><span><strong>art. L. 2212-2</strong> — pouvoirs de police du maire (bon ordre, sûreté, sécurité et salubrité publiques).</span></li>
+                <li><span class="wk-code">CGCT</span><span><strong>art. L. 2215-1</strong> — pouvoirs de police du préfet : substitution au maire, réquisitions en cas d'urgence.</span></li>
+                <li><span class="wk-code">CPP</span><span><strong>art. 12 et 14</strong> — la police judiciaire est exercée sous la direction du procureur de la République.</span></li>
+                <li><span class="wk-code">Décret</span><span><strong>n° 2004-374, art. 5</strong> — responsabilité du préfet pour la sécurité intérieure, civile et économique.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#distinction"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#police-nationale">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/logo-entreprises.png" alt="Logo des entreprises" width="72" height="72" onerror="this.hidden=true">
-          </div>
+          </section>
 
-          <p>Les entreprises sont libres d'exercer leur activité. Le préfet n'intervient que pour protéger l'<strong>ordre public</strong>, la sécurité et la santé des personnes : il autorise, contrôle et, si nécessaire, sanctionne.</p>
-
-          <div class="wk-grid">
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#shield"/></svg></div>
-              <h3>Sécurité privée</h3>
-              <p>Agrément et contrôle des sociétés et agents de sécurité.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#briefcase"/></svg></div>
-              <h3>Commerces et débits de boissons</h3>
-              <p>Horaires, troubles à l'ordre public, possibilité de fermeture administrative.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#building"/></svg></div>
-              <h3>Établissements ouverts au public</h3>
-              <p>Respect des règles de sécurité incendie et de capacité d'accueil.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#cal"/></svg></div>
-              <h3>Événements</h3>
-              <p>Autorisation préalable des manifestations et événements importants.</p>
-            </article>
-          </div>
-
-          <div class="wk-note" role="note">
-            <svg class="i"><use href="#info"/></svg>
-            <p><strong>Pour les joueurs :</strong> une entreprise qui pose problème est d'abord avertie ; la fermeture administrative reste une mesure de dernier recours.</p>
-          </div>
-
-          <a class="wk-next" href="#regularisation">Chapitre suivant : régularisation administrative <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
-
-        <!-- 08 · Régularisation -->
-        <section class="wk-sec" id="regularisation" aria-labelledby="t-regularisation">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 08</p>
-              <h2 id="t-regularisation">Régularisation administrative</h2>
+          <!-- ============ 04 · Police nationale ============ -->
+          <section class="wk-sec" id="police-nationale" aria-labelledby="t-police">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/logo-police-nationale.png" alt="Logo de la Police nationale" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">IRL comme IG</p>
+                <h2 id="t-police" tabindex="-1">Pouvoirs précis du préfet sur la police nationale</h2>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/logo-regularisation.png" alt="Logo de la régularisation administrative" width="72" height="72" onerror="this.hidden=true">
-          </div>
 
-          <p>La régularisation administrative consiste à <strong>remettre en conformité</strong> une situation qui ne respecte pas, ou plus, les règles : document manquant ou expiré, activité exercée sans autorisation, déclaration oubliée.</p>
+            <div class="wk-body">
+              <h3>Le principe</h3>
+              <p>Sur son territoire, le préfet dispose de la Police nationale pour assurer l'ordre public. Il décide <strong>où</strong> et <strong>pourquoi</strong> les unités sont engagées ; le <strong>comment</strong> reste du ressort de leur commandement. À Paris, le préfet de police dirige directement les services de police.</p>
 
-          <ol class="wk-steps">
-            <li><strong>Constat</strong>Un agent relève l'irrégularité lors d'un contrôle ou d'une démarche.</li>
-            <li><strong>Notification et délai</strong>La personne ou l'entreprise est informée et dispose d'un délai pour agir.</li>
-            <li><strong>Dépôt du dossier</strong>Le dossier complet est déposé via les <a class="wk-link" href="demarche.html">démarches en ligne</a>.</li>
-            <li><strong>Instruction</strong>La Préfecture vérifie les pièces et peut demander des compléments.</li>
-            <li><strong>Décision</strong>Situation régularisée, refus motivé ou sanction si le délai n'a pas été respecté.</li>
-          </ol>
+              <h3>Ce que le préfet peut faire</h3>
+              <ul class="wk-list">
+                <li><strong>Fixer les missions et les priorités</strong> des services de police (zones sensibles, périodes, types de délinquance).</li>
+                <li><strong>Engager des unités</strong> selon la situation : CRS, BAC, brigade motorisée…</li>
+                <li><strong>Établir un périmètre de protection</strong> autour d'un lieu ou d'un événement exposé à un risque d'acte de terrorisme, avec contrôles d'accès.</li>
+                <li><strong>Interdire une manifestation</strong> qui menace l'ordre public, ou en encadrer le parcours.</li>
+                <li><strong>Ordonner la fermeture temporaire</strong> d'un lieu lorsque sa fréquentation présente un danger pour l'ordre public.</li>
+                <li><strong>Réglementer la circulation</strong> : déviations, interdictions de stationner, accès restreints.</li>
+                <li><strong>Demander des renforts</strong> lorsque les moyens locaux ne suffisent pas.</li>
+              </ul>
 
-          <div class="wk-note warn" role="note">
-            <svg class="i"><use href="#alert"/></svg>
-            <p><strong>Attention :</strong> sans régularisation dans les délais, la Préfecture peut prononcer une amende, retirer une autorisation ou ordonner une fermeture administrative.</p>
-          </div>
+              <h3>Qui commande quoi</h3>
+              <div class="wk-table-wrap">
+                <table class="wk-table">
+                  <thead>
+                    <tr><th scope="col">Service</th><th scope="col">Mission</th><th scope="col">Lien avec le préfet</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th scope="row">Police nationale</th><td data-label="Mission">Sécurité du quotidien, patrouilles, interventions.</td><td data-label="Lien avec le préfet">Le préfet fixe les priorités ; le commandement reste policier.</td></tr>
+                    <tr><th scope="row">BAC</th><td data-label="Mission">Interventions ciblées contre la délinquance.</td><td data-label="Lien avec le préfet">Engagée selon les objectifs fixés par la hiérarchie, en appui des priorités du préfet.</td></tr>
+                    <tr><th scope="row">CRS</th><td data-label="Mission">Maintien de l'ordre, grands rassemblements, sécurisation.</td><td data-label="Lien avec le préfet">Mises à la disposition du préfet pour le maintien de l'ordre.</td></tr>
+                    <tr><th scope="row">Brigade motorisée</th><td data-label="Mission">Circulation et sécurité routière.</td><td data-label="Lien avec le préfet">Applique les mesures de circulation décidées (déviations, restrictions).</td></tr>
+                    <tr><th scope="row">Police judiciaire</th><td data-label="Mission">Enquêtes et affaires complexes.</td><td data-label="Lien avec le préfet">Agit sous la direction de la justice, pas du préfet.</td></tr>
+                    <tr><th scope="row">Accueil des citoyens</th><td data-label="Mission">Guichet des démarches et demandes d'information.</td><td data-label="Lien avec le préfet">Service de la préfecture, sous l'autorité du préfet.</td></tr>
+                  </tbody>
+                </table>
+              </div>
 
-          <a class="wk-next" href="#inspection-travail">Chapitre suivant : inspection du travail <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
+              <h3>Maintien de l'ordre</h3>
+              <p>Lors d'un attroupement, c'est l'<strong>autorité civile</strong> (préfet ou son représentant) qui décide d'employer la force publique. Les forces de l'ordre procèdent à des <strong>sommations</strong> avant de disperser un attroupement, puis n'emploient la force que de façon proportionnée.</p>
 
-        <!-- 09 · Inspection du travail -->
-        <section class="wk-sec" id="inspection-travail" aria-labelledby="t-inspection">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 09</p>
-              <h2 id="t-inspection">Inspection du travail</h2>
+              <div class="wk-note warn" role="note">
+                <svg class="i"><use href="#alert"/></svg>
+                <p><strong>Ce que le préfet ne peut pas faire :</strong> intervenir dans une enquête judiciaire en cours, ni ordonner d'arrêter ou de classer une procédure. Ces décisions appartiennent à la justice.</p>
+              </div>
+
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>Le préfet fixe les objectifs, engage les unités, prend les arrêtés d'ordre public (manifestations, périmètres, fermetures) et demande des renforts. Il ne commande pas le détail des interventions et n'a aucun pouvoir sur les enquêtes judiciaires.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 211-1</strong> — manifestations sur la voie publique : déclaration préalable.</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 211-4</strong> — interdiction d'une manifestation par l'autorité de police.</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 211-9</strong> — emploi de la force pour disperser un attroupement, après sommations.</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 226-1</strong> — périmètres de protection décidés par le préfet.</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 227-1</strong> — fermeture de lieux dans le cadre de la lutte contre le terrorisme.</span></li>
+                <li><span class="wk-code">CP</span><span><strong>art. 431-3</strong> — définition de l'attroupement.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#securite-interieure"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#gendarmerie">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/logo-inspection-travail.png" alt="Logo de l'inspection du travail" width="72" height="72" onerror="this.hidden=true">
-          </div>
+          </section>
 
-          <p>L'inspection du travail veille au respect des règles qui protègent les salariés : conditions de travail, sécurité, déclaration des employés, lutte contre le travail dissimulé.</p>
-
-          <div class="wk-grid">
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#eye"/></svg></div>
-              <h3>Contrôler</h3>
-              <p>Visites en entreprise, vérification des registres et des conditions de travail.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#user"/></svg></div>
-              <h3>Conseiller</h3>
-              <p>Informer employeurs et salariés sur leurs droits et obligations.</p>
-            </article>
-            <article class="wk-card" data-tilt>
-              <div class="wk-ic"><svg class="i"><use href="#scale"/></svg></div>
-              <h3>Sanctionner</h3>
-              <p>Mise en demeure, procès-verbal, transmission à la justice si nécessaire.</p>
-            </article>
-          </div>
-
-          <div class="wk-note" role="note">
-            <svg class="i"><use href="#info"/></svg>
-            <p><strong>Lien avec la Préfecture :</strong> l'inspection du travail dépend du ministère chargé du Travail, pas du préfet. Les deux travaillent ensemble : en cas de travail illégal constaté, le préfet peut décider d'une fermeture administrative temporaire de l'établissement.</p>
-          </div>
-
-          <a class="wk-next" href="#huissier">Chapitre suivant : huissier de justice <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
-
-        <!-- 10 · Huissier -->
-        <section class="wk-sec" id="huissier" aria-labelledby="t-huissier">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 10</p>
-              <h2 id="t-huissier">Huissier de justice</h2>
+          <!-- ============ 05 · Gendarmerie ============ -->
+          <section class="wk-sec" id="gendarmerie" aria-labelledby="t-gendarmerie">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/logo-gendarmerie.png" alt="Logo de la Gendarmerie nationale" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">IRL comme IG</p>
+                <h2 id="t-gendarmerie" tabindex="-1">Pouvoirs du préfet sur la Gendarmerie nationale</h2>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/logo-huissier.png" alt="Logo des huissiers de justice" width="72" height="72" onerror="this.hidden=true">
-          </div>
 
-          <p>L'huissier de justice est un officier public qui <strong>signifie les actes</strong>, dresse des <strong>constats</strong> et fait <strong>exécuter les décisions de justice</strong> (saisies, expulsions…). Il n'est pas un agent de la Préfecture, mais il a parfois besoin de son appui.</p>
+            <div class="wk-body">
+              <h3>Un statut particulier</h3>
+              <p>La Gendarmerie nationale est une <strong>force armée à statut militaire</strong>, chargée de veiller à la sûreté publique et d'assurer le maintien de l'ordre et l'exécution des lois. Depuis la loi du 3 août 2009, elle est <strong>rattachée au ministère de l'Intérieur</strong>, comme la Police nationale, tout en gardant son statut militaire.</p>
 
-          <h3>Le concours de la force publique</h3>
-          <p>Lorsqu'une décision de justice doit être exécutée malgré le refus de la personne concernée (une expulsion, par exemple), l'huissier demande au préfet l'appui de la police ou de la gendarmerie.</p>
+              <h3>Autorité d'emploi et autorité organique</h3>
+              <div class="wk-grid">
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#flag"/></svg></div>
+                  <h3>Le préfet décide de l'emploi</h3>
+                  <p>Il donne les objectifs et les missions à remplir en matière d'ordre public : sécurisation, maintien de l'ordre, renforts.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#shield"/></svg></div>
+                  <h3>La hiérarchie garde le commandement</h3>
+                  <p>L'organisation interne, la discipline, la formation et la logistique restent gérées par le commandement de la gendarmerie.</p>
+                </article>
+              </div>
 
-          <ol class="wk-steps">
-            <li><strong>Décision de justice</strong>Un jugement ou un titre exécutoire est rendu.</li>
-            <li><strong>Commandement</strong>L'huissier notifie la décision à la personne concernée.</li>
-            <li><strong>Demande de concours</strong>En cas de refus, il saisit le préfet pour obtenir la force publique.</li>
-            <li><strong>Décision du préfet</strong>Le préfet accorde ou refuse l'appui, en tenant compte de l'ordre public.</li>
-          </ol>
+              <h3>Les missions</h3>
+              <ul class="wk-list">
+                <li><strong>Sécurité publique</strong>, surtout en zones rurales et périurbaines.</li>
+                <li><strong>Police judiciaire</strong> : enquêtes sous la direction du procureur.</li>
+                <li><strong>Maintien de l'ordre</strong> par la gendarmerie mobile, équivalente aux CRS pour la police.</li>
+                <li><strong>Missions particulières</strong> : sécurité des institutions et cérémonial (Garde républicaine), transports aériens, etc.</li>
+              </ul>
 
-          <div class="wk-note" role="note">
-            <svg class="i"><use href="#info"/></svg>
-            <p><strong>Bon à savoir :</strong> dans la réalité, la profession d'huissier de justice a été regroupée depuis 2022 sous le nom de « commissaire de justice ». Sur LGP, le terme « huissier » reste utilisé.</p>
-          </div>
+              <h3>Ce que le préfet peut demander</h3>
+              <ul class="wk-list">
+                <li>Engager des unités de gendarmerie territoriales ou mobiles pour un événement ou une crise.</li>
+                <li>Fixer des objectifs de sécurité publique pour le département, en lien avec le commandant de groupement.</li>
+                <li>Coordonner l'action de la gendarmerie avec celle de la police pour éviter les doublons.</li>
+              </ul>
 
-          <a class="wk-next" href="#vigipirate">Chapitre suivant : Vigipirate <svg class="i"><use href="#arrow"/></svg></a>
-        </section>
+              <div class="wk-note" role="note">
+                <svg class="i"><use href="#info"/></svg>
+                <p><strong>En pratique :</strong> le préfet transmet une demande ou un ordre d'emploi à l'officier de gendarmerie responsable, qui choisit les moyens pour l'exécuter. Il ne donne pas d'ordres directs aux gendarmes sur le terrain.</p>
+              </div>
 
-        <!-- 11 · Vigipirate -->
-        <section class="wk-sec" id="vigipirate" aria-labelledby="t-vigipirate">
-          <div class="wk-head">
-            <div>
-              <p class="eyebrow">Chapitre 11</p>
-              <h2 id="t-vigipirate">Vigipirate</h2>
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>Le préfet dispose de la gendarmerie comme de la police pour l'ordre public : il fixe les objectifs et décide de l'emploi des unités. Le commandement, la discipline et l'organisation restent militaires et relèvent de la hiérarchie de la gendarmerie.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">Loi</span><span><strong>n° 2009-971 du 3 août 2009</strong> — loi relative à la gendarmerie nationale (rattachement au ministère de l'Intérieur).</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 421-1</strong> — la gendarmerie nationale est une force armée instituée pour veiller à la sûreté publique et assurer le maintien de l'ordre.</span></li>
+                <li><span class="wk-code">CPP</span><span><strong>art. 12 et 14</strong> — police judiciaire exercée sous la direction du procureur de la République.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#police-nationale"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#secours">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
             </div>
-            <img class="wk-logo" src="assets/img/logo-vigipirate.png" alt="Logo du plan Vigipirate" width="72" height="72" onerror="this.hidden=true">
+          </section>
+
+          <!-- ============ 06 · Secours ============ -->
+          <section class="wk-sec" id="secours" aria-labelledby="t-secours">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/logo-securite-civile.png" alt="Logo de la sécurité civile" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">IRL comme IG</p>
+                <h2 id="t-secours" tabindex="-1">Rôle du préfet sur les secours (sécurité civile)</h2>
+              </div>
+            </div>
+
+            <div class="wk-body">
+              <h3>Qui dirige les secours ?</h3>
+              <p>En temps normal, la direction des opérations de secours (<strong>DOS</strong>) revient au <strong>maire</strong> sur sa commune. Lorsque l'événement dépasse les limites de la commune ou ses moyens, ou que le dispositif ORSEC est déclenché, le <strong>préfet</strong> devient directeur des opérations de secours.</p>
+
+              <h3>Le dispositif ORSEC</h3>
+              <p>L'<strong>organisation de la réponse de sécurité civile (ORSEC)</strong> recense les moyens publics et privés et prévoit comment les mobiliser. Elle comprend des <strong>dispositions générales</strong>, valables pour tout événement, et des <strong>dispositions spécifiques</strong> à certains risques (inondation, accident industriel, attentat, etc.). Les communes préparent de leur côté un <strong>plan communal de sauvegarde</strong>.</p>
+
+              <h3>DOS et COS : qui fait quoi ?</h3>
+              <div class="wk-grid">
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#building"/></svg></div>
+                  <h3>Le préfet (DOS)</h3>
+                  <p>Dirige l'ensemble de la réponse : décisions stratégiques, mobilisation des moyens, protection et information de la population.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#flame"/></svg></div>
+                  <h3>Le commandant des opérations de secours (COS)</h3>
+                  <p>Un officier des sapeurs-pompiers commande les équipes sur le terrain, sous l'autorité du DOS.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#link"/></svg></div>
+                  <h3>Les services partenaires</h3>
+                  <p>Pompiers, urgences médicales, police, gendarmerie et associations agréées de sécurité civile.</p>
+                </article>
+              </div>
+
+              <h3>Déroulement d'une crise</h3>
+              <ol class="wk-steps">
+                <li><strong>Alerte</strong>Les secours sont prévenus et engagent leurs premiers moyens.</li>
+                <li><strong>Évaluation</strong>L'ampleur de l'événement est estimée : victimes, zone concernée, risques.</li>
+                <li><strong>Déclenchement</strong>Le préfet active ORSEC et ouvre une cellule de crise (centre opérationnel).</li>
+                <li><strong>Direction des opérations</strong>Le préfet coordonne ; le COS agit sur le terrain.</li>
+                <li><strong>Retour à la normale</strong>Fin de l'alerte, bilan et information du public.</li>
+              </ol>
+
+              <h3>Les pouvoirs de crise</h3>
+              <ul class="wk-list">
+                <li><strong>Réquisition</strong> de tout bien ou service nécessaire (véhicules, locaux, entreprises), avec indemnisation.</li>
+                <li><strong>Mesures de protection</strong> : évacuation, confinement, interdiction de zones.</li>
+                <li><strong>Renforts</strong> demandés au préfet de zone lorsque les capacités du département sont dépassées.</li>
+              </ul>
+
+              <h3>À Paris</h3>
+              <p>Le préfet de police est l'autorité de référence. Il commande la <strong>Brigade de sapeurs-pompiers de Paris</strong> (unité militaire) et dispose d'un centre opérationnel pour suivre en direct les événements de la capitale.</p>
+
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>Le préfet prend la direction des secours quand un événement dépasse la commune ou déclenche ORSEC. Il décide et coordonne ; le commandant des opérations de secours, un sapeur-pompier, commande l'action sur le terrain.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 741-1 et L. 741-2</strong> — organisation de la réponse de sécurité civile (ORSEC) : dispositions générales et spécifiques.</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 742-2</strong> — le préfet directeur des opérations de secours.</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 731-3</strong> — plan communal de sauvegarde.</span></li>
+                <li><span class="wk-code">CGCT</span><span><strong>art. L. 1424-4</strong> — le commandant des opérations de secours agit sous l'autorité du DOS.</span></li>
+                <li><span class="wk-code">CGCT</span><span><strong>art. R. 1424-43</strong> — le COS relève en principe du directeur départemental des services d'incendie et de secours.</span></li>
+                <li><span class="wk-code">CGCT</span><span><strong>art. L. 2215-1</strong> — pouvoirs de police et de réquisition du préfet en situation de crise.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#gendarmerie"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#entreprises">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 07 · Entreprises ============ -->
+          <section class="wk-sec" id="entreprises" aria-labelledby="t-entreprises">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/logo-entreprises.png" alt="Logo des entreprises" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">IRL comme IG</p>
+                <h2 id="t-entreprises" tabindex="-1">Rôle du préfet vis-à-vis des entreprises privées</h2>
+              </div>
+            </div>
+
+            <div class="wk-body">
+              <h3>Le principe : liberté d'entreprendre</h3>
+              <p>Les entreprises sont libres d'exercer leur activité. Le préfet n'intervient que pour protéger l'<strong>ordre public</strong>, la <strong>sécurité</strong> et la <strong>santé</strong> des personnes. Il peut autoriser, contrôler et, si nécessaire, sanctionner, mais toujours pour un motif précis et proportionné.</p>
+
+              <h3>Les domaines d'intervention</h3>
+              <div class="wk-grid">
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#shield"/></svg></div>
+                  <h3>Sécurité privée</h3>
+                  <p>Les sociétés et agents de sécurité sont encadrés par un organisme de contrôle ; le préfet impose des dispositifs de sécurité pour les événements à risque.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#briefcase"/></svg></div>
+                  <h3>Commerces et débits de boissons</h3>
+                  <p>Horaires, troubles à l'ordre public, bruit : le préfet peut ordonner une fermeture administrative.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#building"/></svg></div>
+                  <h3>Établissements ouverts au public</h3>
+                  <p>Respect des règles de sécurité incendie et de capacité d'accueil, contrôlé par la commission de sécurité.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#cal"/></svg></div>
+                  <h3>Événements</h3>
+                  <p>Déclaration ou autorisation préalable des manifestations et événements importants, avec service d'ordre à la charge de l'organisateur si nécessaire.</p>
+                </article>
+              </div>
+
+              <h3>Les mesures possibles, de la plus légère à la plus lourde</h3>
+              <ol class="wk-steps">
+                <li><strong>Avertissement ou rappel à la règle</strong>Le service concerné prévient l'entreprise du manquement constaté.</li>
+                <li><strong>Mise en demeure</strong>Un délai est donné pour se mettre en conformité.</li>
+                <li><strong>Fermeture administrative temporaire</strong>Décidée par arrêté, pour une durée limitée, en cas d'atteinte à l'ordre public, à la santé ou à la sécurité.</li>
+                <li><strong>Poursuites</strong>Transmission au procureur si une infraction pénale est constatée.</li>
+              </ol>
+
+              <div class="wk-note" role="note">
+                <svg class="i"><use href="#info"/></svg>
+                <p><strong>Pour les joueurs :</strong> une entreprise qui pose problème est d'abord avertie. La fermeture administrative reste une mesure de dernier recours, et l'entreprise peut la contester devant le tribunal administratif.</p>
+              </div>
+
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>Le préfet ne dirige pas les entreprises : il contrôle ce qui touche à l'ordre public, à la sécurité et à la santé (sécurité privée, débits de boissons, établissements recevant du public, événements) et peut aller jusqu'à la fermeture administrative.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">CSI</span><span><strong>Livre VI (art. L. 611-1 et suivants)</strong> — activités privées de sécurité.</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 211-1 et L. 211-4</strong> — déclaration et interdiction des manifestations.</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 211-11</strong> — service d'ordre à la charge des organisateurs de certaines manifestations.</span></li>
+                <li><span class="wk-code">CSP</span><span><strong>art. L. 3332-15</strong> — fermeture administrative d'un débit de boissons ou d'un restaurant.</span></li>
+                <li><span class="wk-code">CCH</span><span><strong>art. R. 123-1 et suivants</strong> — établissements recevant du public : sécurité incendie et accessibilité.</span></li>
+                <li><span class="wk-code">CT</span><span><strong>art. L. 8272-2</strong> — fermeture administrative en cas de travail illégal (voir chapitre 09).</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#secours"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#regularisation">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 08 · Régularisation administrative ============ -->
+          <section class="wk-sec" id="regularisation" aria-labelledby="t-regularisation">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/logo-regularisation.png" alt="Logo de la régularisation administrative" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">Adapté LGP</p>
+                <h2 id="t-regularisation" tabindex="-1">Régularisation administrative</h2>
+              </div>
+            </div>
+
+            <div class="wk-body">
+              <h3>De quoi parle-t-on ?</h3>
+              <p>La régularisation administrative consiste à <strong>remettre en règle</strong> une situation qui ne respecte pas, ou plus, les règles : titre ou document manquant ou expiré, activité exercée sans autorisation, déclaration oubliée. Le terme est surtout connu pour le <strong>séjour des étrangers</strong>, mais il s'applique à toute démarche auprès de la Préfecture.</p>
+
+              <h3>Le cas du séjour des étrangers</h3>
+              <p>Le préfet délivre les titres de séjour. Une personne en situation irrégulière peut demander une <strong>admission exceptionnelle au séjour</strong> : le préfet examine le dossier au cas par cas, en tenant compte de motifs humanitaires ou exceptionnels. Sont généralement regardés l'ancienneté de la présence, la vie privée et familiale, l'insertion et l'activité professionnelle.</p>
+              <p>Le préfet dispose d'un <strong>pouvoir d'appréciation</strong> : remplir les critères n'ouvre pas un droit automatique à la régularisation.</p>
+
+              <h3>Les autres régularisations</h3>
+              <ul class="wk-list">
+                <li><strong>Documents et titres</strong> : renouvellement d'un titre expiré, mise à jour d'une situation (changement de nom, d'adresse).</li>
+                <li><strong>Activités et entreprises</strong> : déclaration ou autorisation manquante, mise en conformité d'un établissement.</li>
+                <li><strong>Dossiers incomplets</strong> : la Préfecture demande les pièces manquantes avant de statuer.</li>
+              </ul>
+
+              <h3>Procédure type</h3>
+              <ol class="wk-steps">
+                <li><strong>Constat</strong>Un agent relève l'irrégularité lors d'un contrôle ou d'une démarche.</li>
+                <li><strong>Notification et délai</strong>La personne ou l'entreprise est informée et dispose d'un délai pour agir.</li>
+                <li><strong>Dépôt du dossier</strong>Le dossier complet est déposé via les <a class="wk-link" href="demarche.html">démarches en ligne</a>.</li>
+                <li><strong>Instruction</strong>La Préfecture vérifie les pièces et peut demander des compléments.</li>
+                <li><strong>Décision</strong>Situation régularisée, refus motivé, ou sanction si le délai n'a pas été respecté.</li>
+              </ol>
+
+              <h3>Si la demande est refusée</h3>
+              <p>Le demandeur peut présenter un <strong>recours gracieux</strong> (auprès du préfet) ou un recours devant le <strong>tribunal administratif</strong>, en principe dans un délai de <strong>deux mois</strong> à compter de la décision.</p>
+
+              <div class="wk-note warn" role="note">
+                <svg class="i"><use href="#alert"/></svg>
+                <p><strong>Attention :</strong> sans régularisation dans les délais, la Préfecture peut prononcer une amende, retirer une autorisation ou ordonner une fermeture administrative. Sur LGP, la procédure est simplifiée : voir les <a class="wk-link" href="demarche.html">démarches en ligne</a> ou <a class="wk-link" href="contact.html">contactez la Préfecture</a>.</p>
+              </div>
+
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>Régulariser, c'est remettre un dossier en conformité. Le préfet apprécie chaque demande, peut la refuser de façon motivée, et un refus peut être contesté dans un délai de deux mois.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">CESEDA</span><span><strong>art. L. 435-1</strong> — admission exceptionnelle au séjour (motifs humanitaires ou exceptionnels).</span></li>
+                <li><span class="wk-code">CJA</span><span><strong>art. R. 421-1</strong> — délai de deux mois pour contester une décision devant le juge administratif.</span></li>
+                <li><span class="wk-code">CT</span><span><strong>art. L. 8272-2</strong> — fermeture administrative en cas de travail illégal.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#entreprises"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#inspection-travail">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 09 · Inspection du travail ============ -->
+          <section class="wk-sec" id="inspection-travail" aria-labelledby="t-inspection">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/logo-inspection-travail.png" alt="Logo de l'inspection du travail" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">IRL comme IG</p>
+                <h2 id="t-inspection" tabindex="-1">Inspection du travail</h2>
+              </div>
+            </div>
+
+            <div class="wk-body">
+              <h3>Qui est l'inspection du travail ?</h3>
+              <p>C'est un service de l'État placé sous l'autorité du <strong>ministère chargé du Travail</strong>, et non du préfet. Elle veille au respect des règles qui protègent les salariés : conditions de travail, santé et sécurité, durée du travail, déclaration des employés, lutte contre le travail dissimulé.</p>
+
+              <h3>Ses trois missions</h3>
+              <div class="wk-grid">
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#eye"/></svg></div>
+                  <h3>Contrôler</h3>
+                  <p>Visites en entreprise, vérification des registres, des contrats et des conditions de travail.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#user"/></svg></div>
+                  <h3>Conseiller</h3>
+                  <p>Informer employeurs et salariés sur leurs droits et leurs obligations.</p>
+                </article>
+                <article class="wk-card" data-tilt>
+                  <div class="wk-ic"><svg class="i"><use href="#scale"/></svg></div>
+                  <h3>Sanctionner</h3>
+                  <p>Mise en demeure, procès-verbal, transmission au procureur si une infraction est constatée.</p>
+                </article>
+              </div>
+
+              <h3>Les pouvoirs des agents de contrôle</h3>
+              <ul class="wk-list">
+                <li><strong>Entrer librement</strong> dans les établissements pendant les heures de travail, sans prévenir.</li>
+                <li><strong>Se faire présenter</strong> les documents obligatoires (registre du personnel, contrats, bulletins de paie).</li>
+                <li><strong>Mettre en demeure</strong> l'employeur de corriger un manquement en matière de santé et de sécurité.</li>
+                <li><strong>Dresser un procès-verbal</strong> lorsqu'une infraction est constatée.</li>
+              </ul>
+
+              <h3>Travail illégal et fermeture administrative</h3>
+              <p>Le <strong>travail illégal</strong> regroupe notamment le travail dissimulé (employer quelqu'un sans le déclarer). En cas de constat, le <strong>préfet</strong> peut ordonner la <strong>fermeture administrative provisoire</strong> de l'établissement, pour une durée limitée. Les services de l'État (inspection du travail, police, gendarmerie, fiscalité, protection sociale) coordonnent leurs contrôles dans des comités placés sous l'autorité du préfet et du procureur.</p>
+
+              <div class="wk-note" role="note">
+                <svg class="i"><use href="#info"/></svg>
+                <p><strong>Lien avec la Préfecture :</strong> l'inspection du travail constate et propose ; le préfet décide de la fermeture administrative lorsque la loi le prévoit. Les deux travaillent ensemble mais restent indépendants.</p>
+              </div>
+
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>L'inspection du travail contrôle le respect du droit du travail et dépend du ministère du Travail. Quand du travail illégal est constaté, le préfet peut décider une fermeture administrative temporaire de l'établissement.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">CT</span><span><strong>art. L. 8112-1</strong> — agents de contrôle de l'inspection du travail.</span></li>
+                <li><span class="wk-code">CT</span><span><strong>art. L. 8113-1</strong> — droit d'entrée dans les établissements.</span></li>
+                <li><span class="wk-code">CT</span><span><strong>art. L. 8113-7</strong> — constatation des infractions par procès-verbal.</span></li>
+                <li><span class="wk-code">CT</span><span><strong>art. L. 4721-1</strong> — mise en demeure en matière de santé et de sécurité.</span></li>
+                <li><span class="wk-code">CT</span><span><strong>art. L. 8211-1 et L. 8221-1</strong> — travail illégal et travail dissimulé.</span></li>
+                <li><span class="wk-code">CT</span><span><strong>art. L. 8272-2</strong> — fermeture administrative provisoire décidée par le préfet.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#regularisation"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#huissier">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 10 · Huissier de justice ============ -->
+          <section class="wk-sec" id="huissier" aria-labelledby="t-huissier">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/logo-huissier.png" alt="Logo des huissiers de justice" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">IRL comme IG</p>
+                <h2 id="t-huissier" tabindex="-1">Huissier de justice</h2>
+              </div>
+            </div>
+
+            <div class="wk-body">
+              <h3>Qui est l'huissier de justice ?</h3>
+              <p>L'huissier de justice est un <strong>officier public et ministériel</strong>. Il <strong>signifie les actes</strong> (assignations, jugements), dresse des <strong>constats</strong>, <strong>recouvre des créances</strong> et fait <strong>exécuter les décisions de justice</strong> (saisies, expulsions). Il n'est pas un agent de la Préfecture, mais il a parfois besoin de son appui.</p>
+
+              <div class="wk-note" role="note">
+                <svg class="i"><use href="#info"/></svg>
+                <p><strong>Bon à savoir :</strong> dans la réalité, la profession d'huissier de justice a été regroupée depuis le 1er juillet 2022 sous le nom de « commissaire de justice ». Sur LGP, le terme « huissier » reste utilisé.</p>
+              </div>
+
+              <h3>Le concours de la force publique</h3>
+              <p>L'État est tenu de prêter son concours à l'exécution des décisions de justice. Lorsque l'exécution se heurte à un refus (une expulsion, par exemple), l'huissier demande au <strong>préfet</strong> (au <strong>préfet de police</strong> à Paris) l'appui de la police ou de la gendarmerie.</p>
+              <ol class="wk-steps">
+                <li><strong>Décision de justice</strong>Un jugement ou un titre exécutoire est rendu. Sans lui, aucune expulsion n'est possible.</li>
+                <li><strong>Commandement de quitter les lieux</strong>L'huissier notifie la décision à la personne concernée. Pour un lieu habité, un délai de deux mois s'applique en principe.</li>
+                <li><strong>Demande de concours</strong>En cas de refus de partir, l'huissier saisit le préfet.</li>
+                <li><strong>Décision du préfet</strong>Le préfet répond dans un délai de deux mois ; un refus doit être motivé et le silence vaut refus. Il tient compte de l'ordre public et de la situation des occupants.</li>
+                <li><strong>Exécution ou indemnisation</strong>Si le concours est accordé, l'expulsion a lieu avec les forces de l'ordre. S'il est refusé, l'État peut devoir indemniser le propriétaire.</li>
+              </ol>
+
+              <h3>La trêve hivernale</h3>
+              <p>Du <strong>1er novembre au 31 mars</strong>, les expulsions de logements habités sont en principe suspendues, sauf exceptions prévues par la loi.</p>
+
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>L'huissier exécute les décisions de justice. Quand il lui faut la force publique, c'est le préfet qui accorde ou refuse son concours, par une décision motivée, en pesant l'ordre public et les conséquences pour les personnes.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">Ord.</span><span><strong>n° 2016-728 du 2 juin 2016</strong> — statut du commissaire de justice (fusion des huissiers et des commissaires-priseurs).</span></li>
+                <li><span class="wk-code">CPCE</span><span><strong>art. L. 153-1</strong> — l'État est tenu de prêter son concours à l'exécution des décisions de justice.</span></li>
+                <li><span class="wk-code">CPCE</span><span><strong>art. R. 153-1</strong> — demande de concours au préfet : réponse sous deux mois, refus motivé.</span></li>
+                <li><span class="wk-code">CPCE</span><span><strong>art. R. 154-1</strong> — point de départ de la responsabilité de l'État en cas de refus.</span></li>
+                <li><span class="wk-code">CPCE</span><span><strong>art. L. 411-1 et L. 412-1</strong> — expulsion, commandement de quitter les lieux et délai de deux mois.</span></li>
+                <li><span class="wk-code">CPCE</span><span><strong>art. L. 412-6</strong> — sursis à l'expulsion pendant la trêve hivernale.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#inspection-travail"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#vigipirate">Chapitre suivant <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ 11 · Vigipirate ============ -->
+          <section class="wk-sec" id="vigipirate" aria-labelledby="t-vigipirate">
+            <div class="wk-head">
+              <img class="wk-logo" src="assets/img/vigipirate.png" alt="Logo du plan Vigipirate" width="112" height="112" onerror="this.hidden=true">
+              <div>
+                <p class="wk-tag">IRL comme IG</p>
+                <h2 id="t-vigipirate" tabindex="-1">Vigipirate</h2>
+              </div>
+            </div>
+
+            <div class="wk-body">
+              <h3>Qu'est-ce que Vigipirate ?</h3>
+              <p>Vigipirate est le plan gouvernemental de <strong>vigilance, de prévention et de protection</strong> face à la menace terroriste. Il relève du Premier ministre : les services de renseignement évaluent la menace, et le Secrétariat général de la défense et de la sécurité nationale (<strong>SGDSN</strong>) en déduit la posture de sécurité à adopter.</p>
+              <p>Le plan compte environ <strong>300 mesures</strong> : des mesures permanentes, réparties en grands domaines d'activité (transports, santé, etc.), et des mesures complémentaires activées selon la menace. Une partie d'entre elles est classifiée.</p>
+
+              <h3>Les trois niveaux</h3>
+              <div class="wk-levels">
+                <article class="wk-level l1" data-tilt>
+                  <img class="wk-level-logo" src="assets/img/vigipirate.png" alt="Logo Vigipirate" width="96" height="96" onerror="this.hidden=true">
+                  <span class="wk-chip">Niveau 1</span>
+                  <h3>Vigipirate</h3>
+                  <p>Posture permanente de vigilance.</p>
+                  <ul>
+                    <li>Mesures permanentes toujours actives.</li>
+                    <li>Présence visible des forces de l'ordre dans les lieux sensibles.</li>
+                    <li>Sensibilisation du public et des opérateurs.</li>
+                  </ul>
+                </article>
+                <article class="wk-level l2" data-tilt>
+                  <img class="wk-level-logo" src="assets/img/vigipirate-securite-renforcee.png" alt="Logo Vigipirate : Sécurité renforcée, risque attentat" width="96" height="96" onerror="this.hidden=true">
+                  <span class="wk-chip">Niveau 2</span>
+                  <h3>Vigipirate : Sécurité renforcée — Risque attentat</h3>
+                  <p>Menace élevée, voire très élevée.</p>
+                  <ul>
+                    <li>Mesures particulières ajoutées selon les secteurs : aéroports, gares, lieux de culte…</li>
+                    <li>Contrôles d'accès et de sacs renforcés, patrouilles supplémentaires.</li>
+                    <li>Peut s'appliquer à l'ensemble du territoire.</li>
+                  </ul>
+                </article>
+                <article class="wk-level l3" data-tilt>
+                  <img class="wk-level-logo" src="assets/img/vigipirate-urgence-attentat.png" alt="Logo Vigipirate : Urgence attentat" width="96" height="96" onerror="this.hidden=true">
+                  <span class="wk-chip">Niveau 3</span>
+                  <h3>Vigipirate : Urgence attentat</h3>
+                  <p>Après un attentat, ou lorsqu'un groupe terroriste identifié mais non localisé passe à l'action.</p>
+                  <ul>
+                    <li>Limité à la durée de la gestion de crise.</li>
+                    <li>Moyens exceptionnels mobilisés.</li>
+                    <li>Diffusion de consignes de protection à la population.</li>
+                  </ul>
+                </article>
+              </div>
+
+              <h3>Rôle du préfet</h3>
+              <ul class="wk-list">
+                <li><strong>Appliquer localement</strong> les mesures décidées au niveau national.</li>
+                <li><strong>Adapter les dispositifs</strong> aux lieux et événements de son territoire (gares, grands rassemblements, lieux de culte).</li>
+                <li><strong>Prendre des arrêtés</strong> : périmètres de protection, restrictions de circulation, fermetures de lieux.</li>
+                <li><strong>Coordonner</strong> police, gendarmerie, secours et opérateurs concernés.</li>
+                <li><strong>Informer la population</strong> des consignes à suivre.</li>
+              </ul>
+
+              <div class="wk-note" role="note">
+                <svg class="i"><use href="#info"/></svg>
+                <p><strong>Sur LGP :</strong> le niveau en vigueur est annoncé par la Préfecture. Suivez les <a class="wk-link" href="actus.html">actualités</a> pour connaître les consignes en cours. Le wiki conserve les noms historiques des niveaux ; selon le site officiel info.gouv.fr, la communication récente du plan parle de « vigilance », « vigilance renforcée » et « alerte attentat ».</p>
+              </div>
+
+              <div class="wk-resume">
+                <b>En résumé</b>
+                <p>Vigipirate adapte la protection du pays à la menace terroriste selon trois niveaux. Le gouvernement fixe le niveau ; le préfet le décline sur son territoire : arrêtés, contrôles, coordination des forces et information du public.</p>
+              </div>
+
+              <h3 class="wk-reftitle">Textes de référence</h3>
+              <ul class="wk-refs">
+                <li><span class="wk-code">CDéf</span><span><strong>art. L. 1111-1</strong> — stratégie de sécurité nationale.</span></li>
+                <li><span class="wk-code">CDéf</span><span><strong>art. L. 1332-1 à L. 1332-7</strong> — protection des opérateurs et des secteurs d'activités d'importance vitale.</span></li>
+                <li><span class="wk-code">CSI</span><span><strong>art. L. 226-1</strong> — périmètres de protection décidés par le préfet.</span></li>
+                <li><span class="wk-code">IGI</span><span><strong>n° 6600</strong> — instruction générale interministérielle sur la protection des activités d'importance vitale.</span></li>
+              </ul>
+
+              <div class="wk-pager">
+                <a href="#huissier"><svg class="i"><use href="#arrow-l"/></svg>Chapitre précédent</a>
+                <a href="#presentation">Retour au début <svg class="i"><use href="#arrow"/></svg></a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Contact -->
+          <div class="wk-contact">
+            <p>Une question sur le contenu de ce wiki ou sur une procédure ? L'équipe de la Préfecture peut vous répondre.</p>
+            <a class="wk-btn" href="contact.html">Contactez la Préfecture</a>
           </div>
 
-          <p>Vigipirate est le plan national de <strong>vigilance, de prévention et de protection</strong> face à la menace terroriste. Le niveau est fixé au plan national ; le préfet décline ensuite les mesures sur son territoire.</p>
-
-          <div class="wk-levels">
-            <article class="wk-level l1" data-tilt>
-              <span class="wk-chip">Niveau 1</span>
-              <h3>Vigilance</h3>
-              <p>Niveau permanent. Présence visible des forces de l'ordre dans les lieux sensibles et sensibilisation du public.</p>
-            </article>
-            <article class="wk-level l2" data-tilt>
-              <span class="wk-chip">Niveau 2</span>
-              <h3>Sécurité renforcée — risque attentat</h3>
-              <p>Contrôles d'accès et de sacs renforcés, patrouilles supplémentaires, surveillance accrue des événements.</p>
-            </article>
-            <article class="wk-level l3" data-tilt>
-              <span class="wk-chip">Niveau 3</span>
-              <h3>Urgence attentat</h3>
-              <p>Menace imminente ou attentat en cours : périmètres de sécurité, restrictions de circulation, mobilisation maximale.</p>
-            </article>
-          </div>
-
-          <h3>Rôle du préfet</h3>
-          <ul class="wk-list">
-            <li>Appliquer localement les mesures décidées au niveau national.</li>
-            <li>Adapter les dispositifs aux lieux et événements de son territoire.</li>
-            <li>Coordonner police, gendarmerie, secours et opérateurs concernés.</li>
-            <li>Informer la population des consignes à suivre.</li>
-          </ul>
-
-          <div class="wk-note" role="note">
-            <svg class="i"><use href="#info"/></svg>
-            <p><strong>Sur LGP :</strong> le niveau en vigueur est annoncé par la Préfecture. Suivez les <a class="wk-link" href="actus.html">actualités</a> pour connaître les consignes en cours.</p>
-          </div>
-
-          <a class="wk-next" href="#presentation">Retour au début du wiki <svg class="i"><use href="#up"/></svg></a>
-        </section>
-
-        <!-- Contact -->
-        <div class="wk-contact">
-          <p>Une question sur le contenu de ce wiki ou sur une procédure ? L'équipe de la Préfecture peut vous répondre.</p>
-          <a class="wk-btn" href="contact.html">Contactez la Préfecture</a>
-        </div>
-
+        </article>
       </div>
     </div>
   </main>
 
-  <!-- ===== Pied de page ===== -->
+  <!-- ===== Pied de page du site ===== -->
   <footer>
     <div class="w">
       <div class="cols">
@@ -1118,36 +1589,57 @@
       try{localStorage.setItem("theme",d)}catch(e){}
     };
 
-    /* Sommaire : chapitre actif, recherche, ouverture sur mobile */
+    /* Wiki : un chapitre affiché à la fois (piloté par l'ancre #…), recherche, sommaire mobile */
     (()=>{
+      const main=document.getElementById("wk-main");
       const toc=document.getElementById("toc");
+      const secs=[...main.querySelectorAll(".wk-sec")];
       const links=[...toc.querySelectorAll("ol a")];
-      const secs=links.map(a=>document.querySelector(a.hash));
+      const baseTitle=document.title;
       const norm=t=>t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+      main.dataset.panels="";                       /* active l'affichage « un chapitre à la fois » */
 
-      /* Chapitre actif : le dernier dont le haut est passé sous l'en-tête */
-      let ticking=false;
-      function spy(){
-        let cur=secs[0];
-        secs.forEach(s=>{if(s.getBoundingClientRect().top<=140)cur=s});
-        if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4)cur=secs[secs.length-1];
+      const idFromHash=()=>{
+        const id=decodeURIComponent(location.hash.slice(1));
+        return secs.some(s=>s.id===id)?id:secs[0].id;
+      };
+
+      /* Affiche un chapitre et met à jour le sommaire */
+      function show(id,scroll,instant){
+        secs.forEach(s=>s.classList.toggle("on",s.id===id));
         links.forEach(a=>{
-          const on=a.hash==="#"+cur.id;
+          const on=a.hash==="#"+id;
           a.classList.toggle("on",on);
           if(on)a.setAttribute("aria-current","true");else a.removeAttribute("aria-current");
         });
-        ticking=false;
+        const sec=document.getElementById(id);
+        const h2=sec.querySelector("h2");
+        document.title=baseTitle+" : "+h2.textContent;
+        if(scroll){
+          const y=main.getBoundingClientRect().top+window.scrollY-112;
+          window.scrollTo({top:Math.max(0,y),behavior:instant?"instant":"auto"});
+          h2.focus({preventScroll:true});
+        }
       }
-      addEventListener("scroll",()=>{if(!ticking){ticking=true;requestAnimationFrame(spy)}},{passive:true});
-      addEventListener("resize",spy);
-      spy();
 
-      /* Recherche : filtre les chapitres du sommaire selon leur texte */
+      /* Clic sur un lien interne : on change de chapitre sans saut de page */
+      document.addEventListener("click",e=>{
+        const a=e.target.closest('a[href^="#"]');
+        if(!a||e.defaultPrevented||e.metaKey||e.ctrlKey)return;
+        const id=a.hash.slice(1);
+        if(!secs.some(s=>s.id===id))return;
+        e.preventDefault();
+        history.pushState(null,"","#"+id);
+        show(id,true,false);
+      });
+      addEventListener("hashchange",()=>show(idFromHash(),true,false));   /* boutons précédent / suivant du navigateur */
+      show(idFromHash(),!!location.hash,true);
+
+      /* Recherche : filtre les chapitres du sommaire (le lien « suivant » est ignoré) */
       const q=document.getElementById("wk-q"),empty=document.getElementById("toc-empty");
-      /* texte de chaque chapitre, sans le lien « chapitre suivant » (il citerait le chapitre d'après) */
       const texts=secs.map(s=>{
         const c=s.cloneNode(true);
-        c.querySelectorAll(".wk-next").forEach(n=>n.remove());
+        c.querySelectorAll(".wk-pager").forEach(n=>n.remove());
         return norm(c.textContent);
       });
       q.addEventListener("input",()=>{
@@ -1159,6 +1651,11 @@
           if(ok)shown++;
         });
         empty.hidden=shown>0;
+      });
+      q.addEventListener("keydown",e=>{
+        if(e.key!=="Enter")return;
+        const first=links.find(a=>!a.parentElement.hidden);
+        if(first)first.click();
       });
 
       /* Mobile : bouton d'ouverture du sommaire */
@@ -1176,5 +1673,6 @@
   <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
   <script src="/tracker.js" defer></script>
   <script src="assets/js/tilt.js" defer></script>
+  <script src="assets/js/reveal.js"></script>
 </body>
 </html>
