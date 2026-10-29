@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/assets/img/favicon2.png">
 <meta name="robots" content="noindex, nofollow">
-<title>Préfecture de LGP — Panel Administrateur</title>
+<title>Préfecture de 93rp — Panel Administrateur</title>
 <style>
 :root{--bleu:#000091;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--sans:Marianne,"Public Sans","Segoe UI",system-ui,sans-serif}
 :root[data-theme=dark]{--bleu:#8b8bff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a}
@@ -199,7 +199,7 @@ async function start(){
         item.documents=Array.isArray(item.documents)?item.documents:[];
         item.photos=Array.isArray(item.photos)?item.photos:[];
         field(card,"Date de publication",item,"date","date");
-        field(card,"Titre",item,"titre");
+        field(card,"Titre",item,"titre");field(card,"Catégorie (ex. Nomination, Communiqué de presse)",item,"categorie");
         field(card,"Résumé (affiché sur l'accueil)",item,"resume","area");
         field(card,"Contenu de l'actualité",item,"texte","area");
         const docs=E("div"),docsTitle=E("label","","Documents joints"),docsHelp=E("small","sub","PDF, Word, OpenDocument ou texte — 1 Mo maximum par fichier, 2 Mo au total avec les photos. Les fichiers seront inclus dans content.json.");
@@ -392,7 +392,7 @@ async function start(){
 </script>
 <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
 <script src="/tracker.js" defer></script>
-<script src="assets/js/tilt.js" defer></script>
+</html>
 <script src="assets/js/reveal.js"></script>
 </body>
 </html>

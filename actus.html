@@ -4,18 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/assets/img/favicon2.png">
-<title>Préfecture de  LGP — Suivre l'actu</title>
-<meta name="description" content="Suivez les informations et actualités concernant les services publics de la Préfecture de  LGP.">
+<title>Préfecture de 93rp — Suivre l'actu</title>
+<meta name="description" content="Suivez les informations et actualités concernant les services publics de la Préfecture de  93rp.">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Préfecture de LGP — Suivre l'actu">
+<meta property="og:title" content="Préfecture de 93rp — Suivre l'actu">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:url" content="https://lgp-prefecture.vercel.app/actus.html">
-<meta property="og:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:image:alt" content="Préfecture de LGP">
+<meta property="og:url" content="https://93rp-prefecture.vercel.app/actus.html">
+<meta property="og:image" content="https://93rp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:image:alt" content="Préfecture de 93rp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:description" content="Suivez les informations et actualités concernant les services publics de la Préfecture de  LGP.">
+<meta name="twitter:image" content="https://93rp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:description" content="Suivez les informations et actualités concernant les services publics de la Préfecture de  93rp.">
 <style>
 :root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;--sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
 :root[data-theme=dark]{--bleu:#8b8bff;--bleu-f:#a5a5ff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a;--nav:#1b1b1f}
@@ -38,18 +38,76 @@ nav{display:flex;gap:6px;flex-wrap:wrap}nav a{padding:8px 16px;font-size:.95rem;
 main{min-height:58vh}
 main section{padding:54px 0 86px}
 .section-head{margin-bottom:32px}.section-head h1{font-size:clamp(1.55rem,3vw,2rem);line-height:1.2;margin-top:10px}
-.news-list{display:grid;grid-template-columns:1fr;gap:16px}
-.news-card{border:1px solid var(--ligne);border-radius:5px;background:var(--carte);padding:20px 22px}
-.news-card time{display:block;color:var(--gris);font-size:.85rem;margin-bottom:5px}
-.news-card h2{font-size:1.2rem;line-height:1.35;margin-bottom:8px}
-.news-card p{white-space:pre-line;color:var(--gris)}
-.news-card .resume{color:var(--texte);font-weight:600;margin-bottom:8px}
-.news-documents{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.news-documents a{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--bleu);border-radius:3px;padding:7px 11px;color:var(--bleu);font-size:.88rem;font-weight:700;overflow-wrap:anywhere}
-.news-documents a:hover{background:var(--lav)}
-.news-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px}
-.news-photos img{display:block;width:100%;max-height:420px;object-fit:cover;border-radius:4px}
+:root{--titre:#162447}
+:root[data-theme=dark]{--titre:#f0f0f0}
+body.modal-open{overflow:hidden}
+.news-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px}
+.news-card{position:relative;display:flex;flex-direction:column;border:1px solid var(--ligne);border-radius:5px;background:var(--carte);overflow:hidden;transition:box-shadow .15s,border-color .15s}
+.news-card:hover,.news-card:focus-within{border-color:var(--bleu);box-shadow:0 6px 22px rgba(0,0,145,.14)}
+.news-cover{display:block;width:100%;height:190px;object-fit:cover;background:var(--lav)}
+.news-body{display:flex;flex-direction:column;gap:6px;flex:1;padding:18px 22px 20px}
+.news-tag{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--bleu)}
+.news-card h2{font-size:1.15rem;line-height:1.35}
+.news-open{background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.news-open::after{content:"";position:absolute;inset:0}
+.news-open:focus-visible{outline:none}
+.news-open:focus-visible::after{outline:3px solid #0a76f6;outline-offset:-3px}
+.news-meta{font-size:.82rem;color:var(--gris)}
+.news-summary{color:var(--gris);white-space:pre-line;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.news-more{margin-top:auto;padding-top:10px;color:var(--bleu);font-weight:700;font-size:.9rem}
 .empty{min-height:95px;display:grid;place-items:center;color:var(--gris);font-size:.95rem}
+
+dialog.news-modal{width:min(980px,calc(100vw - 24px));max-width:none;max-height:calc(100vh - 24px);margin:auto;padding:0;border:0;border-radius:6px;background:var(--carte);color:var(--texte);overflow:auto;box-shadow:0 24px 80px rgba(0,0,0,.45)}
+dialog.news-modal::backdrop,dialog.lb::backdrop{background:rgba(10,10,40,.62)}
+.nm-closewrap{position:sticky;top:0;height:0;z-index:5}
+.nm-close{position:absolute;top:12px;right:12px;width:42px;height:42px;display:grid;place-items:center;border:0;border-radius:3px;background:var(--carte);color:var(--texte);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.nm-close:hover{background:var(--lav)}
+.nm-hero{display:block;width:100%;height:300px;background:var(--bleu);position:relative;overflow:hidden}
+.nm-hero.plain{height:110px}
+.nm-hero button{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:zoom-in}
+.nm-hero img{display:block;width:100%;height:100%;object-fit:cover}
+.nm-content{padding:26px 36px 42px}
+.nm-kicker{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--bleu)}
+.nm-title{font-size:clamp(1.7rem,4vw,2.6rem);line-height:1.2;font-weight:500;color:var(--titre);margin:12px 0 14px;overflow-wrap:anywhere}
+.nm-date{color:var(--gris);margin-bottom:28px}
+.nm-block{margin-bottom:30px}
+.nm-label{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--bleu);margin-bottom:10px}
+.nm-resume{border-left:3px solid var(--bleu);padding:2px 0 2px 18px;color:var(--gris);white-space:pre-line;overflow-wrap:anywhere}
+.nm-article{color:var(--gris);white-space:pre-line;overflow-wrap:anywhere}
+.nm-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.nm-photo{padding:0;border:0;background:none;cursor:zoom-in;border-radius:4px;overflow:hidden}
+.nm-photo img{display:block;width:100%;height:150px;object-fit:cover;transition:transform .2s}
+.nm-photo:hover img{transform:scale(1.04)}
+.nm-doc{border:1px solid var(--ligne);border-radius:4px;margin-bottom:10px;overflow:hidden}
+.nm-doc-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px}
+.nm-doc-name{font-weight:600;overflow-wrap:anywhere;margin-right:auto}
+.nm-doc-size{color:var(--gris);font-size:.82rem}
+.nm-btn{display:inline-block;border:1px solid var(--bleu);background:var(--carte);color:var(--bleu);font:700 .85rem var(--sans);padding:7px 12px;border-radius:3px;cursor:pointer}
+.nm-btn:hover{background:var(--lav)}
+.nm-btn.pri{background:var(--bleu);color:#fff}
+:root[data-theme=dark] .nm-btn.pri{color:#000}
+.nm-btn.pri:hover{background:var(--bleu-f)}
+.nm-viewer{border-top:1px solid var(--ligne);background:var(--fond)}
+.nm-viewer iframe{display:block;width:100%;height:70vh;border:0;background:#fff}
+.nm-viewer pre{margin:0;padding:16px;max-height:70vh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:.92rem}
+.nm-viewer img{display:block;max-width:100%;margin:0 auto}
+.nm-viewer .odt{padding:16px 20px;max-height:70vh;overflow:auto}
+.nm-viewer .odt p{margin:0 0 .8em;white-space:pre-wrap;overflow-wrap:anywhere}
+.nm-viewer .odt h3{margin:1em 0 .5em;font-size:1.1rem}
+.nm-doc .note{padding:10px 14px;font-size:.85rem;color:var(--gris)}
+.nm-doc .note a{color:var(--bleu);text-decoration:underline}
+
+dialog.lb{width:100vw;height:100vh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:rgba(0,0,0,.93);color:#fff}
+dialog.lb[open]{display:grid;grid-template-columns:64px 1fr 64px;align-items:center}
+.lb-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:100%;min-width:0}
+.lb-stage img{display:block;max-width:100%;max-height:calc(100vh - 80px);object-fit:contain}
+.lb-stage p{font-size:.9rem;color:#ddd;min-height:1.2em}
+.lb-nav,.lb-close{border:0;background:rgba(255,255,255,.14);color:#fff;cursor:pointer;display:grid;place-items:center}
+.lb-nav{width:46px;height:46px;border-radius:50%;margin:0 auto;font-size:1.7rem;line-height:1}
+.lb-close{position:absolute;top:14px;right:14px;width:42px;height:42px;border-radius:3px}
+.lb-nav:hover,.lb-close:hover{background:rgba(255,255,255,.28)}
+dialog.lb.single .lb-nav{visibility:hidden}
+@media(max-width:700px){.nm-content{padding:22px 20px 34px}.nm-hero{height:210px}.nm-viewer iframe{height:60vh}dialog.lb[open]{grid-template-columns:44px 1fr 44px}.lb-nav{width:38px;height:38px}}
 footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding:54px 0 42px}
 .cols h4{color:#fff;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}.cols li{list-style:none;margin-bottom:9px}.cols ul{padding:0}.cols a:hover{text-decoration:underline}
@@ -72,7 +130,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 <body>
 <header>
   <div class="w">
-    <a class="logo" href="index.html" aria-label="Préfecture de  LGP — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de  LGP"></a>
+    <a class="logo" href="index.html" aria-label="Préfecture de  93rp — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de 93rp"></a>
     <nav aria-label="Navigation principale">
       <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html" aria-current="page">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
     </nav>
@@ -91,7 +149,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 <footer>
   <div class="w">
     <div class="cols">
-      <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de  LGP" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
+      <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de 93rp" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
       <div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
       <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
       <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
@@ -100,34 +158,176 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
     <div class="bas"><span>© 2026 Préfecture de Grand Paname — Portail de services communautaires.</span><nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav></div>
   </div>
 </footer>
+<dialog id="news-modal" class="news-modal" aria-labelledby="nm-title"></dialog>
+<dialog id="lightbox" class="lb" aria-label="Photo agrandie">
+  <button type="button" class="lb-nav lb-prev" aria-label="Photo précédente">&#8249;</button>
+  <div class="lb-stage"><img id="lb-img" alt=""><p id="lb-cap"></p></div>
+  <button type="button" class="lb-nav lb-next" aria-label="Photo suivante">&#8250;</button>
+  <button type="button" class="lb-close" aria-label="Fermer"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+</dialog>
 <button class="aide" type="button">Besoin d'aide ?</button>
 
 <script src="assets/js/auth.js"></script>
 <script>
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 document.getElementById("theme").onclick=()=>{const d=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}};
-SITE.ready.then(data=>{
-  const box=document.getElementById("news-list"),items=Array.isArray(data.actus)?data.actus.slice():[];
-  items.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-  if(!items.length){box.innerHTML='<p class="empty">Aucune actualité pour le moment.</p>';return}
+(function(){
+const $=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e};
+const XSVG='<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+const MAMMOTH="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js",JSZIP="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+const modal=document.getElementById("news-modal"),lb=document.getElementById("lightbox"),lbImg=document.getElementById("lb-img"),lbCap=document.getElementById("lb-cap");
+let urls=[],lbList=[],lbIdx=0;
+
+/* ---------- utilitaires ---------- */
+const pad=n=>String(n).padStart(3,"0");
+const parseDate=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/.exec(s||"");return m?{y:m[1],mo:m[2],d:m[3],h:m[4],mi:m[5]}:null};
+const fmtDate=s=>{const p=parseDate(s);return p?p.d+"/"+p.mo+"/"+p.y+(p.h?" à "+p.h+":"+p.mi:""):""};
+const fmtSize=n=>{n=Number(n)||0;return n>=1048576?(n/1048576).toFixed(1).replace(".",",")+" Mo":Math.max(1,Math.round(n/1024))+" Ko"};
+const tidy=t=>{const L=String(t||"").split("\n");let out="";L.forEach((l,i)=>{out+=l;if(i<L.length-1){const n=L[i+1];out+=(l.trim()&&n.trim()&&l.length>=60&&!/[.!?:»”)]\s*$/.test(l))?" ":"\n"}});return out};
+const validPhoto=p=>p&&typeof p.data==="string"&&p.data.startsWith("data:image/");
+const validDoc=d=>d&&typeof d.data==="string"&&d.data.startsWith("data:");
+const dataToBlob=(data,type)=>{const i=data.indexOf(","),head=data.slice(0,i),body=data.slice(i+1),mime=type||(/^data:([^;,]+)/.exec(head)||[])[1]||"application/octet-stream";let bytes;if(/;base64/i.test(head)){const bin=atob(body);bytes=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)bytes[k]=bin.charCodeAt(k)}else bytes=new TextEncoder().encode(decodeURIComponent(body));return new Blob([bytes],{type:mime})};
+const kindOf=doc=>{const n=(doc.name||"").toLowerCase(),t=(doc.type||"").toLowerCase(),h=doc.data.slice(5,60).toLowerCase();
+  if(t==="application/pdf"||n.endsWith(".pdf")||h.startsWith("application/pdf"))return"pdf";
+  if(t.startsWith("image/")||/\.(png|jpe?g|gif|webp)$/.test(n))return"image";
+  if(t==="text/plain"||n.endsWith(".txt"))return"text";
+  if(n.endsWith(".docx")||t.includes("wordprocessingml"))return"docx";
+  if(n.endsWith(".odt")||t.includes("opendocument.text"))return"odt";
+  return"other"};
+const libs={};
+const loadScript=url=>libs[url]||(libs[url]=new Promise((ok,ko)=>{const s=document.createElement("script");s.src=url;s.onload=ok;s.onerror=()=>ko(new Error("load"));document.head.append(s)}));
+
+/* ---------- lecteur de documents ---------- */
+async function renderDoc(doc,kind,box){
   box.textContent="";
-  items.forEach(item=>{
-    const article=document.createElement("article");article.className="news-card";
-    if(item.date){const time=document.createElement("time");time.dateTime=item.date;time.textContent=new Date(item.date+"T12:00:00").toLocaleDateString("fr-FR");article.append(time)}
-    const title=document.createElement("h2");title.textContent=item.titre||"Actualité";article.append(title);
-    if(item.resume){const resume=document.createElement("p");resume.className="resume";resume.textContent=item.resume;article.append(resume)}
-    if(item.texte){const body=document.createElement("p");body.textContent=item.texte;article.append(body)}
-    const photos=Array.isArray(item.photos)?item.photos:[];
-    if(photos.length){const gallery=document.createElement("div");gallery.className="news-photos";photos.forEach(photo=>{if(!photo||typeof photo.data!=="string"||!photo.data.startsWith("data:image/"))return;const img=document.createElement("img");img.src=photo.data;img.alt=photo.name||("Photo de "+(item.titre||"l'actualité"));gallery.append(img)});if(gallery.childElementCount)article.append(gallery)}
-    const documents=Array.isArray(item.documents)?item.documents:[];
-    if(documents.length){const list=document.createElement("div");list.className="news-documents";documents.forEach(doc=>{if(!doc||typeof doc.data!=="string"||!doc.data.startsWith("data:"))return;const link=document.createElement("a");link.href=doc.data;link.download=doc.name||"document";link.textContent="↓ Télécharger : "+(doc.name||"Document");list.append(link)});if(list.childElementCount)article.append(list)}
-    box.append(article);
-  });
+  try{
+    if(kind==="pdf"){
+      const url=URL.createObjectURL(dataToBlob(doc.data,"application/pdf"));urls.push(url);
+      const frame=document.createElement("iframe");frame.src=url;frame.title="Lecteur : "+(doc.name||"document");
+      const note=$("p","note");note.append("Si le lecteur ne s'affiche pas sur votre appareil, ");
+      const a=$("a","","ouvrez le PDF dans un nouvel onglet");a.href=url;a.target="_blank";a.rel="noopener";note.append(a,".");
+      box.append(frame,note);
+    }else if(kind==="image"){
+      const img=document.createElement("img");img.src=doc.data;img.alt=doc.name||"Image";box.append(img);
+    }else if(kind==="text"){
+      box.append($("pre","",await dataToBlob(doc.data,"text/plain").text()));
+    }else if(kind==="docx"){
+      await loadScript(MAMMOTH);
+      const res=await window.mammoth.convertToHtml({arrayBuffer:await dataToBlob(doc.data).arrayBuffer()});
+      const frame=document.createElement("iframe");frame.setAttribute("sandbox","");frame.title="Lecteur : "+(doc.name||"document");
+      frame.srcdoc='<!doctype html><meta charset="utf-8"><style>body{font:16px/1.6 system-ui,Arial,sans-serif;margin:24px;color:#161616;background:#fff}img{max-width:100%}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:4px 8px}</style>'+res.value;
+      box.append(frame);
+    }else if(kind==="odt"){
+      await loadScript(JSZIP);
+      const zip=await window.JSZip.loadAsync(await dataToBlob(doc.data).arrayBuffer());
+      const xml=new DOMParser().parseFromString(await zip.file("content.xml").async("string"),"application/xml");
+      const textOf=n=>{let s="";n.childNodes.forEach(c=>{if(c.nodeType===3)s+=c.data;else if(c.nodeType===1){const q=c.nodeName;if(q==="text:s")s+=" ".repeat(+c.getAttribute("text:c")||1);else if(q==="text:tab")s+="\t";else if(q==="text:line-break")s+="\n";else s+=textOf(c)}});return s};
+      const wrap=$("div","odt"),body=xml.getElementsByTagName("office:text")[0];
+      if(body)[...body.getElementsByTagName("*")].forEach(n=>{if(n.nodeName!=="text:p"&&n.nodeName!=="text:h")return;const t=textOf(n).trim();if(t)wrap.append($(n.nodeName==="text:h"?"h3":"p","",t))});
+      if(!wrap.childElementCount)throw new Error("empty");
+      box.append(wrap);
+    }
+  }catch(e){
+    box.textContent="";
+    box.append($("p","note","Impossible d'afficher ce document ici. Télécharge-le pour le consulter."));
+  }
+}
+function docRow(doc){
+  const kind=kindOf(doc),row=$("div","nm-doc"),head=$("div","nm-doc-head");
+  head.append($("span","nm-doc-name",doc.name||"Document"),$("span","nm-doc-size",fmtSize(doc.size)));
+  const view=$("div","nm-viewer");view.hidden=true;
+  if(kind!=="other"){
+    const b=$("button","nm-btn pri","Consulter");b.type="button";b.setAttribute("aria-expanded","false");
+    b.onclick=async()=>{
+      if(!view.hidden){view.hidden=true;b.textContent="Consulter";b.setAttribute("aria-expanded","false");return}
+      view.hidden=false;b.textContent="Masquer";b.setAttribute("aria-expanded","true");
+      if(!view.childElementCount){view.append($("p","note","Chargement du document…"));await renderDoc(doc,kind,view)}
+    };
+    head.append(b);
+  }
+  const dl=$("a","nm-btn","Télécharger");dl.href=doc.data;dl.download=doc.name||"document";head.append(dl);
+  row.append(head);
+  if(kind==="other")row.append($("p","note","Le lecteur intégré n'est pas disponible pour ce format : télécharge le fichier pour le consulter."));
+  else row.append(view);
+  return row;
+}
+
+/* ---------- agrandissement des photos ---------- */
+function showLb(){const p=lbList[lbIdx];lbImg.src=p.data;lbImg.alt=p.name||"Photo de l'actualité";lbCap.textContent=lbList.length>1?(lbIdx+1)+" / "+lbList.length:"";lb.classList.toggle("single",lbList.length<2)}
+function openLb(list,i){lbList=list;lbIdx=i;showLb();if(!lb.open)lb.showModal()}
+const stepLb=d=>{lbIdx=(lbIdx+d+lbList.length)%lbList.length;showLb()};
+lb.querySelector(".lb-prev").onclick=()=>stepLb(-1);
+lb.querySelector(".lb-next").onclick=()=>stepLb(1);
+lb.querySelector(".lb-close").onclick=()=>lb.close();
+lb.addEventListener("keydown",e=>{if(lbList.length<2)return;if(e.key==="ArrowLeft")stepLb(-1);if(e.key==="ArrowRight")stepLb(1)});
+lb.addEventListener("click",e=>{if(e.target===lb||e.target.classList.contains("lb-stage"))lb.close()});
+lb.addEventListener("close",()=>lbImg.removeAttribute("src"));
+
+/* ---------- fiche d'une actualité ---------- */
+function openActu(o){
+  const it=o.a,photos=(Array.isArray(it.photos)?it.photos:[]).filter(validPhoto),docs=(Array.isArray(it.documents)?it.documents:[]).filter(validDoc);
+  modal.textContent="";
+  const cw=$("div","nm-closewrap"),cb=$("button","nm-close");cb.type="button";cb.setAttribute("aria-label","Fermer");cb.innerHTML=XSVG;cb.onclick=()=>modal.close();cw.append(cb);
+  const hero=$("div","nm-hero"+(photos.length?"":" plain"));
+  if(photos.length){const hb=$("button");hb.type="button";hb.setAttribute("aria-label","Agrandir la photo");const img=document.createElement("img");img.src=photos[0].data;img.alt=photos[0].name||("Photo de "+(it.titre||"l'actualité"));hb.append(img);hb.onclick=()=>openLb(photos,0);hero.append(hb)}
+  const c=$("div","nm-content"),kick=$("p","nm-kicker");
+  kick.append($("span","",it.categorie||"Actualité"));
+  const title=$("h2","nm-title",it.titre||"Actualité");title.id="nm-title";
+  c.append(kick,title);
+  const d=fmtDate(it.date);if(d)c.append($("p","nm-date","Publié le "+d));
+  if(it.resume){const b=$("div","nm-block");b.append($("p","nm-label","Résumé"),$("div","nm-resume",tidy(it.resume)));c.append(b)}
+  if(it.texte){const b=$("div","nm-block");b.append($("p","nm-label","Article"),$("div","nm-article",tidy(it.texte)));c.append(b)}
+  if(photos.length>1){
+    const b=$("div","nm-block"),g=$("div","nm-gallery");b.append($("p","nm-label","Photos"),g);
+    photos.slice(1).forEach((p,k)=>{const pb=$("button","nm-photo");pb.type="button";pb.setAttribute("aria-label","Agrandir la photo "+(k+2));const img=document.createElement("img");img.src=p.data;img.alt=p.name||"Photo de l'actualité";img.loading="lazy";pb.append(img);pb.onclick=()=>openLb(photos,k+1);g.append(pb)});
+    c.append(b);
+  }
+  if(docs.length){const b=$("div","nm-block");b.append($("p","nm-label","Documents"));docs.forEach(doc=>b.append(docRow(doc)));c.append(b)}
+  modal.append(cw,hero,c);
+  modal.scrollTop=0;
+  document.body.classList.add("modal-open");
+  if(!modal.open)modal.showModal();
+  try{history.replaceState(null,"","#"+encodeURIComponent(o.num))}catch(e){}
+}
+modal.addEventListener("click",e=>{const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close()});
+modal.addEventListener("close",()=>{
+  urls.forEach(u=>URL.revokeObjectURL(u));urls=[];modal.textContent="";
+  document.body.classList.remove("modal-open");
+  if(location.hash){try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
 });
+
+/* ---------- liste ---------- */
+SITE.ready.then(data=>{
+  const box=document.getElementById("news-list"),raw=Array.isArray(data.actus)?data.actus:[];
+  if(!raw.length){box.innerHTML='<p class="empty">Aucune actualité pour le moment.</p>';return}
+  const items=raw.map((a,i)=>({a,i}));
+  /* identifiant du lien direct (#titre-date), unique */
+  const slug=t=>String(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,80);
+  const seen={};
+  items.forEach(o=>{let k=slug((o.a.titre||"actualite")+"-"+(o.a.date||""))||"actualite";if(seen[k]){seen[k]++;k+="-"+seen[k]}else seen[k]=1;o.num=k});
+  items.sort((x,y)=>(y.a.date||"").localeCompare(x.a.date||"")||(x.i-y.i));
+  box.textContent="";
+  items.forEach(o=>{
+    const it=o.a,photos=(Array.isArray(it.photos)?it.photos:[]).filter(validPhoto),docs=(Array.isArray(it.documents)?it.documents:[]).filter(validDoc);
+    const card=$("article","news-card");
+    if(photos.length){const img=$("img","news-cover");img.src=photos[0].data;img.alt="";img.loading="lazy";card.append(img)}
+    const body=$("div","news-body"),tag=$("p","news-tag",it.categorie||"Actualité");
+    const h=$("h2"),btn=$("button","news-open",it.titre||"Actualité");btn.type="button";btn.onclick=()=>openActu(o);h.append(btn);
+    body.append(tag,h);
+    const meta=[];const d=fmtDate(it.date);if(d)meta.push(d);if(docs.length)meta.push(docs.length+(docs.length>1?" documents":" document"));if(photos.length>1)meta.push(photos.length+" photos");
+    if(meta.length)body.append($("p","news-meta",meta.join(" · ")));
+    const sum=tidy(it.resume||it.texte);if(sum)body.append($("p","news-summary",sum));
+    body.append($("span","news-more","Lire l'actualité →"));
+    card.append(body);box.append(card);
+  });
+  const h=decodeURIComponent(location.hash.slice(1));
+  if(h){const o=items.find(o=>o.num===h);if(o)openActu(o)}
+});
+})();
 </script>
 <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
 <script src="/tracker.js" defer></script>
-<script src="assets/js/tilt.js" defer></script>
+</html>
 <script src="assets/js/reveal.js"></script>
 </body>
 </html>
