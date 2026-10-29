@@ -4,18 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/assets/img/favicon2.png">
-<title>Préfecture de 93rp — Suivre l'actu</title>
-<meta name="description" content="Suivez les informations et actualités concernant les services publics de la Préfecture de  93rp.">
+<title>Préfecture de lgp — Suivre l'actu</title>
+<meta name="description" content="Suivez les informations et actualités concernant les services publics de la Préfecture de  lgp.">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Préfecture de 93rp — Suivre l'actu">
+<meta property="og:title" content="Préfecture de lgp — Suivre l'actu">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:url" content="https://93rp-prefecture.vercel.app/actus.html">
-<meta property="og:image" content="https://93rp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:image:alt" content="Préfecture de 93rp">
+<meta property="og:url" content="https://lgp-prefecture.vercel.app/actus.html">
+<meta property="og:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:image:alt" content="Préfecture de lgp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://93rp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:description" content="Suivez les informations et actualités concernant les services publics de la Préfecture de  93rp.">
+<meta name="twitter:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:description" content="Suivez les informations et actualités concernant les services publics de la Préfecture de  lgp.">
 <style>
 :root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;--sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
 :root[data-theme=dark]{--bleu:#8b8bff;--bleu-f:#a5a5ff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a;--nav:#1b1b1f}
@@ -41,13 +41,15 @@ main section{padding:54px 0 86px}
 :root{--titre:#162447}
 :root[data-theme=dark]{--titre:#f0f0f0}
 body.modal-open{overflow:hidden}
-.news-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px}
-.news-card{position:relative;display:flex;flex-direction:column;border:1px solid var(--ligne);border-radius:5px;background:var(--carte);overflow:hidden;transition:box-shadow .15s,border-color .15s}
+.news-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,600px),1fr));gap:22px}
+.news-card{position:relative;display:grid;grid-template-columns:1fr;border:1px solid var(--ligne);border-radius:5px;background:var(--carte);overflow:hidden;transition:box-shadow .15s,border-color .15s}
+.news-card.has-cover{grid-template-columns:260px 1fr}
+.news-card:not(.has-cover){border-left:4px solid var(--bleu)}
 .news-card:hover,.news-card:focus-within{border-color:var(--bleu);box-shadow:0 6px 22px rgba(0,0,145,.14)}
-.news-cover{display:block;width:100%;height:190px;object-fit:cover;background:var(--lav)}
-.news-body{display:flex;flex-direction:column;gap:6px;flex:1;padding:18px 22px 20px}
+.news-cover{display:block;width:100%;height:100%;min-height:200px;object-fit:cover;background:var(--lav)}
+.news-body{display:flex;flex-direction:column;gap:6px;padding:22px 28px}
 .news-tag{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--bleu)}
-.news-card h2{font-size:1.15rem;line-height:1.35}
+.news-card h2{font-size:1.3rem;line-height:1.35}
 .news-open{background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
 .news-open::after{content:"";position:absolute;inset:0}
 .news-open:focus-visible{outline:none}
@@ -107,7 +109,7 @@ dialog.lb[open]{display:grid;grid-template-columns:64px 1fr 64px;align-items:cen
 .lb-close{position:absolute;top:14px;right:14px;width:42px;height:42px;border-radius:3px}
 .lb-nav:hover,.lb-close:hover{background:rgba(255,255,255,.28)}
 dialog.lb.single .lb-nav{visibility:hidden}
-@media(max-width:700px){.nm-content{padding:22px 20px 34px}.nm-hero{height:210px}.nm-viewer iframe{height:60vh}dialog.lb[open]{grid-template-columns:44px 1fr 44px}.lb-nav{width:38px;height:38px}}
+@media(max-width:700px){.news-card.has-cover{grid-template-columns:1fr}.news-cover{height:180px;min-height:0}.news-body{padding:18px 20px}.nm-content{padding:22px 20px 34px}.nm-hero{height:210px}.nm-viewer iframe{height:60vh}dialog.lb[open]{grid-template-columns:44px 1fr 44px}.lb-nav{width:38px;height:38px}}
 footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding:54px 0 42px}
 .cols h4{color:#fff;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}.cols li{list-style:none;margin-bottom:9px}.cols ul{padding:0}.cols a:hover{text-decoration:underline}
@@ -130,7 +132,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 <body>
 <header>
   <div class="w">
-    <a class="logo" href="index.html" aria-label="Préfecture de  93rp — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de 93rp"></a>
+    <a class="logo" href="index.html" aria-label="Préfecture de  lgp — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de lgp"></a>
     <nav aria-label="Navigation principale">
       <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html" aria-current="page">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
     </nav>
@@ -149,7 +151,7 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 <footer>
   <div class="w">
     <div class="cols">
-      <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de 93rp" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
+      <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de lgp" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
       <div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
       <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
       <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
@@ -309,7 +311,7 @@ SITE.ready.then(data=>{
   box.textContent="";
   items.forEach(o=>{
     const it=o.a,photos=(Array.isArray(it.photos)?it.photos:[]).filter(validPhoto),docs=(Array.isArray(it.documents)?it.documents:[]).filter(validDoc);
-    const card=$("article","news-card");
+    const card=$("article","news-card"+(photos.length?" has-cover":""));
     if(photos.length){const img=$("img","news-cover");img.src=photos[0].data;img.alt="";img.loading="lazy";card.append(img)}
     const body=$("div","news-body"),tag=$("p","news-tag",it.categorie||"Actualité");
     const h=$("h2"),btn=$("button","news-open",it.titre||"Actualité");btn.type="button";btn.onclick=()=>openActu(o);h.append(btn);
