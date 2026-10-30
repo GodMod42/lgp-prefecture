@@ -149,3 +149,31 @@ const syncThemeIcon=()=>{
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',syncThemeIcon):syncThemeIcon();
 new MutationObserver(syncThemeIcon).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 })();
+
+/* Menu « Plus » dans la barre de navigation : Vigipirate et Statut des services (ajouté sur toutes les pages qui chargent site.js) */
+(function(){
+const ITEMS=[{href:'vigipirate.html',label:'Vigipirate'},{href:'status.html',label:'Statut des services'}];
+const setup=()=>{
+ const nav=document.querySelector('header nav[aria-label="Navigation principale"]');
+ if(!nav||nav.querySelector('.nav-more'))return;
+ const here=location.pathname.split('/').pop()||'index.html';
+ const wrap=document.createElement('div');wrap.className='nav-more';
+ const btn=document.createElement('button');btn.type='button';btn.className='nav-more-btn';
+ btn.setAttribute('aria-haspopup','true');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-controls','nav-more-menu');
+ btn.innerHTML='Plus <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+ const menu=document.createElement('div');menu.className='nav-more-menu';menu.id='nav-more-menu';
+ let active=false;
+ ITEMS.forEach(it=>{const a=document.createElement('a');a.href=it.href;a.textContent=it.label;if(here===it.href){a.setAttribute('aria-current','page');active=true}menu.append(a)});
+ if(active)btn.classList.add('on');
+ wrap.append(btn,menu);nav.append(wrap);
+ const hover=()=>matchMedia('(hover:hover)').matches;
+ const toggle=open=>{wrap.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open))};
+ btn.addEventListener('click',e=>{e.stopPropagation();toggle(hover()?true:!wrap.classList.contains('open'))});
+ wrap.addEventListener('mouseenter',()=>{if(hover())toggle(true)});
+ wrap.addEventListener('mouseleave',()=>{if(hover())toggle(false)});
+ wrap.addEventListener('focusout',e=>{if(!wrap.contains(e.relatedTarget))toggle(false)});
+ document.addEventListener('click',e=>{if(!wrap.contains(e.target))toggle(false)});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&wrap.classList.contains('open')){toggle(false);btn.focus()}});
+};
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',setup):setup();
+})();
