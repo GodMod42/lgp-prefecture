@@ -112,6 +112,23 @@ img.av{object-fit:cover;background:var(--fond)}.me-chip{display:flex;align-items
 .ticket-category{border:1px solid var(--ligne);border-radius:9px;margin:12px 0;padding:0 12px 8px}.ticket-category>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 4px;font-weight:700;color:var(--bleu);cursor:pointer;list-style:none}.ticket-category[open]>summary{border-bottom:1px solid var(--ligne)}
 .finance-company{margin:12px 0}.finance-company>summary{display:flex;align-items:center;justify-content:space-between;gap:12px}.finance-head-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}.finance-meta{padding:0 18px 14px;color:var(--gris);font-size:.78rem}.finance-save{font-size:.8rem;color:var(--gris)}
 .nv .badge{margin-left:auto;min-width:22px;text-align:center;background:#e1000f;color:#fff;border-radius:999px;padding:1px 8px;font-size:.72rem;font-weight:800;line-height:1.5}
+/* plan Vigipirate */
+.vg-now{--c:var(--bleu);display:flex;gap:22px;align-items:center;flex-wrap:wrap;border:1px solid var(--ligne);border-left:8px solid var(--c);border-radius:14px;padding:18px 22px;margin-bottom:22px}
+.vg-now img{width:110px;height:110px;object-fit:contain;background:#fff;border-radius:10px;padding:6px}
+.vg-now h3{font-size:1.3rem;line-height:1.25;margin:2px 0 4px}.vg-now .x{flex:1;min-width:220px}
+.vg-tag{font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;font-weight:800;color:var(--c)}
+.vg-sub{color:var(--gris);font-size:.86rem}
+.vg-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:12px 0 16px;border:0;padding:0}
+.vg-opt{--c:var(--bleu);position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;border:2px solid var(--ligne);border-radius:14px;padding:16px 12px;cursor:pointer;background:var(--carte)}
+.vg-opt input{position:absolute;opacity:0;pointer-events:none}
+.vg-opt img{width:92px;height:92px;object-fit:contain;background:#fff;border-radius:10px;padding:6px}
+.vg-opt:has(input:checked){border-color:var(--c);background:color-mix(in srgb,var(--c) 9%,var(--carte))}
+.vg-opt:has(input:focus-visible){outline:3px solid #0a76f6;outline-offset:2px}
+.vg-opt:has(input:disabled){opacity:.55;cursor:not-allowed}
+.vg-opt b{font-size:.95rem}.vg-opt .cur{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
+.vg-form label.l{display:block;font-weight:700;font-size:.88rem;margin:4px 0 6px}
+.vg-hrow{--c:var(--bleu);display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;border:1px solid var(--ligne);border-left:5px solid var(--c);border-radius:10px;padding:10px 14px;margin-bottom:8px}
+.vg-hrow time{color:var(--gris);font-size:.82rem;min-width:150px}.vg-hrow .x{flex:1;min-width:200px}.vg-hrow span{display:block;color:var(--gris);font-size:.88rem;white-space:pre-wrap}
 </style>
 <script>window.LGP_ADMIN=true</script>
 <script src="assets/js/site.js"></script>
@@ -135,6 +152,7 @@ img.av{object-fit:cover;background:var(--fond)}.me-chip{display:flex;align-items
 </div>
 
 <script src="assets/js/auth.js"></script>
+<script src="assets/js/vigipirate.js"></script>
 <script>
 /* ===== À CONFIGURER ===== */
 const PAGE_CONNEXION = "connexion.html";
@@ -156,10 +174,11 @@ const MODS={
  contact:{i:"discussion",n:"Demandes de contact",d:"Demandes générales reçues via le formulaire « Nous contacter »."},
  procedures:{i:"dossier",n:"Démarches en ligne",d:"Déclarations et formulaires de démarches, regroupés par type."},
  finances:{i:"document",n:"Finances publiques",d:"Direction Générale des Finances Publiques : fiches fiscales des entreprises."},
+ vigipirate:{i:"urgent",n:"Plan Vigipirate",d:"Consultez et modifiez le niveau du plan Vigipirate. Chaque changement publie automatiquement une actualité sur le site."},
  svcadmin:{i:"service",n:"Gestion des services",d:"Classement, statistiques et gestion des prises de service.",admin:true}
 };
 const RELAY={annonce:"annonces",reunion:"réunions",rdv:"rendez-vous",absence:"absences"};   /* modules relayés sur Discord (webhook) */
-const GROUPS=[["Service",["service"]],["Communication",["annonce","reunion","discussion"]],["Agenda et dossiers",["rdv","dossier","document","notes"]],["Personnel",["tenues","absence","annuaire"]],["Administration",["contact","procedures","finances","svcadmin"]]];
+const GROUPS=[["Service",["service"]],["Sécurité publique",["vigipirate"]],["Communication",["annonce","reunion","discussion"]],["Agenda et dossiers",["rdv","dossier","document","notes"]],["Personnel",["tenues","absence","annuaire"]],["Administration",["contact","procedures","finances","svcadmin"]]];
 
 try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
 const $=s=>document.querySelector(s);
@@ -376,6 +395,62 @@ const drawServiceAdmin=async p=>{
   await load();
 };
 
+/* ===== Plan Vigipirate : niveau en vigueur + changement (publie une actualité automatiquement) ===== */
+const drawVigipirate=async p=>{
+  const V=window.VIGIPIRATE;
+  if(!V){p.append(E("p","vide","Le fichier assets/js/vigipirate.js est introuvable sur le site."));return}
+  const wrap=E("div"),now=E("div"),form=E("form","vg-form"),hist=E("div"),status=E("p","vg-sub");
+  const call=async(method,body)=>{
+    const r=await fetch("/api/vigipirate",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok){const e=new Error(d.error||String(r.status));e.status=r.status;throw e}
+    return d};
+  const fail=e=>e.status===403||e.status===401?"Ton compte n'a pas le rôle Préfectoral.":e.status===404?"L'API /api/vigipirate n'existe pas encore sur le site.":e.status===409?"Ce niveau est déjà en vigueur.":"Erreur : "+e.message;
+  const when=d=>new Date(d).toLocaleString("fr-FR",{dateStyle:"long",timeStyle:"short"});
+  const img=l=>{const i=E("img");i.src=V.LEVELS[l].img;i.alt="";return i};
+  let st=null,picked=0;
+  wrap.append(now,form,E("h3","","Historique"),hist,status);p.append(wrap);
+
+  const drawForm=()=>{
+    form.textContent="";
+    const fs=E("fieldset","vg-opts");const lg=E("legend","vg-tag","Choisir le nouveau niveau");lg.style.cssText="padding:0;margin-bottom:6px";
+    [1,2,3].forEach(n=>{
+      const L=V.LEVELS[n],lab=E("label","vg-opt"),r=E("input");r.type="radio";r.name="vgl";r.value=String(n);r.disabled=!!st&&st.level===n;r.checked=picked===n;
+      r.onchange=()=>{picked=n;btn.disabled=false;btn.textContent="Passer au niveau "+n+" et publier l'actualité"};
+      lab.style.setProperty("--c",L.color);lab.append(r,img(n),E("b","","Niveau "+n),E("span","",L.n));
+      if(st&&st.level===n)lab.append(E("span","cur","Niveau actuel"));
+      fs.append(lab)});
+    const ml=E("label","l","Précisions publiées dans l'actualité (facultatif)");ml.htmlFor="vg-msg";
+    const ta=E("textarea");ta.id="vg-msg";ta.maxLength=500;ta.placeholder="Ex. : en raison de …, les contrôles sont renforcés jusqu'à nouvel ordre.";
+    const btn=E("button","b p","Choisis un niveau");btn.type="submit";btn.disabled=true;
+    const note=E("p","vg-sub","Dès la validation, une actualité est publiée sur la page Actualités et sur l'accueil du site, et la page Vigipirate est mise à jour.");note.style.margin="8px 0 12px";
+    form.append(fs,ml,ta,note,btn);
+    form.onsubmit=async e=>{e.preventDefault();if(!picked)return;
+      if(!confirm("Passer le plan Vigipirate au niveau "+picked+" — "+V.LEVELS[picked].n+" ?\n\nUne actualité sera publiée immédiatement sur le site."))return;
+      btn.disabled=true;
+      try{st=await call("POST",{level:picked,message:ta.value.trim()});picked=0;render();toast("Niveau mis à jour. L'actualité a été publiée.")}
+      catch(err){alert("Impossible de modifier le niveau. "+fail(err));btn.disabled=false}}};
+
+  const render=()=>{
+    now.textContent="";now.className="vg-now";hist.textContent="";
+    if(st){const L=V.LEVELS[st.level];now.style.setProperty("--c",L.color);
+      const t=E("div","x");t.append(E("span","vg-tag","Niveau en vigueur · "+st.level+" sur 3"),E("h3","",L.n));
+      if(st.updated_at)t.append(E("div","vg-sub","Modifié le "+when(st.updated_at)+(st.updated_by?" par "+st.updated_by:"")));
+      if(st.message){const m=E("div","vg-sub",st.message);m.style.cssText="margin-top:6px;white-space:pre-wrap";t.append(m)}
+      now.append(img(st.level),t)}
+    else now.append(E("p","vg-sub","Niveau en vigueur inconnu."));
+    drawForm();
+    const rows=st&&Array.isArray(st.history)?st.history.filter(h=>V.lvl(h.level)&&h.at).slice(0,15):[];
+    if(!rows.length)hist.append(E("p","vg-sub","Aucun changement enregistré pour le moment."));
+    rows.forEach(h=>{const l=V.lvl(h.level),pv=V.lvl(h.previous),r=E("article","vg-hrow"),b=E("div","x");r.style.setProperty("--c",V.LEVELS[l].color);
+      b.append(E("strong","",(pv&&pv!==l?"Niveau "+pv+" → niveau "+l:"Niveau "+l)+" — "+V.LEVELS[l].n));
+      if(h.message)b.append(E("span","",h.message));
+      if(h.by)b.append(E("span","","Par "+h.by));
+      r.append(E("time","",when(h.at)),b);hist.append(r)})};
+
+  try{st=await call("GET")}catch(e){status.textContent="Impossible de charger le niveau en vigueur. "+fail(e)}
+  render()};
+
 function start(){
   $("#app").hidden=false;
   if(isSiteAdmin(u))$("#lk-admin").hidden=false;
@@ -536,6 +611,7 @@ function start(){
     if(mod==="contact"||mod==="procedures"){markSeen(mod);nav();cnt.hidden=true;return drawTickets(p,mod==="procedures"?"procedure":"contact")}
     if(mod==="finances"){cnt.hidden=true;return drawFinances(p)}
     if(mod==="svcadmin"){cnt.hidden=true;return drawServiceAdmin(p)}
+    if(mod==="vigipirate"){cnt.hidden=true;return drawVigipirate(p)}
     if(mod==="discussion"){cnt.hidden=true;return drawChat(p)}
     if(mod==="service"){cnt.hidden=true;return drawService(p)}
     const add=E("details","finance-company"),form=E("form","finance-form"),inputs={};

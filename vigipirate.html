@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/assets/img/favicon2.png">
+<title>Préfecture de LGP — Plan Vigipirate</title>
+<meta name="description" content="Consultez le niveau du plan Vigipirate en vigueur et l'historique des changements décidés par la Préfecture.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Préfecture de LGP — Plan Vigipirate">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://lgp-prefecture.vercel.app/vigipirate.html">
+<meta property="og:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:image:alt" content="Préfecture de LGP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:description" content="Consultez le niveau du plan Vigipirate en vigueur et l'historique des changements décidés par la Préfecture.">
+<style>
+:root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;--sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+:root[data-theme=dark]{--bleu:#8b8bff;--bleu-f:#a5a5ff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a;--nav:#1b1b1f}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--texte);background:var(--carte);line-height:1.6;padding-bottom:34px}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid #0a76f6;outline-offset:2px}
+.w{max-width:1360px;margin:0 auto;padding:0 24px}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bleu)}
+.eyebrow::before{content:"";width:22px;height:3px;background:var(--rouge)}
+header{background:var(--nav);border-top:5px solid;border-image:linear-gradient(90deg,var(--bleu) 33.3%,#999 33.3% 66.6%,var(--rouge) 66.6%) 1;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--ligne)}
+header .w{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px;max-width:none}
+.logo{display:flex;align-items:center;gap:16px}.logo img{height:68px;width:auto;display:block}
+nav{display:flex;gap:6px;flex-wrap:wrap}nav a{padding:8px 16px;font-size:.95rem;font-weight:500}nav a:hover,nav a[aria-current]{color:var(--bleu);box-shadow:inset 0 -2px var(--bleu)}
+.actions{display:flex;align-items:center;gap:16px}#theme{width:38px;height:38px;border-radius:50%;border:1px solid var(--ligne);background:var(--carte);color:var(--texte);cursor:pointer;display:grid;place-items:center}
+.btn-co{background:var(--bleu);color:#fff;font-weight:700;padding:12px 24px;border-radius:999px}:root[data-theme=dark] .btn-co{color:#000}
+.band{height:46px;background:var(--bleu)}
+main{min-height:58vh}
+main section{padding:54px 0 86px}
+.section-head{margin-bottom:32px}.section-head h1{font-size:clamp(1.55rem,3vw,2rem);line-height:1.2;margin-top:10px}
+.lead{color:var(--gris);max-width:46em;margin-top:8px}
+.vg-h2{font-size:1.3rem;line-height:1.3;margin:48px 0 18px}
+.vg-now{--c:var(--bleu);display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center;border:1px solid var(--ligne);border-left:8px solid var(--c);border-radius:6px;padding:28px 32px;background:var(--carte)}
+.vg-now img{display:block;width:150px;height:150px;object-fit:contain;background:#fff;border-radius:8px;padding:8px}
+.vg-badge{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--c)}
+.vg-now h2{font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.2;margin:6px 0 10px}
+.vg-now p.desc{color:var(--gris);max-width:46em}
+.vg-meta{color:var(--gris);font-size:.88rem;margin-top:10px}
+.vg-msg{border-left:3px solid var(--c);padding:2px 0 2px 16px;margin-top:14px;white-space:pre-line;overflow-wrap:anywhere}
+.vg-levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.vg-lv{--c:var(--bleu);position:relative;display:flex;flex-direction:column;gap:8px;border:1px solid var(--ligne);border-top:5px solid var(--c);border-radius:5px;padding:22px;background:var(--carte)}
+.vg-lv.cur{box-shadow:0 0 0 3px var(--c)}
+.vg-lv img{display:block;width:84px;height:84px;object-fit:contain;background:#fff;border-radius:6px;padding:5px}
+.vg-lv .vg-badge{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.vg-lv .on{background:var(--c);color:#fff;border-radius:99px;padding:2px 10px;font-size:.68rem;letter-spacing:.06em}
+.vg-lv h3{font-size:1.1rem;line-height:1.3}
+.vg-lv p{color:var(--gris);font-size:.93rem}
+.vg-lv ul{margin:4px 0 0;padding-left:18px;color:var(--gris);font-size:.9rem}
+.vg-lv li{margin-bottom:4px}
+.vg-hist{display:flex;flex-direction:column;gap:10px}
+.vg-hrow{--c:var(--bleu);display:grid;grid-template-columns:200px 1fr;gap:6px 22px;border:1px solid var(--ligne);border-left:5px solid var(--c);border-radius:4px;padding:14px 18px;background:var(--carte)}
+.vg-hrow time{color:var(--gris);font-size:.86rem}
+.vg-hrow strong{display:block}
+.vg-hrow span{display:block;color:var(--gris);font-size:.9rem;white-space:pre-line;overflow-wrap:anywhere}
+.empty{min-height:95px;display:grid;place-items:center;color:var(--gris);font-size:.95rem}
+.vg-err{border:1px solid var(--ligne);border-left:8px solid var(--gris);border-radius:6px;padding:22px 26px;background:var(--carte);color:var(--gris)}
+@media(max-width:700px){.vg-now{grid-template-columns:1fr;padding:22px}.vg-now img{width:110px;height:110px}.vg-hrow{grid-template-columns:1fr}}
+</style>
+<script src="assets/js/site.js"></script>
+  <link rel="stylesheet" href="assets/css/site-refresh.css">
+<script>
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+<body>
+<header>
+  <div class="w">
+    <a class="logo" href="index.html" aria-label="Préfecture de LGP — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP"></a>
+    <nav aria-label="Navigation principale">
+      <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
+    </nav>
+    <div class="actions"><button id="theme" type="button" aria-label="Changer de thème"><svg class="i" style="width:18px;height:18px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></svg></button><a class="btn-co" href="connexion.html">Se connecter</a></div>
+  </div>
+</header>
+<main>
+  <div class="band" aria-hidden="true"></div>
+  <section aria-labelledby="vg-title">
+    <div class="w">
+      <div class="section-head"><p class="eyebrow">Sécurité publique</p><h1 id="vg-title">Plan Vigipirate</h1><p class="lead">Niveau d'alerte en vigueur, mis à jour par les services de la Préfecture. Chaque changement est publié automatiquement dans les actualités.</p></div>
+      <div id="vg-now" aria-live="polite"><p class="empty">Chargement du niveau en vigueur…</p></div>
+      <h2 class="vg-h2">Les trois niveaux du plan</h2>
+      <div id="vg-levels" class="vg-levels"></div>
+      <h2 class="vg-h2">Historique des changements</h2>
+      <div id="vg-hist" class="vg-hist"><p class="empty">Chargement de l'historique…</p></div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="w">
+    <div class="cols">
+      <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
+      <div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
+      <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
+      <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
+      <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
+    </div>
+    <div class="bas"><span>© 2026 Préfecture de Grand Paname — Portail de services communautaires.</span><nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav></div>
+  </div>
+</footer>
+<button class="aide" type="button">Besoin d'aide ?</button>
+
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/vigipirate.js"></script>
+<script>
+try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+document.getElementById("theme").onclick=()=>{const d=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}};
+(function(){
+const V=window.VIGIPIRATE,$=id=>document.getElementById(id);
+const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const when=iso=>{const d=new Date(iso);return isNaN(d)?"":d.toLocaleString("fr-FR",{dateStyle:"long",timeStyle:"short"})};
+let current=0;
+
+/* les trois niveaux */
+function drawLevels(){
+  const box=$("vg-levels");box.textContent="";
+  [1,2,3].forEach(n=>{
+    const L=V.LEVELS[n],c=E("article","vg-lv"+(n===current?" cur":""));c.style.setProperty("--c",L.color);
+    const img=E("img");img.src=L.img;img.alt="";img.loading="lazy";
+    const badge=E("p","vg-badge");badge.append(E("span","","Niveau "+n));if(n===current)badge.append(E("span","on","En vigueur"));
+    const ul=E("ul");L.mesures.forEach(m=>ul.append(E("li","",m)));
+    c.append(img,badge,E("h3","",L.n),E("p","",L.desc),ul);box.append(c);
+  });
+}
+
+/* niveau en vigueur */
+function drawNow(st){
+  const box=$("vg-now");box.textContent="";
+  if(!st){const e=E("div","vg-err");e.append(E("strong","","Information momentanément indisponible."),E("p","","Le niveau du plan Vigipirate n'a pas pu être chargé. Réessayez dans quelques instants."));box.append(e);return}
+  const L=V.LEVELS[st.level],c=E("div","vg-now");c.style.setProperty("--c",L.color);
+  const img=E("img");img.src=L.img;img.alt="Logo Vigipirate — "+L.n;
+  const t=E("div");t.append(E("p","vg-badge","Niveau en vigueur · "+st.level+" sur 3"),E("h2","",L.n),E("p","desc",L.desc));
+  const d=when(st.updated_at);if(d)t.append(E("p","vg-meta","Dernière mise à jour : "+d));
+  if(st.message)t.append(E("p","vg-msg",st.message));
+  c.append(img,t);box.append(c);
+}
+
+/* historique */
+function drawHist(st){
+  const box=$("vg-hist");box.textContent="";
+  const rows=st?st.history.filter(h=>V.lvl(h.level)&&h.at).slice(0,20):[];
+  if(!rows.length){box.append(E("p","empty",st?"Aucun changement enregistré pour le moment.":"Historique indisponible."));return}
+  rows.forEach(h=>{
+    const l=V.lvl(h.level),p=V.lvl(h.previous),r=E("article","vg-hrow");r.style.setProperty("--c",V.LEVELS[l].color);
+    const t=E("time","",when(h.at));t.dateTime=h.at;
+    const b=E("div");b.append(E("strong","",(p&&p!==l?"Niveau "+p+" → niveau "+l:"Niveau "+l)+" — "+V.LEVELS[l].n));
+    if(h.message)b.append(E("span","",h.message));
+    r.append(t,b);box.append(r);
+  });
+}
+
+async function load(){
+  let st=null;
+  try{st=await V.getState()}catch(e){}
+  if(st||!current){current=st?st.level:0}
+  drawNow(st);drawLevels();drawHist(st);
+}
+drawLevels();load();
+setInterval(()=>{if(!document.hidden)load()},60000);
+})();
+</script>
+<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
+<script src="/tracker.js" defer></script>
+</html>
+<script src="assets/js/reveal.js"></script>
+</body>
+</html>
