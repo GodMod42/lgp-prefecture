@@ -203,11 +203,11 @@ const checks={
       return{state:"down",detail:txt||"Incident majeur",ms}}
     catch(e){return{state:"unknown",detail:"Vérification impossible depuis ce navigateur"}}},
   contact:api("/api/contact"),
-  prefecture:api("/api/prefecture?module=ping"),
+  prefecture:api("/api/prefecture?module=annonce"),
   tickets:api("/api/admin/tickets"),
   finances:api("/api/admin/finances"),
   vigipirate:async()=>{
-    try{const{r,ms}=await timed("/api/vigipirate");
+    try{const{r,ms}=await timed("/api/prefecture?module=vigipirate");
       if(r.status>=500)return{state:"down",detail:"Erreur "+r.status,ms,db:{state:"down",detail:"Base de données injoignable",ms}};
       if(r.status===404)return{state:"down",detail:"Service introuvable (404)",ms,db:{state:"unknown",detail:"Non vérifiable"}};
       const d=await r.json().catch(()=>null);
@@ -270,7 +270,7 @@ async function run(){
   btn.disabled=false;btn.textContent="Actualiser";running=false;
 }
 
-/* ---------- historique : disponibilité sur 90 jours, temps de réponse, incidents (API /api/status) ---------- */
+/* ---------- historique : disponibilité sur 90 jours, temps de réponse, incidents (module « status » de api/prefecture.js) ---------- */
 let H=null,range="day";
 const tip=E("div","st-tip");tip.hidden=true;document.body.append(tip);
 const fr={
@@ -370,13 +370,13 @@ function drawIncidents(){
 function drawHistory(){Object.keys(cells).forEach(drawBars);drawMetrics();drawIncidents()}
 function historyError(status){
   if(H)return;
-  const msg=status===404?"L'historique n'est pas encore disponible : l'API /api/status n'est pas installée sur le site.":"L'historique est momentanément indisponible.";
+  const msg=status&&status<500?"L'historique n'est pas encore disponible : le module « status » n'est pas installé dans api/prefecture.js.":"L'historique est momentanément indisponible.";
   $("st-metrics").textContent="";$("st-metrics").append(E("p","empty",msg));
   $("st-incidents").textContent="";$("st-incidents").append(E("p","empty",msg));
 }
 async function loadHistory(trigger){
   try{
-    const r=await fetch("/api/status"+(trigger?"?run=1":""),{cache:"no-store"});
+    const r=await fetch("/api/prefecture?module=status"+(trigger?"&run=1":""),{cache:"no-store"});
     if(!r.ok){const e=new Error("http");e.status=r.status;throw e}
     H=await r.json();drawHistory();
   }catch(e){historyError(e.status)}

@@ -19,7 +19,7 @@ const stamp=iso=>{const d=new Date(iso);return isNaN(d)?"":d.getFullYear()+"-"+p
 
 /* État courant : { level, updated_at, updated_by, message, history:[{level,previous,at,by,message}] } */
 async function getState(){
- const r=await fetch("/api/vigipirate",{cache:"no-store"});
+ const r=await fetch("/api/prefecture?module=vigipirate",{cache:"no-store"});
  if(!r.ok)throw new Error(String(r.status));
  const d=await r.json();
  if(!lvl(d&&d.level))throw new Error("invalid");

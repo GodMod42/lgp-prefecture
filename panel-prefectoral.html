@@ -401,11 +401,11 @@ const drawVigipirate=async p=>{
   if(!V){p.append(E("p","vide","Le fichier assets/js/vigipirate.js est introuvable sur le site."));return}
   const wrap=E("div"),now=E("div"),form=E("form","vg-form"),hist=E("div"),status=E("p","vg-sub");
   const call=async(method,body)=>{
-    const r=await fetch("/api/vigipirate",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+    const r=await fetch("/api/prefecture?module=vigipirate",{method,headers:{Authorization:"Bearer "+u.token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
     const d=await r.json().catch(()=>({}));
     if(!r.ok){const e=new Error(d.error||String(r.status));e.status=r.status;throw e}
     return d};
-  const fail=e=>e.status===403||e.status===401?"Ton compte n'a pas le rôle Préfectoral.":e.status===404?"L'API /api/vigipirate n'existe pas encore sur le site.":e.status===409?"Ce niveau est déjà en vigueur.":"Erreur : "+e.message;
+  const fail=e=>e.status===403||e.status===401?"Ton compte n'a pas le rôle Préfectoral.":e.status===404||e.message==="unknown_module"?"Le module Vigipirate n'est pas encore installé dans api/prefecture.js.":e.status===409?"Ce niveau est déjà en vigueur.":"Erreur : "+e.message;
   const when=d=>new Date(d).toLocaleString("fr-FR",{dateStyle:"long",timeStyle:"short"});
   const img=l=>{const i=E("img");i.src=V.LEVELS[l].img;i.alt="";return i};
   let st=null,picked=0;

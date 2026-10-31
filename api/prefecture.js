@@ -9,6 +9,8 @@
      DISCORD_WEBHOOK_PREF_ANNONCE · DISCORD_WEBHOOK_PREF_REUNION
      DISCORD_WEBHOOK_PREF_RDV     · DISCORD_WEBHOOK_PREF_ABSENCE */
 import { db, discordUser, sendJson, ADMIN_ROLE_ID, GUILD_ID } from "../lib/contact-data.js";
+import vigipirateHandler from "../lib/vigipirate-handler.js";
+import statusHandler from "../lib/status-handler.js";
 
 const PREFECTURE_ROLE_ID = process.env.PREFECTURE_ROLE_ID || "";
 
@@ -240,6 +242,9 @@ async function handleServiceAdmin(req, res, sql, body) {
 
 export default async function handler(req, res) {
   const mod = String(req.query?.module || "");
+  /* modules publics (lecture sans connexion) gérés dans lib/ : aucune fonction Vercel supplémentaire */
+  if (mod === "vigipirate") return vigipirateHandler(req, res);
+  if (mod === "status") return statusHandler(req, res);
   if (mod !== "service" && mod !== "service_admin" && !Object.hasOwn(FIELDS, mod)) return sendJson(res, 400, { error: "unknown_module" });
 
   const identity = await discordUser(req).catch(() => ({ error: "discord_auth_unavailable", status: 502 }));
