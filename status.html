@@ -61,6 +61,38 @@ main section{padding:54px 0 86px}
 .st-pill[data-s=ok]{--c:var(--ok)}.st-pill[data-s=slow]{--c:var(--warn)}.st-pill[data-s=down]{--c:var(--bad)}.st-pill[data-s=checking]{--c:var(--unk)}
 .st-pill i{font-style:normal;font-weight:800}
 .st-note{color:var(--gris);font-size:.86rem;margin-top:26px;max-width:52em}
+.empty{min-height:95px;display:grid;place-items:center;color:var(--gris);font-size:.95rem;text-align:center}
+.st-hist{grid-column:1/-1;margin-top:8px}.st-hist:empty{display:none}
+.st-days{display:flex;gap:2px;height:34px}
+.st-day{flex:1;min-width:0;border-radius:2px;background:var(--ligne);cursor:pointer}
+.st-day[data-s=ok]{background:var(--ok)}.st-day[data-s=slow]{background:var(--warn)}.st-day[data-s=down]{background:var(--bad)}
+.st-day:hover{opacity:.7}
+.st-foot{display:flex;align-items:center;gap:10px;margin-top:8px;color:var(--gris);font-size:.8rem}
+.st-line{flex:1;height:1px;background:var(--ligne)}
+.st-tip{position:fixed;z-index:2000;pointer-events:none;min-width:220px;max-width:min(320px,92vw);background:var(--carte);color:var(--texte);border:1px solid var(--ligne);border-radius:6px;box-shadow:0 8px 28px rgba(0,0,0,.28);padding:12px 14px;font-size:.88rem}
+.st-tip-date{margin-bottom:8px;text-transform:capitalize}
+.st-tip-row{--c:var(--unk);display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:4px;background:color-mix(in srgb,var(--c) 12%,transparent)}
+.st-tip-row[data-s=ok]{--c:var(--ok)}.st-tip-row[data-s=slow]{--c:var(--warn)}.st-tip-row[data-s=down]{--c:var(--bad)}
+.st-tip-row i{font-style:normal;font-weight:800;color:var(--c)}.st-tip-row em{margin-left:auto;font-style:normal;color:var(--gris)}
+.st-tip-sub{color:var(--gris);font-size:.82rem;margin-top:6px}
+.st-tip-rel{margin-top:10px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.st-mtools{display:flex;justify-content:flex-end;gap:4px;margin-bottom:10px}
+.st-mtools button{border:0;background:transparent;color:var(--gris);font:600 .9rem var(--sans);padding:7px 16px;border-radius:99px;cursor:pointer}
+.st-mtools button.on{background:var(--bleu);color:#fff}
+:root[data-theme=dark] .st-mtools button.on{color:#000}
+.st-mcard{border:1px solid var(--ligne);border-radius:5px;background:var(--carte);padding:20px 24px}
+.st-mhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.st-mhead h3{font-size:1.15rem;font-weight:500}.st-mval{color:var(--gris);font-size:1.15rem}
+.st-chart{display:block;width:100%;height:auto;touch-action:pan-y}
+.st-chart .g{stroke:var(--ligne);stroke-width:1}.st-chart .a{fill:var(--gris);font-size:11px}
+.st-chart .l{fill:none;stroke:var(--bleu);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.st-chart .cur{stroke:var(--gris);stroke-width:1}.st-chart .dot{fill:var(--bleu);stroke:var(--carte);stroke-width:2}
+.st-inc-day{margin-bottom:26px}
+.st-inc-day h3{font-size:1.25rem;font-weight:500;padding-bottom:6px;border-bottom:1px solid var(--ligne);margin-bottom:12px}
+.st-none{color:var(--gris)}
+.st-inc{--c:var(--warn);margin-bottom:18px}.st-inc[data-s=down]{--c:var(--bad)}
+.st-inc h4{font-size:1.15rem;font-weight:500;color:var(--c);margin-bottom:8px}
+.st-upd{margin:0 0 10px}.st-upd time{display:block;color:var(--gris);font-size:.82rem;margin-top:2px}
 @media(max-width:700px){.st-row{grid-template-columns:1fr auto}.st-ms{display:none}.st-pill{min-width:0}.st-global{padding:18px}}
 
 footer{background:var(--pied);color:#ddd;font-size:.92rem}
@@ -100,7 +132,11 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
       <div id="st-global" class="st-global" data-s="unknown" aria-live="polite"><span class="ic" aria-hidden="true">…</span><div><h2>Vérification en cours…</h2></div></div>
       <div class="st-bar"><button id="st-refresh" class="st-btn" type="button">Actualiser</button><span id="st-time" class="st-time"></span></div>
       <div id="st-groups"></div>
-      <p class="st-note">Ces mesures sont faites depuis votre navigateur à l'ouverture de la page, puis toutes les minutes. Elles indiquent si chaque service répond et en combien de temps ; un service peut répondre sans être pleinement fonctionnel.</p>
+      <h2 class="st-h2">Métriques du système</h2>
+      <div id="st-metrics"><p class="empty">Chargement des métriques…</p></div>
+      <h2 class="st-h2">Incidents passés</h2>
+      <div id="st-incidents"><p class="empty">Chargement de l'historique…</p></div>
+      <p class="st-note">L'état affiché sur chaque ligne est mesuré depuis votre navigateur à l'ouverture de la page, puis toutes les minutes. La disponibilité sur 90 jours, le temps de réponse et les incidents viennent des vérifications automatiques du serveur ; un incident est enregistré après au moins deux vérifications consécutives en échec. Un service peut répondre sans être pleinement fonctionnel.</p>
     </div>
   </section>
 </main>
@@ -201,9 +237,9 @@ GROUPS.forEach(g=>{
   root.append(E("h2","st-h2",g.t));
   const list=E("div","st-list");
   g.rows.forEach(([id,name,desc])=>{
-    const row=E("div","st-row"),n=E("div","st-name",name),d=E("span","st-desc",desc),ms=E("span","st-ms"),pill=E("span","st-pill"),ic=E("i"),tx=E("span");
-    n.append(d);pill.append(ic,tx);row.append(n,ms,pill);list.append(row);
-    cells[id]={d,desc,ms,pill,ic,tx};set(id,{state:"checking"});
+    const row=E("div","st-row"),n=E("div","st-name",name),d=E("span","st-desc",desc),ms=E("span","st-ms"),pill=E("span","st-pill"),ic=E("i"),tx=E("span"),hist=E("div","st-hist");
+    n.append(d);pill.append(ic,tx);row.append(n,ms,pill,hist);list.append(row);
+    cells[id]={d,desc,ms,pill,ic,tx,hist};set(id,{state:"checking"});
   });
   root.append(list);
 });
@@ -233,9 +269,122 @@ async function run(){
   $("st-time").textContent="Dernière vérification : "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
   btn.disabled=false;btn.textContent="Actualiser";running=false;
 }
-$("st-refresh").addEventListener("click",run);
+
+/* ---------- historique : disponibilité sur 90 jours, temps de réponse, incidents (API /api/status) ---------- */
+let H=null,range="day";
+const tip=E("div","st-tip");tip.hidden=true;document.body.append(tip);
+const fr={
+  day:iso=>new Date(iso+"T12:00:00").toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}),
+  dayLong:iso=>new Date(iso+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),
+  dt:iso=>new Date(iso).toLocaleString("fr-FR",{day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"}),
+  key:iso=>new Date(iso).toLocaleDateString("sv-SE",{timeZone:"Europe/Paris"})};
+const dayState=d=>{const t=d.ok+d.slow+d.down;if(!t)return"none";if(d.down>=2)return"down";if(d.down===1||d.slow/t>=.1)return"slow";return"ok"};
+const DAYLABEL={ok:"Opérationnel",slow:"Dégradation partielle",down:"Panne majeure",none:"Pas de données"};
+const dur=ms=>{const m=Math.max(1,Math.round(ms/60000)),h=Math.floor(m/60);return h?h+" h "+String(m%60).padStart(2,"0")+" min":m+" min"};
+const place=(x,y)=>{tip.hidden=false;const w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.min(Math.max(8,x-w/2),window.innerWidth-w-8)+"px";tip.style.top=Math.max(8,y-h-14)+"px"};
+const hideTip=()=>{tip.hidden=true};
+document.addEventListener("click",e=>{if(!e.target.closest||!e.target.closest(".st-days,.st-chart"))hideTip()});
+const comma=n=>String(n).replace(".",",");
+
+/* barres de 90 jours d'un service */
+function drawBars(id){
+  const c=cells[id],s=H&&H.services&&H.services[id];if(!c)return;
+  c.hist.textContent="";if(!s)return;
+  const incs=(H.incidents||[]).filter(i=>i.service===id);
+  const days=E("div","st-days");days.setAttribute("role","img");
+  days.setAttribute("aria-label",s.name+" : "+(s.uptime==null?"pas encore de données":"disponibilité de "+comma(s.uptime)+" % sur 90 jours"));
+  s.days.forEach((d,i)=>{const b=E("span","st-day");b.dataset.s=dayState(d);b.dataset.i=i;days.append(b)});
+  const foot=E("div","st-foot");
+  foot.append(E("span","","Il y a 90 jours"),E("span","st-line"),E("span","",s.uptime==null?"Pas encore de données":comma(s.uptime)+" % de disponibilité"),E("span","st-line"),E("span","","Aujourd'hui"));
+  c.hist.append(days,foot);
+  const show=e=>{
+    const t=e.target.closest(".st-day");if(!t){hideTip();return}
+    const d=s.days[+t.dataset.i],st=t.dataset.s,r=t.getBoundingClientRect();
+    tip.textContent="";tip.append(E("div","st-tip-date",fr.day(d.d)));
+    const row=E("div","st-tip-row");row.dataset.s=st;row.append(E("i","",st==="down"?"✕":st==="slow"?"▲":st==="ok"?"●":"–"),E("span","",DAYLABEL[st]));
+    const today=incs.filter(i=>fr.key(i.started_at)===d.d);
+    if(today.length)row.append(E("em","",dur(today.reduce((a,i)=>a+((i.resolved_at?new Date(i.resolved_at):new Date())-new Date(i.started_at)),0))));
+    tip.append(row);
+    const n=d.ok+d.slow+d.down;
+    if(n)tip.append(E("div","st-tip-sub",n+" vérification"+(n>1?"s":"")+(d.down?" · "+d.down+" en échec":"")+(d.slow?" · "+d.slow+" lente"+(d.slow>1?"s":""):"")));
+    if(today.length){tip.append(E("div","st-tip-rel","Lié"));today.forEach(i=>tip.append(E("div","st-tip-sub","Panne : "+i.name)))}
+    place(r.left+r.width/2,r.top)};
+  days.addEventListener("pointermove",show);days.addEventListener("pointerleave",hideTip);days.addEventListener("click",show);
+}
+
+/* courbe du temps de réponse de l'API */
+function drawMetrics(){
+  const box=$("st-metrics");box.textContent="";
+  const pts=((H&&H.metrics&&H.metrics[range])||[]).map(p=>({t:new Date(p.t).getTime(),ms:p.ms})).filter(p=>p.ms!=null);
+  const tools=E("div","st-mtools");
+  [["day","Jour"],["week","Semaine"],["month","Mois"]].forEach(([k,l])=>{const b=E("button",k===range?"on":"",l);b.type="button";b.onclick=()=>{range=k;drawMetrics()};tools.append(b)});
+  const card=E("div","st-mcard"),head=E("div","st-mhead");
+  head.append(E("h3","","Temps de réponse de l'API"),E("span","st-mval",pts.length?pts[pts.length-1].ms+" ms":"—"));card.append(head);
+  box.append(tools,card);
+  if(pts.length<2){card.append(E("p","empty","Pas encore assez de mesures : elles s'accumulent au fil de la surveillance."));return}
+  const W=900,HH=220,L=8,R=46,T=12,B=26,x0=pts[0].t,x1=pts[pts.length-1].t;
+  const mn=Math.min(...pts.map(p=>p.ms)),mx=Math.max(...pts.map(p=>p.ms));
+  const lo=Math.floor(mn/50)*50;let hi=Math.ceil(mx/50)*50;if(hi-lo<100)hi=lo+100;
+  const X=t=>L+(t-x0)/((x1-x0)||1)*(W-L-R),Y=v=>T+(1-(v-lo)/(hi-lo))*(HH-T-B);
+  const NS="http://www.w3.org/2000/svg",mk=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e};
+  const sv=mk("svg",{viewBox:"0 0 "+W+" "+HH,"class":"st-chart",role:"img","aria-label":"Temps de réponse de l'API sur la période"});
+  for(let i=0;i<=3;i++){const v=lo+(hi-lo)*i/3,y=Y(v);sv.append(mk("line",{x1:L,x2:W-R,y1:y,y2:y,"class":"g"}));const t=mk("text",{x:W-R+8,y:y+4,"class":"a"});t.textContent=Math.round(v);sv.append(t)}
+  for(let i=0;i<=5;i++){const t=x0+(x1-x0)*i/5,e=mk("text",{x:X(t),y:HH-6,"class":"a","text-anchor":i===0?"start":i===5?"end":"middle"}),dt=new Date(t);
+    e.textContent=range==="day"?dt.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):dt.toLocaleDateString("fr-FR",{day:"numeric",month:"short"});sv.append(e)}
+  const diffs=pts.slice(1).map((p,i)=>p.t-pts[i].t).sort((a,b)=>a-b),gap=diffs[Math.floor(diffs.length/2)]*3.5;
+  let d="";pts.forEach((p,i)=>{d+=(i&&p.t-pts[i-1].t<=gap?"L":"M")+X(p.t).toFixed(1)+" "+Y(p.ms).toFixed(1)+" "});
+  sv.append(mk("path",{d,"class":"l"}));
+  const cur=mk("line",{y1:T,y2:HH-B,"class":"cur"}),dot=mk("circle",{r:5,"class":"dot"});cur.style.display=dot.style.display="none";sv.append(cur,dot);
+  sv.addEventListener("pointermove",e=>{
+    const r=sv.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W;
+    let best=pts[0];pts.forEach(p=>{if(Math.abs(X(p.t)-px)<Math.abs(X(best.t)-px))best=p});
+    cur.setAttribute("x1",X(best.t));cur.setAttribute("x2",X(best.t));dot.setAttribute("cx",X(best.t));dot.setAttribute("cy",Y(best.ms));cur.style.display=dot.style.display="";
+    tip.textContent="";tip.append(E("div","st-tip-date",new Date(best.t).toLocaleString("fr-FR",{weekday:"long",day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"})));
+    const row=E("div","st-tip-row");row.dataset.s="ok";row.append(E("i","","●"),E("span","",best.ms+" ms"));tip.append(row);
+    place(e.clientX,r.top+Y(best.ms)/HH*r.height)});
+  sv.addEventListener("pointerleave",()=>{cur.style.display=dot.style.display="none";hideTip()});
+  card.append(sv);
+}
+
+/* incidents des 10 derniers jours */
+function drawIncidents(){
+  const box=$("st-incidents");box.textContent="";
+  const incs=H.incidents||[],today=new Date().toLocaleDateString("sv-SE",{timeZone:"Europe/Paris"}),base=new Date(today+"T12:00:00Z").getTime();
+  for(let k=0;k<10;k++){
+    const key=new Date(base-k*86400000).toISOString().slice(0,10),sec=E("section","st-inc-day");
+    sec.append(E("h3","",fr.dayLong(key)));
+    const list=incs.filter(i=>fr.key(i.started_at)===key);
+    if(!list.length)sec.append(E("p","st-none","Aucun incident signalé."));
+    list.forEach(i=>{
+      const a=E("article","st-inc");a.dataset.s=i.ongoing?"down":"slow";
+      a.append(E("h4","","Panne : "+i.name+(i.ongoing?" (en cours)":"")));
+      const ups=[];
+      if(i.resolved_at)ups.push(["Résolu","Le service répond de nouveau normalement.",i.resolved_at]);
+      ups.push(["Investigation","Une panne a été détectée automatiquement ("+i.checks+" vérifications consécutives en échec).",i.started_at]);
+      ups.forEach(([st,tx,at])=>{const p=E("p","st-upd");p.append(E("strong","",st),document.createTextNode(" – "+tx),E("time","",fr.dt(at)));a.append(p)});
+      sec.append(a)});
+    box.append(sec);
+  }
+}
+
+function drawHistory(){Object.keys(cells).forEach(drawBars);drawMetrics();drawIncidents()}
+function historyError(status){
+  if(H)return;
+  const msg=status===404?"L'historique n'est pas encore disponible : l'API /api/status n'est pas installée sur le site.":"L'historique est momentanément indisponible.";
+  $("st-metrics").textContent="";$("st-metrics").append(E("p","empty",msg));
+  $("st-incidents").textContent="";$("st-incidents").append(E("p","empty",msg));
+}
+async function loadHistory(trigger){
+  try{
+    const r=await fetch("/api/status"+(trigger?"?run=1":""),{cache:"no-store"});
+    if(!r.ok){const e=new Error("http");e.status=r.status;throw e}
+    H=await r.json();drawHistory();
+  }catch(e){historyError(e.status)}
+}
+$("st-refresh").addEventListener("click",()=>{run();loadHistory(true)});
 run();
-setInterval(()=>{if(!document.hidden)run()},60000);
+loadHistory(false).then(()=>loadHistory(true));
+setInterval(()=>{if(!document.hidden){run();loadHistory(true)}},60000);
 })();
 </script>
 <script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
