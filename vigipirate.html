@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="/assets/img/favicon2.png">
 <title>Préfecture de LGP — Plan Vigipirate</title>
-<meta name="description" content="Consultez le niveau du plan Vigipirate en vigueur et l'historique des changements décidés par la Préfecture.">
+<meta name="description" content="Consultez le niveau du plan Vigipirate en vigueur, les consignes et l'historique des changements décidés par la Préfecture.">
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="Préfecture de LGP — Plan Vigipirate">
 <meta property="og:type" content="website">
@@ -15,7 +15,7 @@
 <meta property="og:image:alt" content="Préfecture de LGP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
-<meta property="og:description" content="Consultez le niveau du plan Vigipirate en vigueur et l'historique des changements décidés par la Préfecture.">
+<meta property="og:description" content="Consultez le niveau du plan Vigipirate en vigueur, les consignes et l'historique des changements décidés par la Préfecture.">
 <style>
 :root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;--sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
 :root[data-theme=dark]{--bleu:#8b8bff;--bleu-f:#a5a5ff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a;--nav:#1b1b1f}
@@ -38,33 +38,40 @@ nav{display:flex;gap:6px;flex-wrap:wrap}nav a{padding:8px 16px;font-size:.95rem;
 main{min-height:58vh}
 main section{padding:54px 0 86px}
 .section-head{margin-bottom:32px}.section-head h1{font-size:clamp(1.55rem,3vw,2rem);line-height:1.2;margin-top:10px}
-.lead{color:var(--gris);max-width:46em;margin-top:8px}
-.vg-h2{font-size:1.3rem;line-height:1.3;margin:48px 0 18px}
-.vg-now{--c:var(--bleu);display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center;border:1px solid var(--ligne);border-left:8px solid var(--c);border-radius:6px;padding:28px 32px;background:var(--carte)}
-.vg-now img{display:block;width:150px;height:150px;object-fit:contain;background:#fff;border-radius:8px;padding:8px}
-.vg-badge{font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--c)}
-.vg-now h2{font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.2;margin:6px 0 10px}
-.vg-now p.desc{color:var(--gris);max-width:46em}
-.vg-meta{color:var(--gris);font-size:.88rem;margin-top:10px}
-.vg-msg{border-left:3px solid var(--c);padding:2px 0 2px 16px;margin-top:14px;white-space:pre-line;overflow-wrap:anywhere}
-.vg-levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-.vg-lv{--c:var(--bleu);position:relative;display:flex;flex-direction:column;gap:8px;border:1px solid var(--ligne);border-top:5px solid var(--c);border-radius:5px;padding:22px;background:var(--carte)}
-.vg-lv.cur{box-shadow:0 0 0 3px var(--c)}
-.vg-lv img{display:block;width:84px;height:84px;object-fit:contain;background:#fff;border-radius:6px;padding:5px}
-.vg-lv .vg-badge{display:flex;gap:8px;align-items:center;justify-content:space-between}
-.vg-lv .on{background:var(--c);color:#fff;border-radius:99px;padding:2px 10px;font-size:.68rem;letter-spacing:.06em}
-.vg-lv h3{font-size:1.1rem;line-height:1.3}
-.vg-lv p{color:var(--gris);font-size:.93rem}
-.vg-lv ul{margin:4px 0 0;padding-left:18px;color:var(--gris);font-size:.9rem}
-.vg-lv li{margin-bottom:4px}
+
+:root{--titre:#162447}
+:root[data-theme=dark]{--titre:#f0f0f0}
+.vg-h2{font-size:1.3rem;line-height:1.3;margin:44px 0 16px}
+.vgc{--c:var(--bleu);border:1px solid var(--ligne);border-radius:16px;background:var(--carte);overflow:hidden;box-shadow:0 1px 3px rgba(22,36,71,.05)}
+.vgc-head{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:24px 30px 22px;border-bottom:1px solid var(--ligne);background:linear-gradient(135deg,color-mix(in srgb,var(--c) 12%,var(--carte)),var(--carte) 75%)}
+.vgc-left{display:flex;align-items:center;gap:18px;min-width:0}
+.vgc-icon{flex:none;width:58px;height:58px;border-radius:14px;background:var(--c);color:#fff;display:grid;place-items:center;font-size:2rem;font-weight:800;line-height:1}
+.vgc-kicker{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gris)}
+.vgc-title{font-size:clamp(1.6rem,3.6vw,2.3rem);line-height:1.15;font-weight:800;color:var(--titre);margin:2px 0 6px}
+.vgc-sub{color:var(--gris);font-size:.95rem}
+.vgc-pill{flex:none;background:var(--c);color:#fff;border-radius:99px;padding:9px 20px;font-size:.85rem;font-weight:800;text-align:center}
+.vgc-body{padding:22px 30px 30px}
+.vgc-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.vgc-badge{display:inline-block;border:1px solid var(--ligne);background:var(--fond);border-radius:8px;padding:7px 12px;font-size:.85rem;font-weight:700;color:var(--titre)}
+.vgc-logo{display:block;width:52px;height:52px;object-fit:contain;background:#fff;border-radius:8px;padding:4px}
+.vgc-note{border-left:4px solid var(--c);background:color-mix(in srgb,var(--c) 7%,var(--carte));border-radius:6px;padding:12px 16px;margin-bottom:18px}
+.vgc-note strong{display:block;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--c);margin-bottom:2px}
+.vgc-note p{white-space:pre-line;overflow-wrap:anywhere}
+.vgc-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+.vgc-col{border:1px solid var(--ligne);border-radius:14px;padding:22px 24px;background:var(--carte)}
+.vgc-col h2{font-size:1rem;line-height:1.3;font-weight:800;color:var(--titre);margin:0 0 14px;display:flex;align-items:center;gap:8px}
+.vgc-sym{color:var(--c);font-size:.9rem}
+.vgc-txt{color:var(--gris);font-size:.93rem;line-height:1.65;white-space:pre-line;overflow-wrap:anywhere}
+.vg-foot{color:var(--gris);font-size:.8rem;margin:14px 6px 0}
 .vg-hist{display:flex;flex-direction:column;gap:10px}
-.vg-hrow{--c:var(--bleu);display:grid;grid-template-columns:200px 1fr;gap:6px 22px;border:1px solid var(--ligne);border-left:5px solid var(--c);border-radius:4px;padding:14px 18px;background:var(--carte)}
+.vg-hrow{--c:var(--bleu);display:grid;grid-template-columns:200px 1fr;gap:6px 22px;border:1px solid var(--ligne);border-left:5px solid var(--c);border-radius:12px;padding:14px 18px;background:var(--carte)}
 .vg-hrow time{color:var(--gris);font-size:.86rem}
 .vg-hrow strong{display:block}
 .vg-hrow span{display:block;color:var(--gris);font-size:.9rem;white-space:pre-line;overflow-wrap:anywhere}
 .empty{min-height:95px;display:grid;place-items:center;color:var(--gris);font-size:.95rem}
-.vg-err{border:1px solid var(--ligne);border-left:8px solid var(--gris);border-radius:6px;padding:22px 26px;background:var(--carte);color:var(--gris)}
-@media(max-width:700px){.vg-now{grid-template-columns:1fr;padding:22px}.vg-now img{width:110px;height:110px}.vg-hrow{grid-template-columns:1fr}}
+.vg-err{border:1px solid var(--ligne);border-left:8px solid var(--gris);border-radius:12px;padding:22px 26px;background:var(--carte);color:var(--gris)}
+@media(max-width:960px){.vgc-cols{grid-template-columns:1fr}}
+@media(max-width:700px){.vgc-head{padding:20px}.vgc-body{padding:18px 18px 22px}.vgc-icon{width:48px;height:48px;font-size:1.6rem}.vg-hrow{grid-template-columns:1fr}}
 
 footer{background:var(--pied);color:#ddd;font-size:.92rem}
 .cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding:54px 0 42px}
@@ -97,12 +104,10 @@ footer{background:var(--pied);color:#ddd;font-size:.92rem}
 </header>
 <main>
   <div class="band" aria-hidden="true"></div>
-  <section aria-labelledby="vg-title">
+  <section aria-label="Plan Vigipirate">
     <div class="w">
-      <div class="section-head"><p class="eyebrow">Sécurité publique</p><h1 id="vg-title">Plan Vigipirate</h1><p class="lead">Niveau d'alerte en vigueur, mis à jour par les services de la Préfecture. Chaque changement est publié automatiquement dans les actualités.</p></div>
-      <div id="vg-now" aria-live="polite"><p class="empty">Chargement du niveau en vigueur…</p></div>
-      <h2 class="vg-h2">Les trois niveaux du plan</h2>
-      <div id="vg-levels" class="vg-levels"></div>
+      <div id="vg-card" class="vgc" aria-live="polite"><p class="empty">Chargement du niveau en vigueur…</p></div>
+      <p class="vg-foot">Information de roleplay publiée par la Préfecture de Paris RP. Cette page n’est pas un canal d’alerte officiel et ne remplace pas les consignes des autorités réelles.</p>
       <h2 class="vg-h2">Historique des changements</h2>
       <div id="vg-hist" class="vg-hist"><p class="empty">Chargement de l'historique…</p></div>
     </div>
@@ -131,30 +136,27 @@ document.getElementById("theme").onclick=()=>{const d=document.documentElement.d
 const V=window.VIGIPIRATE,$=id=>document.getElementById(id);
 const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const when=iso=>{const d=new Date(iso);return isNaN(d)?"":d.toLocaleString("fr-FR",{dateStyle:"long",timeStyle:"short"})};
-let current=0;
+const day=iso=>{const d=new Date(iso);return isNaN(d)?"":d.toLocaleDateString("fr-FR")};
 
-/* les trois niveaux */
-function drawLevels(){
-  const box=$("vg-levels");box.textContent="";
-  [1,2,3].forEach(n=>{
-    const L=V.LEVELS[n],c=E("article","vg-lv"+(n===current?" cur":""));c.style.setProperty("--c",L.color);
-    const img=E("img");img.src=L.img;img.alt="";img.loading="lazy";
-    const badge=E("p","vg-badge");badge.append(E("span","","Niveau "+n));if(n===current)badge.append(E("span","on","En vigueur"));
-    const ul=E("ul");L.mesures.forEach(m=>ul.append(E("li","",m)));
-    c.append(img,badge,E("h3","",L.n),E("p","",L.desc),ul);box.append(c);
-  });
-}
-
-/* niveau en vigueur */
-function drawNow(st){
-  const box=$("vg-now");box.textContent="";
-  if(!st){const e=E("div","vg-err");e.append(E("strong","","Information momentanément indisponible."),E("p","","Le niveau du plan Vigipirate n'a pas pu être chargé. Réessayez dans quelques instants."));box.append(e);return}
-  const L=V.LEVELS[st.level],c=E("div","vg-now");c.style.setProperty("--c",L.color);
-  const img=E("img");img.src=L.img;img.alt="Logo Vigipirate — "+L.n;
-  const t=E("div");t.append(E("p","vg-badge","Niveau en vigueur · "+st.level+" sur 3"),E("h2","",L.n),E("p","desc",L.desc));
-  const d=when(st.updated_at);if(d)t.append(E("p","vg-meta","Dernière mise à jour : "+d));
-  if(st.message)t.append(E("p","vg-msg",st.message));
-  c.append(img,t);box.append(c);
+/* carte « situation actuelle » */
+function drawCard(st){
+  const box=$("vg-card");box.textContent="";
+  if(!st){box.className="";const e=E("div","vg-err");e.append(E("strong","","Information momentanément indisponible."),E("p","","Le niveau du plan Vigipirate n'a pas pu être chargé. Réessayez dans quelques instants."));box.append(e);return}
+  const L=V.LEVELS[st.level];box.className="vgc";box.style.setProperty("--c",L.color);
+  const head=E("div","vgc-head"),left=E("div","vgc-left"),icon=E("span","vgc-icon",L.icon||"!");icon.setAttribute("aria-hidden","true");
+  const tx=E("div");tx.append(E("p","vgc-kicker","Information sécurité · Paris"),E("h1","vgc-title","Vigipirate — situation actuelle"),E("p","vgc-sub",L.sub));
+  left.append(icon,tx);head.append(left,E("span","vgc-pill",L.n));
+  const body=E("div","vgc-body"),row=E("div","vgc-row");
+  const badge=E("span","vgc-badge",st.updated_at?"En vigueur depuis le "+day(st.updated_at):"Posture permanente de sécurité");
+  if(st.updated_at)badge.title=when(st.updated_at);
+  const logo=E("img","vgc-logo");logo.src=L.img;logo.alt="Logo Vigipirate — "+L.n;
+  row.append(badge,logo);body.append(row);
+  if(st.message){const n=E("div","vgc-note");n.append(E("strong","","Précision de la Préfecture"),E("p","",st.message));body.append(n)}
+  const cols=E("div","vgc-cols");
+  [["●","Situation en ville",L.sit],["◆","Consignes aux forces de l’ordre",L.forces],["✓","Conseils au public",L.pub]].forEach(([sym,t,txt])=>{
+    const c=E("section","vgc-col"),h=E("h2"),s=E("span","vgc-sym",sym);s.setAttribute("aria-hidden","true");
+    h.append(s,document.createTextNode(t));c.append(h,E("div","vgc-txt",txt));cols.append(c)});
+  body.append(cols);box.append(head,body);
 }
 
 /* historique */
@@ -174,10 +176,9 @@ function drawHist(st){
 async function load(){
   let st=null;
   try{st=await V.getState()}catch(e){}
-  if(st||!current){current=st?st.level:0}
-  drawNow(st);drawLevels();drawHist(st);
+  drawCard(st);drawHist(st);
 }
-drawLevels();load();
+load();
 setInterval(()=>{if(!document.hidden)load()},60000);
 })();
 </script>
