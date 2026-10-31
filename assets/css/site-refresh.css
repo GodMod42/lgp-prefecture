@@ -343,31 +343,47 @@ aside { padding: 8px; border: 1px solid var(--ligne); border-radius: var(--rayon
 .quick a.tilt svg{transform:translateZ(28px)}
 .tilt .value-icon,.tilt .command-avatar{transform:translateZ(30px)}
 
-/* Menu déroulant « Plus » de la barre de navigation (créé par site.js) */
-.nav-more { position: relative; display: flex; }
-.nav-more-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  min-height: 42px; padding: 9px clamp(7px, .8vw, 12px);
-  border: 0; border-bottom: 2px solid transparent; background: none;
-  color: #fff; font: inherit; font-size: .88rem; font-weight: 500; line-height: 1.3; cursor: pointer;
-  transition: color .16s ease, background-color .16s ease, border-color .16s ease;
+/* Menu « 3 barres » (créé par site.js) : bouton dans l'en-tête, panneau latéral plein écran en hauteur */
+.menu-btn {
+  display: inline-grid; place-items: center; flex: none;
+  width: 42px; height: 42px; padding: 0;
+  border: 1px solid var(--ligne); border-radius: var(--rayon, 4px);
+  background: rgb(7 14 28 / .5); color: #fff; cursor: pointer;
+  transition: background-color .16s ease;
 }
-.nav-more-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .16s ease; }
-.nav-more.open .nav-more-btn svg { transform: rotate(180deg); }
-.nav-more-btn:hover, .nav-more.open .nav-more-btn { background: rgb(7 14 28 / .62); }
-.nav-more-btn.on { border-color: #fff; font-weight: 700; }
-.nav-more-menu {
-  position: absolute; top: 100%; right: 0; z-index: 40; display: none; flex-direction: column; min-width: 220px;
-  background: #101827; border: 1px solid rgb(255 255 255 / .18); border-top: 2px solid #fff;
-  box-shadow: 0 12px 30px rgb(0 0 0 / .35);
+.menu-btn:hover { background: rgb(7 14 28 / .72); }
+.menu-btn svg, .site-menu-close svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.site-menu-back {
+  position: fixed; inset: 0; z-index: 1000; background: rgb(10 10 40 / .55);
+  opacity: 0; visibility: hidden; transition: opacity .2s ease, visibility .2s;
 }
-.nav-more.open .nav-more-menu { display: flex; }
-header .nav-more-menu a {
-  display: block; min-height: 0; padding: 12px 16px; white-space: nowrap; text-align: left;
-  border-bottom: 0; border-left: 3px solid transparent;
+.site-menu-back.open { opacity: 1; visibility: visible; }
+.site-menu {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 1001;
+  display: flex; flex-direction: column; width: min(380px, 92vw);
+  background: var(--carte, #fff); color: var(--texte, #161616);
+  border-left: 4px solid transparent; border-image: linear-gradient(180deg, #000091 33.3%, #fff 33.3% 66.6%, #e1000f 66.6%) 1;
+  box-shadow: -12px 0 40px rgb(0 0 0 / .3);
+  transform: translateX(100%); visibility: hidden;
+  transition: transform .25s ease, visibility .25s;
 }
-header .nav-more-menu a[aria-current] { border-left-color: #fff; }
-@media (max-width: 720px) {
-  .nav-more-btn { flex: 1; justify-content: center; }
-  .nav-more-menu { min-width: max(100%, 220px); }
+.site-menu.open { transform: none; visibility: visible; }
+.site-menu-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--ligne, #ddd); }
+.site-menu-head strong { font-size: 1.05rem; }
+.site-menu-close {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0; cursor: pointer;
+  border: 1px solid var(--ligne, #ddd); border-radius: var(--rayon, 4px); background: transparent; color: inherit;
 }
+.site-menu-close:hover { background: var(--lav, #e8e8fb); }
+.site-menu-body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 8px 10px 24px; }
+.site-menu-sec { padding: 10px 0 4px; }
+.site-menu-title { margin: 6px 10px 6px; font-size: .72rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--bleu, #000091); }
+.site-menu-body a {
+  display: block; padding: 9px 12px; border-left: 3px solid transparent; border-radius: 3px;
+  color: inherit; font-size: .95rem; font-weight: 500; text-decoration: none; overflow-wrap: anywhere;
+}
+.site-menu-body a.sub { padding-left: 28px; font-size: .88rem; color: var(--gris, #666); }
+.site-menu-body a:hover { background: var(--lav, #e8e8fb); }
+.site-menu-body a[aria-current] { border-left-color: var(--bleu, #000091); background: var(--lav, #e8e8fb); font-weight: 700; }
+html.site-menu-lock { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .site-menu, .site-menu-back { transition: none; } }

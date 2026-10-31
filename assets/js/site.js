@@ -150,30 +150,83 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',syn
 new MutationObserver(syncThemeIcon).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 })();
 
-/* Menu « Plus » dans la barre de navigation : Vigipirate et Statut des services (ajouté sur toutes les pages qui chargent site.js) */
+/* ---- Menu « 3 barres » : liste de toutes les pages du site (ajouté sur les pages publiques) ---- */
 (function(){
-const ITEMS=[{href:'vigipirate.html',label:'Vigipirate'},{href:'status.html',label:'Statut des services'}];
+const GROUPS=[
+ {t:"Le site",l:[
+  ["Accueil","index.html"],
+  ["Présentation","presentation.html"],
+  ["Organigramme","presentation.html#organigramme",1],["Missions","presentation.html#missions",1],["Histoire","presentation.html#histoire",1],
+  ["Wiki de la Préfecture","wiki.html"],
+  ["Nos emplois","emplois.html"],
+  ["Suivre l'actu","actus.html"],
+  ["Nous contacter","contact.html"]]},
+ {t:"Sécurité et services",l:[
+  ["Plan Vigipirate","vigipirate.html"],
+  ["Statut des services","status.html"],
+  ["Services publics (unités)","demarche.html#units"]]},
+ {t:"Démarches en ligne",l:[
+  ["Toutes les démarches","demarche.html"],
+  ["Création d'entreprise","creation-entreprise.html"],
+  ["Demande de subvention(s)","demande-subvention.html"],
+  ["Création d'association","creation-association.html"],
+  ["Demande de changement de nom","changement-nom.html"],
+  ["Déclarer une manifestation","declarer-manifestation.html"],
+  ["Mise au point entreprise","mise-au-point-entreprise.html"],
+  ["Donation service public","don-service-public.html"],
+  ["Prendre rendez-vous","rendez-vous.html"],
+  ["Mes démarches","mes-demarches.html"]]},
+ {t:"Compte et informations",l:[
+  ["Se connecter","connexion.html"],
+  ["Mentions légales","mentions-legales.html"],
+  ["Politique de confidentialité","politique-confidentialite.html"],
+  ["Plan du site","plan-du-site.html"]]}
+];
+const BARS='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+const CROSS='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
 const setup=()=>{
- const nav=document.querySelector('header nav[aria-label="Navigation principale"]');
- if(!nav||nav.querySelector('.nav-more'))return;
- const here=location.pathname.split('/').pop()||'index.html';
- const wrap=document.createElement('div');wrap.className='nav-more';
- const btn=document.createElement('button');btn.type='button';btn.className='nav-more-btn';
- btn.setAttribute('aria-haspopup','true');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-controls','nav-more-menu');
- btn.innerHTML='Plus <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
- const menu=document.createElement('div');menu.className='nav-more-menu';menu.id='nav-more-menu';
- let active=false;
- ITEMS.forEach(it=>{const a=document.createElement('a');a.href=it.href;a.textContent=it.label;if(here===it.href){a.setAttribute('aria-current','page');active=true}menu.append(a)});
- if(active)btn.classList.add('on');
- wrap.append(btn,menu);nav.append(wrap);
- const hover=()=>matchMedia('(hover:hover)').matches;
- const toggle=open=>{wrap.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open))};
- btn.addEventListener('click',e=>{e.stopPropagation();toggle(hover()?true:!wrap.classList.contains('open'))});
- wrap.addEventListener('mouseenter',()=>{if(hover())toggle(true)});
- wrap.addEventListener('mouseleave',()=>{if(hover())toggle(false)});
- wrap.addEventListener('focusout',e=>{if(!wrap.contains(e.relatedTarget))toggle(false)});
- document.addEventListener('click',e=>{if(!wrap.contains(e.target))toggle(false)});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&wrap.classList.contains('open')){toggle(false);btn.focus()}});
+ const actions=document.querySelector('header .actions');
+ if(!actions||!document.querySelector('header nav[aria-label="Navigation principale"]')||document.getElementById('site-menu'))return;
+ const norm=s=>(s||'').replace(/\.html$/,'')||'index';
+ const here=norm(location.pathname.split('/').pop());
+ const btn=document.createElement('button');btn.type='button';btn.className='menu-btn';btn.innerHTML=BARS;
+ btn.setAttribute('aria-label','Ouvrir le menu du site');btn.setAttribute('aria-haspopup','dialog');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-controls','site-menu');
+ actions.append(btn);
+ /* le panneau est placé dans <body> (et non dans l'en-tête) pour ne jamais être rogné ni décalé par l'en-tête */
+ const back=document.createElement('div');back.className='site-menu-back';
+ const panel=document.createElement('aside');panel.id='site-menu';panel.className='site-menu';panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label','Toutes les pages du site');
+ const head=document.createElement('div');head.className='site-menu-head';
+ const title=document.createElement('strong');title.textContent='Toutes les pages';
+ const close=document.createElement('button');close.type='button';close.className='site-menu-close';close.innerHTML=CROSS;close.setAttribute('aria-label','Fermer le menu');
+ head.append(title,close);panel.append(head);
+ const body=document.createElement('nav');body.className='site-menu-body';body.setAttribute('aria-label','Plan du site');
+ GROUPS.forEach(g=>{
+  const sec=document.createElement('div');sec.className='site-menu-sec';
+  const h=document.createElement('p');h.className='site-menu-title';h.textContent=g.t;sec.append(h);
+  g.l.forEach(([label,href,sub])=>{
+   const a=document.createElement('a');a.href=href;a.textContent=label;if(sub)a.className='sub';
+   if(!href.includes('#')&&norm(href)===here)a.setAttribute('aria-current','page');
+   sec.append(a)});
+  body.append(sec)});
+ panel.append(body);
+ document.body.append(back,panel);
+ const root=document.documentElement;
+ const isOpen=()=>panel.classList.contains('open');
+ const toggle=open=>{
+  panel.classList.toggle('open',open);back.classList.toggle('open',open);root.classList.toggle('site-menu-lock',open);
+  btn.setAttribute('aria-expanded',String(open));btn.innerHTML=open?CROSS:BARS;
+  btn.setAttribute('aria-label',open?'Fermer le menu du site':'Ouvrir le menu du site');
+  if(open)close.focus();else btn.focus()};
+ btn.addEventListener('click',()=>toggle(!isOpen()));
+ close.addEventListener('click',()=>toggle(false));
+ back.addEventListener('click',()=>toggle(false));
+ panel.addEventListener('click',e=>{if(e.target.closest('a'))toggle(false)});
+ document.addEventListener('keydown',e=>{
+  if(!isOpen())return;
+  if(e.key==='Escape'){toggle(false);return}
+  if(e.key==='Tab'){const f=[...panel.querySelectorAll('a,button')];const first=f[0],last=f[f.length-1];
+   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
+   else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 };
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',setup):setup();
 })();
