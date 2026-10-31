@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/assets/img/favicon2.png">
+<title>Préfecture de LGP — Statut du site</title>
+<meta name="description" content="État en direct des services du portail de la Préfecture : site, Discord, API et base de données.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Préfecture de LGP — Statut du site">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://lgp-prefecture.vercel.app/status.html">
+<meta property="og:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:image:alt" content="Préfecture de LGP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lgp-prefecture.vercel.app/assets/img/partage.png">
+<meta property="og:description" content="État en direct des services du portail de la Préfecture : site, Discord, API et base de données.">
+<style>
+:root{--bleu:#000091;--bleu-f:#00006d;--rouge:#e1000f;--lav:#e8e8fb;--fond:#f5f5f8;--carte:#fff;--texte:#161616;--gris:#666;--ligne:#ddd;--nav:#fff;--pied:#1e1e1e;--sans:Marianne,"Public Sans","Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+:root[data-theme=dark]{--bleu:#8b8bff;--bleu-f:#a5a5ff;--lav:#26264f;--fond:#161616;--carte:#1e1e1e;--texte:#f0f0f0;--gris:#b5b5b5;--ligne:#3a3a3a;--nav:#1b1b1f}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--texte);background:var(--carte);line-height:1.6;padding-bottom:34px}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid #0a76f6;outline-offset:2px}
+.w{max-width:1360px;margin:0 auto;padding:0 24px}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bleu)}
+.eyebrow::before{content:"";width:22px;height:3px;background:var(--rouge)}
+header{background:var(--nav);border-top:5px solid;border-image:linear-gradient(90deg,var(--bleu) 33.3%,#999 33.3% 66.6%,var(--rouge) 66.6%) 1;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--ligne)}
+header .w{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px;max-width:none}
+.logo{display:flex;align-items:center;gap:16px}.logo img{height:68px;width:auto;display:block}
+nav{display:flex;gap:6px;flex-wrap:wrap}nav a{padding:8px 16px;font-size:.95rem;font-weight:500}nav a:hover,nav a[aria-current]{color:var(--bleu);box-shadow:inset 0 -2px var(--bleu)}
+.actions{display:flex;align-items:center;gap:16px}#theme{width:38px;height:38px;border-radius:50%;border:1px solid var(--ligne);background:var(--carte);color:var(--texte);cursor:pointer;display:grid;place-items:center}
+.btn-co{background:var(--bleu);color:#fff;font-weight:700;padding:12px 24px;border-radius:999px}:root[data-theme=dark] .btn-co{color:#000}
+.band{height:46px;background:var(--bleu)}
+main{min-height:58vh}
+main section{padding:54px 0 86px}
+.section-head{margin-bottom:32px}.section-head h1{font-size:clamp(1.55rem,3vw,2rem);line-height:1.2;margin-top:10px}
+.lead{color:var(--gris);max-width:46em;margin-top:8px}
+:root{--ok:#18753c;--warn:#b34000;--bad:#c9190b;--unk:#666}
+:root[data-theme=dark]{--ok:#53d18d;--warn:#ffb26b;--bad:#ff7b72;--unk:#b5b5b5}
+.st-global{--c:var(--ok);display:flex;align-items:center;gap:18px;border:1px solid var(--ligne);border-left:8px solid var(--c);border-radius:6px;padding:22px 26px;background:var(--carte)}
+.st-global[data-s=slow]{--c:var(--warn)}.st-global[data-s=down]{--c:var(--bad)}.st-global[data-s=unknown]{--c:var(--unk)}
+.st-global .ic{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--c);color:#fff;font-size:1.4rem;font-weight:800}
+:root[data-theme=dark] .st-global .ic{color:#111}
+.st-global h2{font-size:clamp(1.25rem,2.6vw,1.7rem);line-height:1.25;margin:0}
+.st-global p{color:var(--gris);font-size:.92rem;margin-top:2px}
+.st-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:18px 0 6px}
+.st-btn{border:2px solid var(--bleu);background:transparent;color:var(--bleu);font:700 .9rem var(--sans);padding:9px 18px;cursor:pointer}
+.st-btn:hover:not(:disabled){background:var(--lav)}.st-btn:disabled{opacity:.55;cursor:progress}
+.st-time{color:var(--gris);font-size:.88rem}
+.st-h2{font-size:1.2rem;line-height:1.3;margin:34px 0 12px}
+.st-list{border:1px solid var(--ligne);border-radius:5px;background:var(--carte);overflow:hidden}
+.st-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:6px 18px;padding:15px 20px;border-top:1px solid var(--ligne)}
+.st-row:first-child{border-top:0}
+.st-name{font-weight:600}.st-desc{display:block;color:var(--gris);font-size:.86rem;font-weight:400;overflow-wrap:anywhere}
+.st-ms{color:var(--gris);font-size:.82rem;min-width:56px;text-align:right}
+.st-pill{--c:var(--unk);display:inline-flex;align-items:center;gap:7px;min-width:132px;justify-content:center;border:1px solid var(--c);color:var(--c);border-radius:99px;padding:4px 12px;font-size:.82rem;font-weight:700;background:color-mix(in srgb,var(--c) 10%,var(--carte))}
+.st-pill[data-s=ok]{--c:var(--ok)}.st-pill[data-s=slow]{--c:var(--warn)}.st-pill[data-s=down]{--c:var(--bad)}.st-pill[data-s=checking]{--c:var(--unk)}
+.st-pill i{font-style:normal;font-weight:800}
+.st-note{color:var(--gris);font-size:.86rem;margin-top:26px;max-width:52em}
+@media(max-width:700px){.st-row{grid-template-columns:1fr auto}.st-ms{display:none}.st-pill{min-width:0}.st-global{padding:18px}}
+
+footer{background:var(--pied);color:#ddd;font-size:.92rem}
+.cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:32px;padding:54px 0 42px}
+.cols h4{color:#fff;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}.cols li{list-style:none;margin-bottom:9px}.cols ul{padding:0}.cols a:hover{text-decoration:underline}
+.flogo{background:#fff;display:inline-block;padding:12px 18px;margin-bottom:16px}
+.bas{border-top:1px solid #333;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:22px 0;font-size:.85rem}.bas nav a{padding:0 0 0 18px;font-size:.85rem;font-weight:400}
+
+.aide{position:fixed;right:20px;bottom:50px;background:var(--bleu-f);color:#fff;border:0;border-radius:24px;padding:12px 20px;font:700 .9rem var(--sans);cursor:pointer;z-index:30}
+.aide::after{content:"";display:inline-block;width:10px;height:10px;border:2px solid #7fe0a0;border-radius:50%;margin-left:10px}
+:root[data-theme=dark] .logo img{background:#fff;padding:4px 10px}
+@media(max-width:1000px){.cols{grid-template-columns:1fr 1fr}header .w{flex-wrap:wrap;padding-top:10px;padding-bottom:10px}}
+@media(max-width:560px){.cols{grid-template-columns:1fr}.aide{display:none}main section{padding:40px 0}}
+</style>
+<script src="assets/js/site.js"></script>
+  <link rel="stylesheet" href="assets/css/site-refresh.css">
+<script>
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+<body>
+<header>
+  <div class="w">
+    <a class="logo" href="index.html" aria-label="Préfecture de LGP — Accueil"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP"></a>
+    <nav aria-label="Navigation principale">
+      <a href="index.html">Accueil</a><a href="presentation.html">Présentation</a><a href="demarche.html">Démarches en ligne</a><a href="wiki.html">Wiki</a><a href="emplois.html">Nos emplois</a><a href="actus.html">Suivre l'actu</a><a href="contact.html">Nous contacter</a>
+    </nav>
+    <div class="actions"><button id="theme" type="button" aria-label="Changer de thème"><svg class="i" style="width:18px;height:18px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></svg></button><a class="btn-co" href="connexion.html">Se connecter</a></div>
+  </div>
+</header>
+<main>
+  <div class="band" aria-hidden="true"></div>
+  <section aria-labelledby="st-title">
+    <div class="w">
+      <div class="section-head"><p class="eyebrow">État des services</p><h1 id="st-title">Statut du site</h1><p class="lead">Vérification en direct des services du portail : site, Discord, API et base de données.</p></div>
+      <div id="st-global" class="st-global" data-s="unknown" aria-live="polite"><span class="ic" aria-hidden="true">…</span><div><h2>Vérification en cours…</h2></div></div>
+      <div class="st-bar"><button id="st-refresh" class="st-btn" type="button">Actualiser</button><span id="st-time" class="st-time"></span></div>
+      <div id="st-groups"></div>
+      <p class="st-note">Ces mesures sont faites depuis votre navigateur à l'ouverture de la page, puis toutes les minutes. Elles indiquent si chaque service répond et en combien de temps ; un service peut répondre sans être pleinement fonctionnel.</p>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="w">
+    <div class="cols">
+      <div><div class="flogo"><img src="assets/img/logo-prefecture.png" alt="Préfecture de LGP" style="height:84px;width:auto;display:block"></div><p>Portail de services de la Préfecture du Grand Paname.</p></div>
+      <div><h4>Coordonnées</h4><p style="margin-top:14px"><a href="https://discord.gg/8RAFH7KfDj" target="_blank" rel="noopener">Contacter l&#39;équipe</a></p></div>
+      <div><h4>Horaires</h4><ul><li>Lun–Ven : 8h30–22h00</li><li>Samedi : 9h00–22h00</li><li>Dimanche : fermé</li><li>Urgences : 24h / 24</li></ul></div>
+      <div><h4>Liens utiles</h4><ul><li><a href="contact.html">Nous contacter</a></li><li><a href="demarche.html">Démarches en ligne</a></li><li><a href="connexion.html">Connexion</a></li></ul></div>
+      <div><h4>Institution</h4><ul><li><a href="presentation.html#organigramme">Organigramme</a></li><li><a href="presentation.html#missions">Missions</a></li><li><a href="presentation.html#histoire">Histoire</a></li><li><a href="wiki.html">Wiki de la Préfecture</a></li><li><a href="actus.html">Suivre l'actu</a></li></ul></div>
+    </div>
+    <div class="bas"><span>© 2026 Préfecture de Grand Paname — Portail de services communautaires.</span><nav aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Politique de confidentialité</a><a href="#">Accessibilité : non conforme</a><a href="plan-du-site.html">Plan du site</a><a href="#">Avis des citoyens</a></nav></div>
+  </div>
+</footer>
+<button class="aide" type="button">Besoin d'aide ?</button>
+
+<script src="assets/js/auth.js"></script>
+<script>
+try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+document.getElementById("theme").onclick=()=>{const d=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=d;try{localStorage.setItem("theme",d)}catch(e){}};
+(function(){
+const DISCORD_INVITE="8RAFH7KfDj";          /* même invitation que sur l'accueil */
+const TIMEOUT=8000,SLOW=2500;
+const $=id=>document.getElementById(id);
+const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const LABEL={ok:["●","Opérationnel"],slow:["▲","Ralenti"],down:["✕","Panne"],unknown:["?","Indéterminé"],checking:["…","Vérification"]};
+
+/* requête avec délai maximal et mesure du temps de réponse */
+const timed=async(url,opt)=>{
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),TIMEOUT),t0=performance.now();
+  try{const r=await fetch(url,Object.assign({cache:"no-store",signal:c.signal},opt||{}));return{r,ms:Math.round(performance.now()-t0)}}
+  finally{clearTimeout(t)}};
+const speed=(state,ms)=>state==="ok"&&ms>SLOW?"slow":state;
+
+/* service HTTP du site : toute réponse du serveur sans erreur 5xx/404 prouve que la fonction est en ligne (401/405 = normal sans connexion) */
+const api=url=>async()=>{
+  try{const{r,ms}=await timed(url);
+    if(r.status>=500)return{state:"down",detail:"Erreur "+r.status,ms};
+    if(r.status===404)return{state:"down",detail:"Service introuvable (404)",ms};
+    return{state:speed("ok",ms),detail:ms>SLOW?"Réponse lente":"",ms}}
+  catch(e){return{state:"down",detail:e.name==="AbortError"?"Délai dépassé":"Injoignable"}}};
+
+const checks={
+  site:async()=>{
+    try{const{r,ms}=await timed("content.json");
+      if(!r.ok)return{state:"down",detail:"Erreur "+r.status,ms};
+      await r.json();return{state:speed("ok",ms),detail:"",ms}}
+    catch(e){return{state:"down",detail:e.name==="AbortError"?"Délai dépassé":"Contenu illisible"}}},
+  discordServer:async()=>{
+    try{const{r,ms}=await timed("https://discord.com/api/v9/invites/"+DISCORD_INVITE+"?with_counts=true");
+      if(r.status===429)return{state:"unknown",detail:"Trop de requêtes, réessayez dans un instant",ms};
+      if(!r.ok)return{state:"down",detail:"Erreur "+r.status,ms};
+      const d=await r.json();
+      if(d.approximate_member_count==null)return{state:"unknown",detail:"Réponse inattendue",ms};
+      return{state:speed("ok",ms),detail:d.approximate_member_count+" membres · "+d.approximate_presence_count+" en ligne",ms}}
+    catch(e){return{state:"unknown",detail:"Vérification impossible depuis ce navigateur"}}},
+  discordPlatform:async()=>{
+    try{const{r,ms}=await timed("https://discordstatus.com/api/v2/status.json");
+      if(!r.ok)return{state:"unknown",detail:"Erreur "+r.status,ms};
+      const d=await r.json(),i=d.status&&d.status.indicator,txt=d.status&&d.status.description||"";
+      if(i==="none")return{state:speed("ok",ms),detail:"Aucun incident signalé",ms};
+      if(i==="minor")return{state:"slow",detail:txt,ms};
+      return{state:"down",detail:txt||"Incident majeur",ms}}
+    catch(e){return{state:"unknown",detail:"Vérification impossible depuis ce navigateur"}}},
+  contact:api("/api/contact"),
+  prefecture:api("/api/prefecture?module=ping"),
+  tickets:api("/api/admin/tickets"),
+  finances:api("/api/admin/finances"),
+  vigipirate:async()=>{
+    try{const{r,ms}=await timed("/api/vigipirate");
+      if(r.status>=500)return{state:"down",detail:"Erreur "+r.status,ms,db:{state:"down",detail:"Base de données injoignable",ms}};
+      if(r.status===404)return{state:"down",detail:"Service introuvable (404)",ms,db:{state:"unknown",detail:"Non vérifiable"}};
+      const d=await r.json().catch(()=>null);
+      if(!r.ok||!d||!d.level)return{state:"down",detail:"Réponse invalide",ms,db:{state:"unknown",detail:"Non vérifiable"}};
+      return{state:speed("ok",ms),detail:ms>SLOW?"Réponse lente":"",ms,db:{state:speed("ok",ms),detail:"Lecture réussie",ms}}}
+    catch(e){return{state:"down",detail:e.name==="AbortError"?"Délai dépassé":"Injoignable",db:{state:"unknown",detail:"Non vérifiable"}}}}
+};
+
+const GROUPS=[
+  {t:"Site web",rows:[["site","Site web de la Préfecture","Pages et contenu du site"]]},
+  {t:"Discord",rows:[
+    ["discordServer","Serveur Discord de la Préfecture","Invitation publique et effectifs"],
+    ["discordPlatform","Plateforme Discord","État officiel de Discord (discordstatus.com)"]]},
+  {t:"API du site",rows:[
+    ["contact","Démarches en ligne (API)","Dépôt et suivi des demandes"],
+    ["prefecture","Espace Préfecture (API)","Panel préfectoral"],
+    ["tickets","Tickets (API)","Espace des agents"],
+    ["finances","Finances (API)","Espace des agents"],
+    ["vigipirate","Plan Vigipirate (API)","Niveau d'alerte et actualités automatiques"]]},
+  {t:"Données",rows:[["db","Base de données","Stockage des demandes, tickets et niveaux d'alerte"]]}
+];
+
+/* squelette : une ligne par service, mises à jour en place */
+const cells={};
+const root=$("st-groups");
+GROUPS.forEach(g=>{
+  root.append(E("h2","st-h2",g.t));
+  const list=E("div","st-list");
+  g.rows.forEach(([id,name,desc])=>{
+    const row=E("div","st-row"),n=E("div","st-name",name),d=E("span","st-desc",desc),ms=E("span","st-ms"),pill=E("span","st-pill"),ic=E("i"),tx=E("span");
+    n.append(d);pill.append(ic,tx);row.append(n,ms,pill);list.append(row);
+    cells[id]={d,desc,ms,pill,ic,tx};set(id,{state:"checking"});
+  });
+  root.append(list);
+});
+function set(id,res){
+  const c=cells[id];if(!c)return;
+  const s=res.state,L=LABEL[s]||LABEL.unknown;
+  c.pill.dataset.s=s==="unknown"?"":s;c.ic.textContent=L[0];c.tx.textContent=L[1];
+  c.ms.textContent=res.ms!=null?res.ms+" ms":"";
+  c.d.textContent=res.detail?c.desc+" · "+res.detail:c.desc;
+}
+
+let running=false;
+async function run(){
+  if(running)return;running=true;
+  const btn=$("st-refresh");btn.disabled=true;btn.textContent="Vérification…";
+  const results={};
+  const jobs=Object.keys(checks).map(async id=>{
+    const r=await checks[id]();results[id]=r;set(id,r);
+    if(r.db){results.db=r.db;set("db",r.db)}});
+  await Promise.all(jobs);
+  /* bilan global */
+  const all=Object.values(results),down=all.filter(r=>r.state==="down").length,slow=all.filter(r=>r.state==="slow").length,unk=all.filter(r=>r.state==="unknown").length;
+  const g=$("st-global"),ic=g.querySelector(".ic"),h=g.querySelector("h2");let p=g.querySelector("p");if(!p){p=E("p");h.parentNode.append(p)}
+  if(down){g.dataset.s="down";ic.textContent="✕";h.textContent=down===1?"Une panne est en cours":down+" pannes sont en cours";p.textContent="Les services concernés sont indiqués ci-dessous."}
+  else if(slow){g.dataset.s="slow";ic.textContent="▲";h.textContent="Certains services sont ralentis";p.textContent="Le site reste utilisable mais peut répondre plus lentement."}
+  else{g.dataset.s="ok";ic.textContent="✓";h.textContent="Tous les services sont opérationnels";p.textContent=unk?unk+" vérification"+(unk>1?"s":"")+" impossible"+(unk>1?"s":"")+" depuis votre navigateur.":"Aucun incident détecté."}
+  $("st-time").textContent="Dernière vérification : "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  btn.disabled=false;btn.textContent="Actualiser";running=false;
+}
+$("st-refresh").addEventListener("click",run);
+run();
+setInterval(()=>{if(!document.hidden)run()},60000);
+})();
+</script>
+<script type="module">import { inject } from "https://esm.sh/@vercel/analytics"; inject();</script>
+<script src="/tracker.js" defer></script>
+</html>
+<script src="assets/js/reveal.js"></script>
+</body>
+</html>
