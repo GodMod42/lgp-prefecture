@@ -180,6 +180,7 @@ const GROUPS=[
   ["Se connecter","connexion.html"],
   ["Mentions légales","mentions-legales.html"],
   ["Politique de confidentialité","politique-confidentialite.html"],
+  ["Accessibilité","accessibilite.html"],
   ["Plan du site","plan-du-site.html"]]}
 ];
 const BARS='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
@@ -229,4 +230,10 @@ const setup=()=>{
    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 };
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',setup):setup();
+})();
+
+/* Pied de page : le lien « Accessibilité : non conforme » mène à la déclaration d'accessibilité */
+(function(){
+const fix=()=>{document.querySelectorAll('footer a').forEach(a=>{if(/^\s*Accessibilité/i.test(a.textContent)&&(a.getAttribute('href')||'#')==='#')a.setAttribute('href','accessibilite.html')})};
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fix):fix();
 })();
